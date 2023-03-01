@@ -62,4 +62,21 @@ inventoryToMenu = {
     "Iced Coffee": ["Coffee brew", "Milk"]
 }
 
+header = ["id", "menu_id", "inventory_id", "quantity"]
 
+
+with open('inventoryToMenu.csv', 'w', encoding='UTF8') as f:
+    writer = csv.writer(f)
+
+    # write the header
+    writer.writerow(header)
+
+    id = 1
+
+    for menu_item, ingred_list in inventoryToMenu.items():
+        menu_id = menu.index(menu_item) + 1
+        for ingred in ingred_list:
+            inventory_id = ingredients.index(ingred) + 1
+            data = [str(menu_id) + str(inventory_id), menu_id, inventory_id, 1]
+            id += 1
+            writer.writerow(data)
