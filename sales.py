@@ -3,14 +3,13 @@ import random
 import datetime
 
 
-menu_items = [
+menu = [
     "Classic Chicken Sandwich",
     "Spicy Chicken Sandwich",
     "Chicken Deluxe Sandwich",
     "Grilled Chicken Sandwich",
     "Grilled Chicken Club Sandwich",
-    "Grilled Chicken Cool Wrap",
-    "Chicken Deluxe Cool Wrap",
+    "Cool Wrap",
     "Nuggets",
     "Chick-n-Strips",
     "Cobb Salad",
@@ -23,49 +22,47 @@ menu_items = [
     "Vanilla Milkshake",
     "Icedream Cone",
     "Lemonade",
+    "Iced Coffee",
     "Sweet Tea",
 ]
 
 ingredients = [
-    "chicken breast", "spicy chicken breast", "brioche bun", "pickle slices", "butter", "flour", "milk", "salt", "pepper",
-    "potatoes", "oil", "vanilla ice cream", "whipped cream", "cherry", "icecream", "biscuit", "yeast roll",
-    "multigrain bun", "lettuce", "tomato", "honey mustard sauce", "corn", "black beans", "shredded cheese",
-    "tortilla strips", "ranch dressing", "bacon", "egg", "blue cheese", "avocado", "cabbage", "carrots", "onion",
-    "mayonnaise", "sugar", "vinegar", "lemonade", "coffee", "vanilla syrup", "egg white patty", "English muffin",
-    "cheese", "American cheese", "vanilla Greek yogurt", "fresh berries", "granola"
-]
-
-menu_to_inventory = [
-    "Chicken Sandwich", ["chicken breast", "brioche bun", "pickle slices"],
-    "Spicy Chicken Sandwich", ["spicy chicken breast", "brioche bun", "pickle slices"],
-    "Chicken Nuggets", ["frozen nuggets"],
-    "Waffle Fries", ["frozen waffle fries"],
-    "Milkshake", ["vanilla ice cream", "milk", "whipped cream", "cherry"],
-    "Icedream Cone", ["icecream"],
-    "Chicken Biscuit", ["chicken breast", "biscuit", "butter"],
-    "Chicken Mini", ["chicken breast", "yeast roll", "pickle slices"],
-    "Hashbrowns", ["potatoes", "oil", "salt", "pepper"],
-    "Grilled Chicken Sandwich", ["chicken breast", "multigrain bun", "lettuce", "tomato", "honey mustard sauce"],
-    "Spicy Southwest Salad", ["spicy chicken breast", "lettuce", "corn", "black beans", "tomato", "shredded cheese", "tortilla strips", "ranch dressing"],
-    "Cobb Salad", ["grilled chicken breast", "lettuce", "bacon", "egg", "blue cheese", "tomato", "avocado", "ranch dressing"],
-    "Chicken Cool Wrap", ["grilled chicken breast", "lettuce", "red cabbage", "carrots", "cheese", "dressing", "flour tortilla"],
-    "Fruit Cup", ["fresh fruit"],
-    "Mac and Cheese", ["macaroni", "cheese sauce", "milk", "butter"],
-    "Cole Slaw", ["cabbage", "carrots", "onion", "mayonnaise", "sugar", "vinegar", "salt", "pepper"],
-    "Frosted Lemonade", ["lemonade", "vanilla ice cream"],
-    "Frosted Coffee", ["coffee", "vanilla syrup", "vanilla ice cream"],
-    "Egg White Grill", ["grilled chicken breast", "egg white patty", "English muffin", "cheese"],
-    "Bacon, Egg & Cheese Biscuit", ["biscuit", "bacon", "egg patty", "American cheese"],
-    "Grilled Chicken Club Sandwich", ["grilled chicken breast", "multigrain bun", "bacon", "lettuce", "tomato", "cheese", "honey mustard sauce"],
-    "Deluxe Chicken Sandwich", ["chicken breast", "brioche bun", "lettuce", "tomato", "mayonnaise"],
-    "Grilled Cool Wrap", ["grilled chicken breast", "lettuce", "red cabbage", "carrots", "cheese", "dressing", "flour tortilla"],
-    "Greek Yogurt Parfait", ["vanilla Greek yogurt", "fresh berries", "granola"]
+    'Chicken breast', 'Brioche bun', 'Pickles', 'Spicy chicken breast',
+    'Pepper', 'Tomato', 'Lettuce', 'Cheddar Cheese', 'Multigrain brioche bun',
+    'Bacon', 'Colby Jack cheese', 'Flour tortilla', 'Ranch dressing',
+    'Breaded chicken nugget', 'Breaded chicken strip', 'Hard-boiled egg',
+    'Potato fries', 'Strawberry', 'Blueberry', 'Mandarin orange', 'Macaroni',
+    'Cheddar cheese', 'Parmesean cheese', 'Romano Cheese', 'Chicken broth',
+    'Carrots', 'Celery', 'Egg noodles', 'Saltine Cracker', 'Lemonade',
+    'Vanilla ice cream', 'Chocolate chunk cookie', 'Milk', 'Whipped cream',
+    'Cherry', 'Icecream', 'Sugar cone', 'Sweet tea', 'Coffee brew'
 ]
 
 
 
-
-
+# Define a dictionary of ingredients for each menu item
+inventoryToMenu = {
+    "Classic Chicken Sandwich": ["Chicken breast", "Brioche bun", "Pickles"],
+    "Spicy Chicken Sandwich": ["Spicy chicken breast", "Brioche bun", "Pickles", "Pepper"],
+    "Chicken Deluxe Sandwich": ["Chicken breast", "Brioche bun", "Tomato", "Lettuce", "Cheddar Cheese", "Pickles"],
+    "Grilled Chicken Sandwich": ["Grilled chicken breast", "Multigrain brioche bun", "Tomato", "Lettuce"],
+    "Grilled Chicken Club Sandwich": ["Grilled chicken breast", "Multigrain brioche bun", "Tomato", "Lettuce", "Bacon", "Colby Jack cheese"],
+    "Cool Wrap": ["Grilled chicken breast", "Flour tortilla", "Tomato", "Lettuce", "Colby Jack cheese", "Ranch dressing"],
+    "Nuggets": ["Breaded chicken nugget"],
+    "Chick-n-Strips": ["Breaded chicken strip"],
+    "Cobb Salad": ["Lettuce", "Breaded chicken nugget", "Hard-boiled egg", "Tomato", "Ranch dressing"],
+    "Waffle Potato Fries": ["Potato fries"],
+    "Fruit Cup": ["Strawberry", "Blueberry", "Mandarin orange"],
+    "Mac and Cheese": ["Macaroni", "Cheddar cheese", "Parmesean cheese", "Romano Cheese"],
+    "Chicken Noodle Soup": ["Chicken broth", "Chicken breast", "Carrots", "Celery", "Egg noodles", "Saltine Cracker"],
+    "Frosted Lemonade": ["Lemonade", "Vanilla ice cream"],
+    "Chocolate Chunk Cookie": ["Chocolate chunk cookie"],
+    "Vanilla Milkshake": ["Vanilla ice cream", "Milk", "Whipped cream", "Cherry"],
+    "Icedream Cone": ["Icecream", "Sugar cone"],
+    "Sweet Tea": ["Sweet tea"],
+    "Lemonade": ["Lemonade"],
+    "Iced Coffee": ["Coffee brew", "Milk"]
+}
 
 
 
@@ -137,7 +134,11 @@ with open('restaurant_sales.csv', mode='w', newline='') as sales_file:
     sales_writer = csv.writer(sales_file)
 
     # Write the header row to the CSV file
+<<<<<<< HEAD
+    sales_writer.writerow(['date', 'item', 'price'])
+=======
     sales_writer.writerow(['date', 'item', 'cost_total'])
+>>>>>>> 2e2a0fb17cf271390626c2b27c3ae7f3512ed3c9
 
     # Write the orders data to the CSV file
     sales_writer.writerows(orders_data)
