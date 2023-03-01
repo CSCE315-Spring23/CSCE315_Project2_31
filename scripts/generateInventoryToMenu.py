@@ -39,6 +39,8 @@ ingredients = [
     'Cherry', 'Icecream', 'Sugar cone', 'Sweet tea', 'Coffee brew'
 ]
 
+print(len(ingredients))
+
 inventoryToMenu = {
     "Classic Chicken Sandwich": ["Chicken breast", "Brioche bun", "Pickles"],
     "Spicy Chicken Sandwich": ["Spicy chicken breast", "Brioche bun", "Pickles", "Pepper"],
@@ -62,10 +64,10 @@ inventoryToMenu = {
     "Iced Coffee": ["Coffee brew", "Milk"]
 }
 
-header = ["id", "menu_id", "inventory_id", "quantity"]
+header = ["inventory_id", "menu_id", "quantity"]
 
 
-with open('./csv/inventoryToMenu.csv', 'w', encoding='UTF8') as f:
+with open('./csv/inventoryToMenu.csv', 'w', newline='') as f:
     writer = csv.writer(f)
 
     # write the header
@@ -77,6 +79,6 @@ with open('./csv/inventoryToMenu.csv', 'w', encoding='UTF8') as f:
         menu_id = menu.index(menu_item) + 1
         for ingred in ingred_list:
             inventory_id = ingredients.index(ingred) + 1
-            data = [str(menu_id) + str(inventory_id), menu_id, inventory_id, 1]
+            data = [inventory_id ,menu_id, 1]
             id += 1
             writer.writerow(data)

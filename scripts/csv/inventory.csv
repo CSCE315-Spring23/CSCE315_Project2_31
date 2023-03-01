@@ -1,40 +1,41 @@
 inventory_id,name,quantity
-1,Chicken breast,488
-2,Brioche bun,861
-3,Pickles,210
-4,Spicy chicken breast,205
-5,Pepper,754
-6,Tomato,285
-7,Lettuce,791
-8,Cheddar Cheese,519
-9,Multigrain brioche bun,299
-10,Bacon,295
-11,Colby Jack cheese,707
-12,Flour tortilla,282
-13,Ranch dressing,297
-14,Breaded chicken nugget,294
-15,Breaded chicken strip,739
-16,Hard-boiled egg,780
-17,Potato fries,460
-18,Strawberry,813
-19,Blueberry,965
-20,Mandarin orange,669
-21,Macaroni,518
-22,Cheddar cheese,998
-23,Parmesean cheese,288
-24,Romano Cheese,420
-25,Chicken broth,959
-26,Carrots,789
-27,Celery,382
-28,Egg noodles,869
-29,Saltine Cracker,608
-30,Lemonade,259
-31,Vanilla ice cream,314
-32,Chocolate chunk cookie,732
-33,Milk,687
-34,Whipped cream,312
-35,Cherry,375
-36,Icecream,610
-37,Sugar cone,825
-38,Sweet tea,349
-39,Coffee brew,778
+1,Chicken breast,660
+2,Brioche bun,703
+3,Pickles,606
+4,Spicy chicken breast,358
+5,Grilled chicken breast,873
+6,Pepper,679
+7,Tomato,540
+8,Lettuce,448
+9,Cheddar Cheese,858
+10,Multigrain brioche bun,348
+11,Bacon,620
+12,Colby Jack cheese,333
+13,Flour tortilla,681
+14,Ranch dressing,743
+15,Breaded chicken nugget,756
+16,Breaded chicken strip,635
+17,Hard-boiled egg,540
+18,Potato fries,856
+19,Strawberry,810
+20,Blueberry,348
+21,Mandarin orange,573
+22,Macaroni,655
+23,Cheddar cheese,859
+24,Parmesean cheese,732
+25,Romano Cheese,782
+26,Chicken broth,620
+27,Carrots,212
+28,Celery,628
+29,Egg noodles,327
+30,Saltine Cracker,496
+31,Lemonade,665
+32,Vanilla ice cream,215
+33,Chocolate chunk cookie,833
+34,Milk,992
+35,Whipped cream,765
+36,Cherry,287
+37,Icecream,441
+38,Sugar cone,260
+39,Sweet tea,641
+40,Coffee brew,684
