@@ -27,20 +27,18 @@ menu = [
 ]
 
 ingredients = [
-    'Chicken breast', 'Brioche bun', 'Pickles', 'Spicy chicken breast',
-    'Pepper', 'Tomato', 'Lettuce', 'Cheddar Cheese', 'Multigrain brioche bun',
-    'Bacon', 'Colby Jack cheese', 'Flour tortilla', 'Ranch dressing',
-    'Breaded chicken nugget', 'Breaded chicken strip', 'Hard-boiled egg',
-    'Potato fries', 'Strawberry', 'Blueberry', 'Mandarin orange', 'Macaroni',
-    'Cheddar cheese', 'Parmesean cheese', 'Romano Cheese', 'Chicken broth',
-    'Carrots', 'Celery', 'Egg noodles', 'Saltine Cracker', 'Lemonade',
+    'Chicken breast', 'Brioche bun', 'Pickles', 'Spicy chicken breast', 
+    'Grilled chicken breast', 'Pepper', 'Tomato', 'Lettuce',
+    'Cheddar Cheese', 'Multigrain brioche bun', 'Bacon', 'Colby Jack cheese',
+    'Flour tortilla', 'Ranch dressing', 'Breaded chicken nugget',
+    'Breaded chicken strip', 'Hard-boiled egg', 'Potato fries', 'Strawberry',
+    'Blueberry', 'Mandarin orange', 'Macaroni', 'Cheddar cheese',
+    'Parmesean cheese', 'Romano Cheese', 'Chicken broth', 'Carrots',
+    'Celery', 'Egg noodles', 'Saltine Cracker', 'Lemonade',
     'Vanilla ice cream', 'Chocolate chunk cookie', 'Milk', 'Whipped cream',
     'Cherry', 'Icecream', 'Sugar cone', 'Sweet tea', 'Coffee brew'
 ]
 
-
-
-# Define a dictionary of ingredients for each menu item
 inventoryToMenu = {
     "Classic Chicken Sandwich": ["Chicken breast", "Brioche bun", "Pickles"],
     "Spicy Chicken Sandwich": ["Spicy chicken breast", "Brioche bun", "Pickles", "Pepper"],
