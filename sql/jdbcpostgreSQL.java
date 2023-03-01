@@ -19,22 +19,22 @@ public class jdbcpostgreSQL {
 
     String[] queries = {
         // List all customers
-        "SELECT * FROM customers;",
+        "SELECT * FROM customers LIMIT 20;",
 
         // List all inventory items
-        "SELECT * FROM inventory;",
+        "SELECT * FROM inventory LIMIT 20;",
 
         // List all menu items
-        "SELECT * FROM menu;",
+        "SELECT * FROM menu LIMIT 20;",
 
         // List all orders
-        "SELECT * FROM orders;",
+        "SELECT * FROM orders LIMIT 20;",
 
         // List all staff members
-        "SELECT * FROM staff;",
+        "SELECT * FROM staff LIMIT 20;",
 
         // List all restaurants
-        "SELECT * FROM restaurant;",
+        "SELECT * FROM restaurant LIMIT 20;",
 
         // List all inventory items and their associated menu items
         "SELECT inventory.name, menu.name " +
@@ -61,10 +61,7 @@ public class jdbcpostgreSQL {
             "INNER JOIN menu ON menu_to_order.menu_id = menu.menu_id;",
 
         // List all orders placed by a specific customer
-        "SELECT * FROM orders WHERE customer_id = [customer_id];",
-
-        // List all orders placed on a specific date
-        "SELECT * FROM orders WHERE date = '[date]';",
+        "SELECT * FROM orders WHERE customer_id = 3;",
 
         // List all inventory items with a quantity less than 10
         "SELECT * FROM inventory WHERE quantity < 10;",
@@ -76,7 +73,39 @@ public class jdbcpostgreSQL {
         "SELECT orders.order_id, customers.name AS customer_name, staff.name AS staff_name " +
             "FROM orders " +
             "INNER JOIN customers ON orders.customer_id = customers.customer_id " +
-            "INNER JOIN staff ON orders.staff_id = staff.staff_id;"
+            "INNER JOIN staff ON orders.staff_id = staff.staff_id;",
+
+        // Get the count of each menu item
+        "SELECT menu.name, COUNT(menu_to_order.menu_id) AS frequency " +
+            "FROM menu_to_order " +
+            "INNER JOIN menu ON menu_to_order.menu_id = menu.menu_id " +
+            "GROUP BY menu.name;",
+
+        // Get the top 20 dates with the most money
+        "SELECT date, SUM(cost_total) AS total_cost " +
+            "FROM orders " +
+            "GROUP BY date " +
+            "ORDER BY total_cost DESC " +
+            "LIMIT 20;",
+
+        // Get top 20 customers that spent the most
+        "SELECT customers.name AS customer_name, SUM(orders.cost_total) AS total_cost " +
+            "FROM customers " +
+            "INNER JOIN orders ON customers.customer_id = orders.customer_id " +
+            "GROUP BY customers.customer_id " +
+            "ORDER BY total_cost DESC " +
+            "LIMIT 20;",
+
+        // Get the number of unique dates in the orders table
+        "SELECT COUNT(DISTINCT date) AS num_dates " +
+            "FROM orders;",
+
+        // Get total revenue from orders
+        "SELECT SUM(cost_total) AS total_revenue " +
+            "FROM orders;",
+
+        // Get all orders placed on a specific date
+        "SELECT * FROM orders WHERE date = '2022/12/3';"
     };
 
     // Building the connection with your credentials
