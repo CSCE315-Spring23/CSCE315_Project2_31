@@ -65,7 +65,7 @@ inventoryToMenu = {
 header = ["id", "menu_id", "inventory_id", "quantity"]
 
 
-with open('inventoryToMenu.csv', 'w', encoding='UTF8') as f:
+with open('./csv/inventoryToMenu.csv', 'w', encoding='UTF8') as f:
     writer = csv.writer(f)
 
     # write the header
