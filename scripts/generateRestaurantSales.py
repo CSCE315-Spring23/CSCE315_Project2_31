@@ -137,7 +137,7 @@ for i, date in enumerate(date_list):
     print(f"Total sales for {datetime.date.strftime(date, '%m/%d/%Y')}: ${sales_so_far:.2f}")
 
 # Open a new CSV file in write mode
-with open('restaurantSales.csv', mode='w', newline='') as sales_file:
+with open('./csv/restaurantSales.csv', mode='w', newline='') as sales_file:
     # Create a CSV writer object
     sales_writer = csv.writer(sales_file)
 
