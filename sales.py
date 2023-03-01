@@ -1,6 +1,7 @@
 import csv
 import random
 import datetime
+import numpy as np
 
 
 menu_items = [
@@ -94,6 +95,10 @@ daily_sales_goals[game_day_2] = average_daily_sales * 2
 # Create a list to store the orders data
 orders_data = []
 
+customers_ids = np.arange(1, 1001)
+staff_ids = np.arange(1, 16)
+order_id = 1
+
 # Generate sales data for each day in the sales period
 for i, date in enumerate(date_list):
     # Generate a list of distinct menu items for the day
@@ -117,16 +122,22 @@ for i, date in enumerate(date_list):
         # Generate a random price for the item between $1 and $20
         price = round(random.uniform(1, 20), 2)
 
+        customer_id = random.choice(customers_ids)
+        staff_id = random.choice(staff_ids)
+
         # Add the price to the sales so far and update the number of orders for the item
         sales_so_far += price
         orders_per_item[item] += 1
 
         # Add the order data to the orders_data list
         orders_data.append([
+            order_id,
+            price,
             datetime.date.strftime(date, '%m/%d/%Y'),
-            item,
-            price
+            customer_id,
+            staff_id,
         ])
+        order_id += 1
 
     # Print out the total sales for the day
     print(f"Total sales for {datetime.date.strftime(date, '%m/%d/%Y')}: ${sales_so_far:.2f}")
@@ -137,7 +148,7 @@ with open('restaurant_sales.csv', mode='w', newline='') as sales_file:
     sales_writer = csv.writer(sales_file)
 
     # Write the header row to the CSV file
-    sales_writer.writerow(['date', 'item', 'cost_total'])
+    sales_writer.writerow(['order_id', 'cost_total', 'date', 'customer_id', 'staff_id'])
 
     # Write the orders data to the CSV file
     sales_writer.writerows(orders_data)
