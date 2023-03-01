@@ -1,6 +1,6 @@
 import random
 import csv
-
+from datetime import *
 
 
 menu_names = [
@@ -52,6 +52,7 @@ menu = [
 
 
 # Calculate the total sales goal for the period ($1 million)
+startDate = date(2022, 2, 25)
 sales_goal = 1000000
 days_in_period = 365
 # Calculate the average daily sales needed to reach the sales goal
@@ -80,7 +81,6 @@ for i in range(days_in_period):
     # Generate orders until the daily sales goal is reached
     while sales_so_far < daily_sales_goal:
 
-        
         items_in_order = random.randint(1, 10)
         order_items = []
         order_price = 0
@@ -93,15 +93,14 @@ for i in range(days_in_period):
             price = menu[itemIndex][1]
             order_price += price
             
-            
-            
         sales_so_far += order_price
         
 
         # Add the order data to the orders_data list
         orders_data.append([
             order_items,
-            order_price
+            order_price,
+            startDate + timedelta(days=i)
         ])
         orderCount += 1
 
@@ -117,7 +116,7 @@ with open('./csv/menuToOrder.csv', mode='w', newline='') as sales_file:
     sales_writer = csv.writer(sales_file)
 
     # Write the header row to the CSV file
-    sales_writer.writerow(['menu_id', 'order_id', 'quantity'])
+    sales_writer.writerow(['menu_id', 'order_id', 'quantity', 'date'])
 
     for order_id, elem in enumerate(orders_data):
         seenItems = set()
@@ -127,7 +126,8 @@ with open('./csv/menuToOrder.csv', mode='w', newline='') as sales_file:
                 continue
             seenItems.add(item)
             menu_id = menu_names.index(item) + 1
-            sales_writer.writerow([menu_id, order_id+1, qty])
+            d = elem[2]
+            sales_writer.writerow([menu_id, order_id+1, qty, d])
 
 
 # Print a message when the sales data has been generated
