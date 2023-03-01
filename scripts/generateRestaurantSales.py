@@ -4,7 +4,7 @@ import datetime
 import numpy as np
 
 
-menu = [
+menu_items = [
     "Classic Chicken Sandwich",
     "Spicy Chicken Sandwich",
     "Chicken Deluxe Sandwich",
