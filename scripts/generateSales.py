@@ -13,13 +13,13 @@ with open('./csv/menu.csv') as f:
         menu_prices.append(menu_item_price)
 
 orders_data = {}
-with open('./csv/menu_to_order_with_dates.csv') as f:
+with open('./csv/menuToOrderWithDates.csv') as f:
     for line in f:
         if line.startswith('menu_id'):
             continue
         menu_id, order_id, quantity, order_date = line.strip().split(',')
         quantity = int(quantity)
-        price = menu_prices[int(menu_id) - 1]
+        price = menu_prices[int(menu_id) - 1] * quantity
         if order_id in orders_data.keys(): # add to price
             orders_data[order_id][0] += round(price, 2)
         else: # set price and date
@@ -29,7 +29,7 @@ customers_ids = np.arange(1, 1001)
 staff_ids = np.arange(1, 16)
 
 # Open a new CSV file in write mode
-with open('./csv/restaurant_sales.csv', mode='w', newline='') as sales_file:
+with open('./csv/orders.csv', mode='w', newline='') as sales_file:
     # Create a CSV writer object
     sales_writer = csv.writer(sales_file)
 
