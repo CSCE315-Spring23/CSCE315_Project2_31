@@ -96,7 +96,7 @@ order_id = 1
 # Generate sales data for each day in the sales period
 for i, date in enumerate(date_list):
     # Generate a list of distinct menu items for the day
-    menu_items_for_day = random.sample(menu_items, k=random.randint(1, len(menu_items) - 1))
+    menu_items_for_day = random.sample(menu, k=random.randint(1, len(menu) - 1))
 
     # Generate a random number of orders for the day
     num_orders = random.randint(50, 250)
@@ -137,7 +137,7 @@ for i, date in enumerate(date_list):
     print(f"Total sales for {datetime.date.strftime(date, '%m/%d/%Y')}: ${sales_so_far:.2f}")
 
 # Open a new CSV file in write mode
-with open('./csv/restaurantSales.csv', mode='w', newline='') as sales_file:
+with open('./csv/orders.csv', mode='w', newline='') as sales_file:
     # Create a CSV writer object
     sales_writer = csv.writer(sales_file)
 
