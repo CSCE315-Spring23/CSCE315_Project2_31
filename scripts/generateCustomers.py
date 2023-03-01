@@ -5,7 +5,7 @@ import random
 fake = Faker()
 
 # Open a new CSV file for writing
-with open('customers.csv', mode='w', newline='') as file:
+with open('./csv/customers.csv', mode='w', newline='') as file:
     writer = csv.writer(file)
 
     # Write the header row

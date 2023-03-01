@@ -35,7 +35,7 @@ game_days = []
 total_revenue = 0
 
 # create a new CSV file
-with open('../menu_to_order_with_dates.csv', mode='w', newline='') as file:
+with open('./csv/menu_to_order_with_dates.csv', mode='w', newline='') as file:
     writer = csv.writer(file)
     
     # write the header row

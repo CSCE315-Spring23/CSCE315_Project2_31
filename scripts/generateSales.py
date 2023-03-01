@@ -4,7 +4,7 @@ import datetime
 import numpy as np
 
 menu_prices = []
-with open('../menu.csv') as f:
+with open('./csv/menu.csv') as f:
     for line in f:
         if line.startswith('menu_id'):
             continue
@@ -13,7 +13,7 @@ with open('../menu.csv') as f:
         menu_prices.append(menu_item_price)
 
 orders_data = {}
-with open('../menu_to_order_with_dates.csv') as f:
+with open('./csv/menu_to_order_with_dates.csv') as f:
     for line in f:
         if line.startswith('menu_id'):
             continue
@@ -29,7 +29,7 @@ customers_ids = np.arange(1, 1001)
 staff_ids = np.arange(1, 16)
 
 # Open a new CSV file in write mode
-with open('../restaurant_sales.csv', mode='w', newline='') as sales_file:
+with open('./csv/restaurant_sales.csv', mode='w', newline='') as sales_file:
     # Create a CSV writer object
     sales_writer = csv.writer(sales_file)
 
