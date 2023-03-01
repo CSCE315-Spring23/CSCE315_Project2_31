@@ -137,7 +137,7 @@ with open('restaurant_sales.csv', mode='w', newline='') as sales_file:
     sales_writer = csv.writer(sales_file)
 
     # Write the header row to the CSV file
-    sales_writer.writerow(['date', 'item', 'price'])
+    sales_writer.writerow(['date', 'item', 'cost_total'])
 
     # Write the orders data to the CSV file
     sales_writer.writerows(orders_data)
