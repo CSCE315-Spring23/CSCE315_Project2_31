@@ -1,7 +1,7 @@
 import java.awt.*;  
 import javax.swing.*;  
 public class MainDisplayPanel {  
-    static JPanel panel; 
+    JPanel panel; 
     MainDisplayPanel()  {  
         this.panel = new JPanel();  
         this.panel.setBounds(40,80,200,200);    

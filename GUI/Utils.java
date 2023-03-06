@@ -5,7 +5,7 @@ public class Utils {
         return sqlStatement;
     }
 
-    public static String () {
+    public static String Query() {
         String sqlStatement = "";
         return sqlStatement;
     }

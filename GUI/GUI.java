@@ -1,5 +1,7 @@
 import java.sql.*;
+import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 /*
@@ -35,7 +37,7 @@ public class GUI extends JFrame implements ActionListener {
         Statement stmt = conn.createStatement();
         //create an SQL statement
         //TODO Step 2
-        String sqlStatement = "SELECT * FROM staff LIMIT 20;";
+        String sqlStatement = "SELECT * FROM staff LIMIT 5;";
         //send statement to DBMS
         ResultSet result = stmt.executeQuery(sqlStatement);
         while (result.next()) {
@@ -44,30 +46,31 @@ public class GUI extends JFrame implements ActionListener {
       } catch (Exception e){
         JOptionPane.showMessageDialog(null,"Error accessing Database.");
       }
+
       // create a new frame
       f = new JFrame("DB GUI");
-
-
+      f.setLayout(new BorderLayout(15, 15));
       // create a object
       GUI s = new GUI();
       // create a panel
-      JPanel p = new JPanel();
-
+      JPanel top = new JPanel();
+      JPanel bot = new JPanel();
       JButton b = new JButton("Close");
-
       // add actionlistener to button
       b.addActionListener(s);
-      ItemListPanel itemListP = new ItemListPanel(); 
-      //TODO Step 3 
       JTextArea text = new JTextArea(name);
-      //TODO Step 4
-      p.add(text);
-      // add button to panel
-      p.add(b);
-      // add panel to frame
-      f.add(p);
+      top.add(text);
+      top.add(b);
+      f.add(top, BorderLayout.NORTH);
+      f.add(bot, BorderLayout.SOUTH);
+
+      ItemListPanel itemListP = new ItemListPanel(); 
+      MainDisplayPanel mainDisplayP = new MainDisplayPanel();
+      OrderListPanel orderListP = new OrderListPanel(); 
       
-      f.add(itemListP.panel);
+      f.add(itemListP.panel, BorderLayout.WEST);
+      f.add(mainDisplayP.panel, BorderLayout.CENTER);
+      f.add(orderListP.panel, BorderLayout.EAST);
 
       // set the size of frame
       f.setSize(1000, 800);

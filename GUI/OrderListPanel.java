@@ -1,7 +1,7 @@
 import java.awt.*;  
 import javax.swing.*;  
 public class OrderListPanel {  
-static JPanel panel; 
+    JPanel panel; 
     OrderListPanel() {  
         this.panel = new JPanel();  
         this.panel.setBounds(40,80,200,200);    
