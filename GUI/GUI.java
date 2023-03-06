@@ -1,6 +1,7 @@
 import java.sql.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 /*
   TODO:
   1) Change credentials for your own team's database
@@ -49,7 +50,6 @@ public class GUI extends JFrame implements ActionListener {
 
       // create a object
       GUI s = new GUI();
-      PanelExample another = new PanelExample();
       // create a panel
       JPanel p = new JPanel();
 
@@ -57,16 +57,17 @@ public class GUI extends JFrame implements ActionListener {
 
       // add actionlistener to button
       b.addActionListener(s);
-
+      ItemListPanel itemListP = new ItemListPanel(); 
       //TODO Step 3 
       JTextArea text = new JTextArea(name);
       //TODO Step 4
       p.add(text);
       // add button to panel
       p.add(b);
-      f.add(another.panel);
       // add panel to frame
       f.add(p);
+      
+      f.add(itemListP.panel);
 
       // set the size of frame
       f.setSize(1000, 800);

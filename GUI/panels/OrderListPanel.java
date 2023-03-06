@@ -1,9 +1,8 @@
 import java.awt.*;  
 import javax.swing.*;  
-public class PanelExample {  
-    static JPanel panel; 
-    PanelExample()  
-        {  
+public class OrderListPanel {  
+static JPanel panel; 
+    OrderListPanel() {  
         this.panel = new JPanel();  
         this.panel.setBounds(40,80,200,200);    
         this.panel.setBackground(Color.gray);  
@@ -14,9 +13,5 @@ public class PanelExample {
         b2.setBounds(100,100,80,30);    
         b2.setBackground(Color.green);   
         this.panel.add(b1); panel.add(b2);  
-        }
-        public static void main(String args[])  
-        {  
-        new PanelExample();  
-        }  
-    }  
+    }
+}  
