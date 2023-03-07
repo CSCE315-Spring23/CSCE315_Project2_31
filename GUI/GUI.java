@@ -21,22 +21,26 @@ public class GUI extends JFrame implements ActionListener {
     String username = "csce315331_team_31_master";
     String password = "TEAM_31";
     Data db = new Data(database_url, username, password);
-
+    
     if (db.connect()) {
       JOptionPane.showMessageDialog(null, "Opened database successfully");
     } else {
       JOptionPane.showMessageDialog(null, "Error accessing Database.");
       System.exit(0);
     }
-
-    // for (int i = 0; i < 10; i++)
-    //   System.out.println(db.getOrder(i+1));
-
+    
+    for (int i = 0; i < 10; i++)
+    System.out.println(db.getOrder(i+1));
+    
     // create a new frame
     f = new JFrame("Chick-fil-A Order System");
-
+    
     // create a object
     GUI s = new GUI();
+    // button to close program
+    JButton b = new JButton("Close");
+    // add actionlistener to button
+    b.addActionListener(s);
 
     // Set the layout manager of the content pane to GridBagLayout
     f.getContentPane().setLayout(new GridBagLayout());
@@ -71,6 +75,7 @@ public class GUI extends JFrame implements ActionListener {
     mainGrid.weightx = 1.0;
     mainGrid.weighty = 0.1;
     f.getContentPane().add(rowPanel1, mainGrid);
+    rowPanel1.add(b);
 
     // Second row
     // Add the columns to the second row panel
@@ -111,6 +116,7 @@ public class GUI extends JFrame implements ActionListener {
     mainGrid.weightx = 1.0;
     mainGrid.weighty = 0.1;
     f.getContentPane().add(rowPanel3, mainGrid);
+
 
     // set the size of frame to default fullscreen
     // Get the default graphics device and set it to fullscreen mode
