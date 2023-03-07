@@ -1,38 +1,81 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.*;
+
 
 public class ItemListPanel {
     JPanel panel;
 
     ItemListPanel() {
         this.panel = new JPanel();
-        this.panel.setBounds(10, 10, 100, 400);
+        this.panel.setPreferredSize(new Dimension(220, 400));
         this.panel.setBackground(Color.gray);
 
-        JButton b1 = new JButton("Test 2");
-        b1.setBounds(0, 0, 80, 30);
-        b1.setBackground(Color.yellow);
+        JPanel btnPanel = new JPanel(new GridLayout(6, 1, 10, 20));
 
-        JButton b2 = new JButton("Test 2");
-        b2.setBounds(50, 0, 80, 30);
-        b2.setBackground(Color.green);
+        ArrayList<JButton> buttons = new ArrayList<JButton>();
+        // Sandwiches, Other Entrees, Sides, Dessert, Drinks
 
-        b1.addActionListener(new ActionListener() {
+        JButton sandwichesButton = new JButton("Sandwiches");
+        sandwichesButton.setPreferredSize(new Dimension(200, 80));
+        sandwichesButton.setBackground(Color.yellow);
+        buttons.add(sandwichesButton);
+
+        JButton otherEntreesButton = new JButton("Other Entrees");
+        otherEntreesButton.setPreferredSize(new Dimension(200, 80));
+        otherEntreesButton.setBackground(Color.green);
+        buttons.add(otherEntreesButton);
+
+        JButton sidesButton = new JButton("Sides");
+        sidesButton.setPreferredSize(new Dimension(200, 80));
+        sidesButton.setBackground(Color.yellow);
+        buttons.add(sidesButton);
+
+        JButton dessertsButton = new JButton("Desserts");
+        dessertsButton.setPreferredSize(new Dimension(200, 80));
+        dessertsButton.setBackground(Color.green);
+        buttons.add(dessertsButton);
+
+        JButton drinksButton = new JButton("Drinks");
+        drinksButton.setPreferredSize(new Dimension(200, 80));
+        drinksButton.setBackground(Color.yellow);
+        buttons.add(drinksButton);
+
+        sandwichesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // handle button 1 click
                 System.out.println("ItemListPanel: Button 1 Pressed");
             }
         });
 
-        b2.addActionListener(new ActionListener() {
+        otherEntreesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // handle button 2 click
                 System.out.println("ItemListPanel: Button 2 Pressed");
             }
         });
 
-        this.panel.add(b1);
-        this.panel.add(b2);
+        sidesButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("ItemListPanel: Button 3 Pressed");
+            }
+        });
+
+        dessertsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("ItemListPanel: Button 4 Pressed");
+            }
+        });
+
+        drinksButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("ItemListPanel: Button 5 Pressed");
+            }
+        });
+
+        for(int i = 0; i < buttons.size(); i++){
+            btnPanel.add(buttons.get(i));
+        }
+
+        this.panel.add(btnPanel);
     }
 }
