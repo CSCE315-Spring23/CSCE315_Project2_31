@@ -6,7 +6,6 @@ import java.util.*;
 
 public class ItemListPanel {
     JPanel panel;
-
     ItemListPanel() {
         this.panel = new JPanel();
         this.panel.setPreferredSize(new Dimension(220, 400));
