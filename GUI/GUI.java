@@ -19,7 +19,6 @@ public class GUI extends JFrame implements ActionListener {
     {
       //Building the connection
       Connection conn = null;
-      //TODO STEP 1
       try {
         Class.forName("org.postgresql.Driver");
         conn = DriverManager.getConnection("jdbc:postgresql://csce-315-db.engr.tamu.edu/csce315331_team_31",
@@ -36,7 +35,6 @@ public class GUI extends JFrame implements ActionListener {
         //create a statement object
         Statement stmt = conn.createStatement();
         //create an SQL statement
-        //TODO Step 2
         String sqlStatement = "SELECT * FROM staff LIMIT 5;";
         //send statement to DBMS
         ResultSet result = stmt.executeQuery(sqlStatement);
