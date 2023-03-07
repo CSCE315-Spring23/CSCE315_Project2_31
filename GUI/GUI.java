@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.Vector;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -21,20 +22,21 @@ public class GUI extends JFrame implements ActionListener {
     String username = "csce315331_team_31_master";
     String password = "TEAM_31";
     Data db = new Data(database_url, username, password);
-    
+
     if (db.connect()) {
       JOptionPane.showMessageDialog(null, "Opened database successfully");
     } else {
       JOptionPane.showMessageDialog(null, "Error accessing Database.");
       System.exit(0);
     }
-    
-    for (int i = 0; i < 10; i++)
-    System.out.println(db.getOrder(i+1));
-    
+    Vector<Menu> a = db.getMenuByType("Sandwiches");
+    for (int i = 0; i < a.size(); i++) {
+      System.out.println(a.get(i).name);
+    }
+
     // create a new frame
     f = new JFrame("Chick-fil-A Order System");
-    
+
     // create a object
     GUI s = new GUI();
     // button to close program
@@ -116,7 +118,6 @@ public class GUI extends JFrame implements ActionListener {
     mainGrid.weightx = 1.0;
     mainGrid.weighty = 0.1;
     f.getContentPane().add(rowPanel3, mainGrid);
-
 
     // set the size of frame to default fullscreen
     // Get the default graphics device and set it to fullscreen mode
