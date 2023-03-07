@@ -6,6 +6,7 @@ import java.util.*;
 
 public class ItemListPanel {
     JPanel panel;
+
     ItemListPanel() {
         this.panel = new JPanel();
         this.panel.setPreferredSize(new Dimension(220, 400));
@@ -44,30 +45,35 @@ public class ItemListPanel {
         sandwichesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("ItemListPanel: Button 1 Pressed");
+                MainDisplayPanel.testingConnection(1);
             }
         });
 
         otherEntreesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("ItemListPanel: Button 2 Pressed");
+                MainDisplayPanel.testingConnection(2);
             }
         });
 
         sidesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("ItemListPanel: Button 3 Pressed");
+                MainDisplayPanel.testingConnection(3);
             }
         });
 
         dessertsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("ItemListPanel: Button 4 Pressed");
+                MainDisplayPanel.testingConnection(4);
             }
         });
 
         drinksButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("ItemListPanel: Button 5 Pressed");
+                MainDisplayPanel.testingConnection(5);
             }
         });
 

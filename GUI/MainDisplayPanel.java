@@ -33,4 +33,9 @@ public class MainDisplayPanel {
         this.panel.add(b1);
         this.panel.add(b2);
     }
+
+    public static void testingConnection(int buttonNum){
+        System.out.println("Testing from mainDisplayPanel! With Button: " + buttonNum);
+        
+    }
 }
