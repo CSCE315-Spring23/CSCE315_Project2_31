@@ -1,41 +1,45 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.util.*;
+import java.lang.Math;
 
 public class MainDisplayPanel {
     JPanel panel;
+    Vector<Menu> menuItems;
 
-    MainDisplayPanel() {
+    MainDisplayPanel(Data db) {
         this.panel = new JPanel();
-        this.panel.setBounds(10, 10, 100, 400);
+        this.panel.setPreferredSize(new Dimension(300, 400));
         this.panel.setBackground(Color.gray);
-        JButton b1 = new JButton("Button 1");
-        b1.setBounds(0, 0, 80, 30);
-        b1.setBackground(Color.yellow);
-        JButton b2 = new JButton("Button 2");
-        b2.setBounds(50, 0, 80, 30);
-        b2.setBackground(Color.green);
 
-        b1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // handle button 1 click
-                System.out.println("MainDisplayPanel: Button 1 Pressed");
+        menuItems = db.getAllMenuItems();
+        
+
+        int dims = ((int) Math.sqrt((double) menuItems.size())) + 1;
+        JPanel btnPanel = new JPanel(new GridLayout(dims, dims, 10, 10));
+        
+        // create buttons (up to )
+        ActionListener addToOrder = new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                JButton temp = (JButton) e.getSource();
+                System.out.println("Clicked on and added: " + temp.getText() + " to order!");
             }
-        });
+        };
+        
+        for (int i = 0; i < menuItems.size() - 15; i++){
+            JButton btn = new JButton();
+            btn.setText(menuItems.get(i).name);
+            btn.addActionListener(addToOrder);
+            btnPanel.add(btn);
+        }
+        
+        this.panel.add(btnPanel);
 
-        b2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // handle button 2 click
-                System.out.println("MainDisplayPanel: Button 2 Pressed");
-            }
-        });
-
-        this.panel.add(b1);
-        this.panel.add(b2);
     }
 
     public static void testingConnection(int buttonNum){
         System.out.println("Testing from mainDisplayPanel! With Button: " + buttonNum);
-        
+
     }
 }
