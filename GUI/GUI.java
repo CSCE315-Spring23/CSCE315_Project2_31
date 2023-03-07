@@ -29,24 +29,8 @@ public class GUI extends JFrame implements ActionListener {
       System.exit(0);
     }
 
-    String name = "";
-    String sqlStatement = "SELECT * FROM staff LIMIT 5;";
-    ResultSet result = db.executeSQL(sqlStatement); // Accessing the db
-    if (result == null) {
-      JOptionPane.showMessageDialog(null, "Error accessing Database.");
-      System.exit(0);
-    }
-    try { // Reading the data
-      while (result.next()) {
-        name += result.getString("name") + "\n";
-      }
-    } catch (Exception e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
-      JOptionPane.showMessageDialog(null, "Error reading info from Database.");
-      System.exit(0);
-    }
-
-    System.out.println(db.getOrdersByCustomerId(304).size());
+    for (int i = 0; i < 10; i++)
+      System.out.println(db.getOrder(i+1));
 
     // create a new frame
     f = new JFrame("Chick-fil-A Order System");

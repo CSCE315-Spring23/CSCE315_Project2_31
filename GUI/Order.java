@@ -6,10 +6,10 @@ public class Order {
     public java.sql.Date date;
     public int customer_id;
     public int staff_id;
-    public Vector<MyPair<Menu, Integer>> menu_items;
+    public Vector<MyPair<Integer, Integer>> menu_items; // menu_id, quantity
 
     Order(int order_id, double cost_total, java.sql.Date date, int customer_id, int staff_id,
-            Vector<MyPair<Menu, Integer>> menu_items) {
+            Vector<MyPair<Integer, Integer>> menu_items) {
         this.order_id = order_id;
         this.cost_total = cost_total;
         this.date = date;

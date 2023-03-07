@@ -66,7 +66,7 @@ public class Data {
         ResultSet res = this.executeSQL(sqlStatement);
         try {
             res.next();
-            Vector<MyPair<Menu, Integer>> menu_items = this.getMenuItemsByOrderId(order_id);
+            Vector<MyPair<Integer, Integer>> menu_items = this.getMenuItemsByOrderId(order_id);
             Order out = new Order(
                     res.getInt("order_id"), res.getDouble("cost_total"), res.getDate("date"),
                     res.getInt("customer_id"), res.getInt("staff_id"),
@@ -85,7 +85,7 @@ public class Data {
         ResultSet res = this.executeSQL(sqlStatement);
         try {
             while (res.next()) {
-                Vector<MyPair<Menu, Integer>> menu_items = this.getMenuItemsByOrderId(res.getInt("order_id"));
+                Vector<MyPair<Integer, Integer>> menu_items = this.getMenuItemsByOrderId(res.getInt("order_id"));
                 Order order = new Order(
                         res.getInt("order_id"), res.getDouble("cost_total"), res.getDate("date"),
                         res.getInt("customer_id"), res.getInt("staff_id"),
@@ -101,16 +101,17 @@ public class Data {
     }
 
     public Vector<Order> getOrdersByDate(java.sql.Date date) {
-        String sqlStatement = "SELECT * FROM orders WHERE date = " + date + ";";
+        String sqlStatement = "SELECT * FROM orders WHERE date = '" + date.toString() + "';";
         Vector<Order> out = new Vector<Order>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
             while (res.next()) {
-                Vector<MyPair<Menu, Integer>> menu_items = this.getMenuItemsByOrderId(res.getInt("order_id"));
+                Vector<MyPair<Integer, Integer>> menu_items = this.getMenuItemsByOrderId(res.getInt("order_id"));
                 Order order = new Order(
-                        res.getInt("order_id"), res.getDouble("cost_total"), res.getDate("date"),
-                        res.getInt("customer_id"), res.getInt("staff_id"),
-                        menu_items);
+                    res.getInt("order_id"), res.getDouble("cost_total"), res.getDate("date"),
+                    res.getInt("customer_id"), res.getInt("staff_id"),
+                    menu_items
+                );
                 out.add(order);
             }
             return out;
@@ -127,7 +128,7 @@ public class Data {
         ResultSet res = this.executeSQL(sqlStatement);
         try {
             while (res.next()) {
-                Vector<MyPair<Menu, Integer>> menu_items = this.getMenuItemsByOrderId(res.getInt("order_id"));
+                Vector<MyPair<Integer, Integer>> menu_items = this.getMenuItemsByOrderId(res.getInt("order_id"));
                 Order order = new Order(
                         res.getInt("order_id"), res.getDouble("cost_total"), res.getDate("date"),
                         res.getInt("customer_id"), res.getInt("staff_id"),
@@ -147,7 +148,7 @@ public class Data {
         ResultSet res = this.executeSQL(sqlStatement);
         try {
             res.next();
-            Vector<MyPair<Inventory, Integer>> inventory_items = this.getInventoryItemsByMenuId(menu_id);
+            Vector<MyPair<Integer, Integer>> inventory_items = this.getInventoryItemsByMenuId(menu_id);
             Menu out = new Menu(
                     res.getInt("menu_id"), res.getString("name"), res.getDouble("price"),
                     inventory_items);
@@ -165,8 +166,7 @@ public class Data {
         ResultSet res = this.executeSQL(sqlStatement);
         try {
             while (res.next()) {
-                Vector<MyPair<Inventory, Integer>> inventory_items = this
-                        .getInventoryItemsByMenuId(res.getInt("menu_id"));
+                Vector<MyPair<Integer, Integer>> inventory_items = this.getInventoryItemsByMenuId(res.getInt("menu_id"));
                 Menu item = new Menu(
                         res.getInt("menu_id"), res.getString("name"), res.getDouble("price"),
                         inventory_items);
@@ -237,16 +237,14 @@ public class Data {
         return null;
     }
 
-    public Vector<MyPair<Inventory, Integer>> getInventoryItemsByMenuId(int menu_id) {
+    public Vector<MyPair<Integer, Integer>> getInventoryItemsByMenuId(int menu_id) {
         String sqlStatement = "SELECT * FROM inventory_to_menu WHERE inventory_id = " + menu_id + ';';
-        Vector<MyPair<Inventory, Integer>> out = new Vector<MyPair<Inventory, Integer>>();
+        Vector<MyPair<Integer, Integer>> out = new Vector<MyPair<Integer, Integer>>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
             while (res.next()) {
                 // (inventory_id, menu_id, quantity)
-                Inventory item = this.getInventory(res.getInt("inventory_id"));
-                Integer quantity = res.getInt("quantity");
-                out.add(new MyPair<Inventory, Integer>(item, quantity));
+                out.add(new MyPair<Integer, Integer>(res.getInt("inventory_id"), res.getInt("quantity")));
             }
             return out;
         } catch (Exception e) {
@@ -274,16 +272,14 @@ public class Data {
         return null;
     }
 
-    public Vector<MyPair<Menu, Integer>> getMenuItemsByOrderId(int order_id) {
+    public Vector<MyPair<Integer, Integer>> getMenuItemsByOrderId(int order_id) {
         String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id = " + order_id + ';';
-        Vector<MyPair<Menu, Integer>> out = new Vector<MyPair<Menu, Integer>>();
+        Vector<MyPair<Integer, Integer>> out = new Vector<MyPair<Integer, Integer>>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
             while (res.next()) {
                 // (menu_id, order_id, quantity)
-                Menu item = this.getMenu(res.getInt("menu_id"));
-                Integer quantity = res.getInt("quantity");
-                out.add(new MyPair<Menu, Integer>(item, quantity));
+                out.add(new MyPair<Integer, Integer>(res.getInt("menu_id"), res.getInt("quantity")));
             }
             return out;
         } catch (Exception e) {
