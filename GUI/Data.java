@@ -143,6 +143,27 @@ public class Data {
         return null;
     }
 
+    public Vector<Order> getRecentOrders() {
+        String sqlStatement = "SELECT * FROM orders LIMIT 10;";
+        Vector<Order> out = new Vector<Order>();
+        ResultSet res = this.executeSQL(sqlStatement);
+        try {
+            while (res.next()) {
+                Vector<MyPair<Integer, Integer>> menu_items = this.getMenuItemsByOrderId(res.getInt("order_id"));
+                Order order = new Order(
+                        res.getInt("order_id"), res.getDouble("cost_total"), res.getDate("date"),
+                        res.getInt("customer_id"), res.getInt("staff_id"),
+                        menu_items);
+                out.add(order);
+            }
+            return out;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return null;
+    }
+
     public Menu getMenu(int menu_id) {
         String sqlStatement = "SELECT * FROM menu WHERE menu_id = " + menu_id + ";";
         ResultSet res = this.executeSQL(sqlStatement);

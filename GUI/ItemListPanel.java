@@ -7,7 +7,7 @@ import java.util.*;
 public class ItemListPanel {
     JPanel panel;
 
-    ItemListPanel() {
+    ItemListPanel(Data db) {
         this.panel = new JPanel();
         this.panel.setPreferredSize(new Dimension(200, 400));
         this.panel.setBackground(Color.gray);

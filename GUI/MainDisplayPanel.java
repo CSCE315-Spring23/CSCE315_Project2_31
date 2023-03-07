@@ -33,13 +33,10 @@ public class MainDisplayPanel {
             btn.addActionListener(addToOrder);
             btnPanel.add(btn);
         }
-        
         this.panel.add(btnPanel);
-
     }
 
     public static void testingConnection(int buttonNum){
         System.out.println("Testing from mainDisplayPanel! With Button: " + buttonNum);
-
     }
 }

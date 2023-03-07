@@ -29,8 +29,8 @@ public class GUI extends JFrame implements ActionListener {
       System.exit(0);
     }
     
-    for (int i = 0; i < 10; i++)
-    System.out.println(db.getOrder(i+1));
+    // for (int i = 0; i < 10; i++)
+    // System.out.println(db.getOrder(i+1));
     
     // create a new frame
     f = new JFrame("Chick-fil-A Order System");
@@ -59,8 +59,8 @@ public class GUI extends JFrame implements ActionListener {
     rowPanel3.setPreferredSize(new Dimension(200, 50));
     rowPanel3.setBackground(Color.BLUE);
 
-    OrderListPanel orderListP = new OrderListPanel();
-    ItemListPanel itemListP = new ItemListPanel();
+    OrderListPanel orderListP = new OrderListPanel(db);
+    ItemListPanel itemListP = new ItemListPanel(db);
     MainDisplayPanel mainDisplayP = new MainDisplayPanel(db);
 
     // Add the panels to the content pane using GridBagConstraints

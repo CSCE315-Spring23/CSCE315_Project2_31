@@ -1,38 +1,30 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.util.*;
 
 public class OrderListPanel {
     JPanel panel;
 
-    OrderListPanel() {
+    OrderListPanel(Data db) {
         this.panel = new JPanel();
-        this.panel.setBounds(10, 10, 100, 400);
-
+        this.panel.setPreferredSize(new Dimension(350, 400));
         this.panel.setBackground(Color.gray);
-        JButton b1 = new JButton("Button 1");
-        b1.setBounds(0, 0, 80, 30);
-        b1.setBackground(Color.yellow);
 
-        JButton b2 = new JButton("Button 2");
-        b2.setBounds(50, 0, 80, 30);
-        b2.setBackground(Color.green);
+        JPanel orderListView = new JPanel(new GridLayout(10, 1, 10, 10)); 
+        orderListView.setPreferredSize(new Dimension(340, 400));
+        
+        Vector<Order> orders = db.getRecentOrders();
+        for (int i = orders.size()-9; i < orders.size(); i++){
+            JPanel order = new JPanel();
+            order.setPreferredSize(new Dimension(300, 50));
+            JTextArea orderContent = new JTextArea();
+            orderContent.setPreferredSize(new Dimension(300, 50));
+            orderContent.append("Order #" + orders.get(i).order_id + " --- Total Cost: " + orders.get(i).cost_total);
+            order.add(orderContent);
+            orderListView.add(order);
+        }
 
-        b1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // handle button 1 click
-                System.out.println("OrderListPanel: Button 1 Pressed");
-            }
-        });
-
-        b2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // handle button 2 click
-                System.out.println("OrderListPanel: Button 2 Pressed");
-            }
-        });
-
-        this.panel.add(b1);
-        this.panel.add(b2);
+        this.panel.add(orderListView);
     }
 }
