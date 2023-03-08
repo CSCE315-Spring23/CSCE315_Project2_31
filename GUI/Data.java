@@ -353,8 +353,28 @@ public class Data {
         return false; // ERROR
     }
 
-    public boolean addMenuItem() {
-        return false;
+    public boolean addMenuItem(String name, double price, String type) {
+        String query = "INSERT INTO menu (name, price, type) VALUES ('" + name + "', " + price + ", '" + type + "');";
+        try {
+            this.executeSQL(query);
+            return true; // SUCCESS
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return false; // ERROR
+    }
+
+    public boolean removeMenuItem(int menu_id) {
+        String query = "DELETE FROM menu WHERE menu_id = " + menu_id + ";";
+        try {
+            this.executeSQL(query);
+            return true; // SUCCESS
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return false; // ERROR
     }
 
     public boolean addItemToOrder(String item_name) {
@@ -365,12 +385,27 @@ public class Data {
         return false;
     }
 
-    public boolean changeMenuPrice(int menu_id, double new_price) {
-
-        return false;
+    public boolean updateMenuPrice(int menu_id, double newPrice) {
+        String query = "UPDATE menu SET price = " + newPrice + " WHERE menu_id = " + menu_id + ";";
+        try {
+            this.executeSQL(query);
+            return true; // SUCCESS
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return false; // ERROR
     }
 
-    public boolean changeOrderPrice() {
-        return false;
+    public boolean updateOrderPrice(int order_id, double newCostTotal) {
+        String template = "UPDATE orders SET cost_total = " + newCostTotal + " WHERE order_id = " + order_id + ";";
+        try {
+            this.executeSQL(template);
+            return true; // SUCCESS
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return false; // ERROR
     }
 }
