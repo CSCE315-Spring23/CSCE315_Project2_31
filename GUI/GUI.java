@@ -123,7 +123,7 @@ public class GUI extends JFrame implements ActionListener {
     });
     footerPanel.add(switchServerToManagerButton);
     f.add(footerPanel, BorderLayout.SOUTH);
-
+    
     // Make the JFrame visible
     f.setVisible(true);
     // closing the connection

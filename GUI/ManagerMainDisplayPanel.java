@@ -22,9 +22,6 @@ public class ManagerMainDisplayPanel {
         drawDisplay(false);
     }
 
-
-
-
     // public void itemAdded(String menuItemName) {
     //     // Update the orderItems vector and totalCost
     //     System.out.println("called itemAdded");
