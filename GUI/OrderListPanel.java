@@ -7,7 +7,7 @@ public class OrderListPanel {
 
     OrderListPanel() {
         this.panel = new JPanel();
-        this.panel.setBounds(10, 10, 100, 400);
+        this.panel.setBounds(10, 10, 50, 400);
 
         this.panel.setBackground(Color.gray);
         JButton b1 = new JButton("Button 1");

@@ -103,7 +103,7 @@ public class GUI extends JFrame implements ActionListener {
     mainGrid.gridy = 1;
     mainGrid.fill = GridBagConstraints.VERTICAL;
     mainGrid.anchor = GridBagConstraints.EAST;
-    mainGrid.weightx = 0.5;
+    mainGrid.weightx = 1.0;
     mainGrid.weighty = 0.8;
     f.getContentPane().add(mainDisplayP.panel, mainGrid);
 
