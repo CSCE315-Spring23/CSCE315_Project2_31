@@ -488,7 +488,7 @@ public class Data {
      *         pairs that are in the menu item
      */
     public Vector<MyPair<Integer, Integer>> getInventoryItemsByMenuId(int menu_id) {
-        String sqlStatement = "SELECT * FROM inventory_to_menu WHERE inventory_id = " + menu_id + ";";
+        String sqlStatement = "SELECT * FROM inventory_to_menu WHERE menu_id = " + menu_id + ";";
         Vector<MyPair<Integer, Integer>> out = new Vector<MyPair<Integer, Integer>>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
@@ -624,10 +624,12 @@ public class Data {
         for (int i = 0; i < menu_items.size(); i++) {
             Vector<MyPair<Integer, Integer>> inventory_items = this
                     .getInventoryItemsByMenuId(menu_items.get(i).getFirst());
+            // System.out.println(inventory_items.size());
             for (int j = 0; j < inventory_items.size(); j++) {
-                String sqlStatement3 = "UPDATE inventory SET quantity = (quantity - "
+                String sqlStatement3 = "UPDATE inventory SET quantity = quantity - "
                         + inventory_items.get(j).getSecond()
-                        + ") WHERE inventory_id = " + inventory_items.get(j).getFirst() + ";";
+                        + " WHERE inventory_id = " + inventory_items.get(j).getFirst() + ";";
+                // System.out.println("Calling SQL Command: " + sqlStatement3);
                 try {
                     this.executeUpdateSQL(sqlStatement3);
                 } catch (Exception e) {

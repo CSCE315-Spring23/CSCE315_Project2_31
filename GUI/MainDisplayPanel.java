@@ -104,8 +104,11 @@ public class MainDisplayPanel {
             out.add(new MyPair<Integer, Integer>(
                     this.currOrderItems.get(i).getFirst().menu_id,
                     this.currOrderItems.get(i).getSecond()));
+            // System.out.println(
+            // "[" + currOrderItems.get(i).getFirst().name + "-" +
+            // currOrderItems.get(i).getFirst().menu_id + ","
+            // + currOrderItems.get(i).getSecond() + "]");
         }
-
         return out;
     }
 

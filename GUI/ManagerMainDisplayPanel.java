@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
+import java.util.concurrent.Flow;
 
 public class ManagerMainDisplayPanel {
     JPanel panel;
@@ -110,7 +111,7 @@ public class ManagerMainDisplayPanel {
 
             JButton submitButton = new JButton("Add by Name to inventory");
             submitButton.addActionListener(changeInventoryItemsDisplay);
-            
+
             newItemPanel.add(nameLabel);
             newItemPanel.add(nameTextField);
             newItemPanel.add(quantityLabel);
@@ -118,11 +119,19 @@ public class ManagerMainDisplayPanel {
             newItemPanel.add(submitButton);
 
             for (int i = 0; i < inventoryItems.size(); i++) {
+                // panel with two rows and second row is split into two columns
+                JPanel qtyBtnPanel = new JPanel(new BorderLayout());
+                Dimension panelSize = qtyBtnPanel.getSize();
+                qtyBtnPanel.setPreferredSize(new Dimension(panelSize.width, (int) (panelSize.height * 0.85)));
+
                 // button for selecting item to add
                 JLabel btn = new JLabel();
                 btn.setText(
                         inventoryItems.get(i).name + " | " + inventoryItems.get(i).quantity);
                 btnPanel.add(btn);
+
+                // add buttons to handle quantity edits
+                btnPanel.add(qtyBtnPanel);
             }
 
         } else {
@@ -185,7 +194,8 @@ public class ManagerMainDisplayPanel {
         // menu_id; name; price; type; inventory_items
         // (Vector<MyPair<inventory_id, quantity>>);
 
-        JPanel itemCreationPanel = new JPanel(new GridLayout(5, 2));
+        JPanel fullItemCreatePanel = new JPanel(new FlowLayout());
+        JPanel itemCreationPanel = new JPanel(new GridLayout(4, 2));
 
         JLabel nameLabel = new JLabel("Menu Item Name: ");
         JLabel priceLabel = new JLabel("Menu Item Price: ");
@@ -224,12 +234,13 @@ public class ManagerMainDisplayPanel {
         itemCreationPanel.add(typeTextField);
         itemCreationPanel.add(ingredientsLabel);
         itemCreationPanel.add(ingredientsTextField);
-        itemCreationPanel.add(addNewItemButton);
+        fullItemCreatePanel.add(itemCreationPanel);
+        fullItemCreatePanel.add(addNewItemButton);
 
         panel.removeAll();
         this.panel.add(newItemPanel);
         this.panel.add(btnPanel);
-        this.panel.add(itemCreationPanel);
+        this.panel.add(fullItemCreatePanel);
         this.panel.validate();
         this.panel.repaint();
     }
