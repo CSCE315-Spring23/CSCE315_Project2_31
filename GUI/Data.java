@@ -14,6 +14,11 @@ public class Data {
         this.conn = null;
     }
 
+    /**
+     * Connects to the PostgreSQL database.
+     *
+     * @return boolean for success (true) or failure (false)
+     */
     public boolean connect() {
         try {
             Class.forName("org.postgresql.Driver");
@@ -26,6 +31,11 @@ public class Data {
         return false; // ERROR
     }
 
+    /**
+     * Disconnects from the PostgreSQL database.
+     *
+     * @return boolean for success (true) or failure (false)
+     */
     public boolean disconnect() {
         try {
             this.conn.close();
@@ -37,6 +47,12 @@ public class Data {
         return false; // ERROR
     }
 
+    /**
+     * Executes SQL query that has a return value.
+     *
+     * @param sqlStatement an SQL statement with a return value
+     * @return a ResultSet result from query
+     */
     public ResultSet executeSQL(String sqlStatement) {
         try {
             // create a statement object
@@ -56,6 +72,11 @@ public class Data {
         return null;
     }
 
+    /**
+     * Executes SQL query that does not have return value.
+     *
+     * @param sqlStatement an SQL statement without a return value
+     */
     public void executeUpdateSQL(String sqlStatement) {
         try {
             // create a statement object
@@ -78,7 +99,12 @@ public class Data {
     // Accessing
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+     * Returns the Order Object from the database with specified order_id
+     *
+     * @param order_id an order_id int
+     * @return a Order object resulting from the query
+     */
     public Order getOrder(int order_id) {
         String sqlStatement = "SELECT * FROM orders WHERE order_id = " + order_id + ";";
         ResultSet res = this.executeSQL(sqlStatement);
@@ -97,6 +123,12 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets all the orders from the database that match the customer id.
+     *
+     * @param customer_id an for the customer to search by
+     * @return a vector of orders matching the customer id
+     */
     public Vector<Order> getOrdersByCustomerId(int customer_id) {
         String sqlStatement = "SELECT * FROM orders WHERE customer_id = " + customer_id + ";";
         Vector<Order> out = new Vector<Order>();
@@ -118,6 +150,12 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets all the orders from the database that match the date.
+     *
+     * @param date a date to search by
+     * @return a vector of orders matching the date
+     */
     public Vector<Order> getOrdersByDate(java.sql.Date date) {
         String sqlStatement = "SELECT * FROM orders WHERE date = '" + date.toString() + "';";
         Vector<Order> out = new Vector<Order>();
@@ -139,6 +177,11 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets all the orders from the database.
+     *
+     * @return a vector of orders
+     */
     public Vector<Order> getAllOrders() {
         String sqlStatement = "SELECT * FROM orders;";
         Vector<Order> out = new Vector<Order>();
@@ -160,6 +203,12 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets the 25 most recent orders ordered by order_id and returns a
+     * {@code Vector<Order>}
+     *
+     * @return a vector of recent Order object
+     */
     public Vector<Order> getRecentOrders() {
         String sqlStatement = "SELECT * FROM orders ORDER BY order_id DESC LIMIT 25;";
         Vector<Order> out = new Vector<Order>();
@@ -181,6 +230,12 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets the menu item from the database that matches the menu_id.
+     *
+     * @param menu_id an id for the menu item to search by
+     * @return a menu item matching the menu_id
+     */
     public Menu getMenu(int menu_id) {
         String sqlStatement = "SELECT * FROM menu WHERE menu_id = " + menu_id + ";";
         ResultSet res = this.executeSQL(sqlStatement);
@@ -198,6 +253,12 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets the menu item from the database that matches the name.
+     *
+     * @param name a name to search by
+     * @return an order matching the name
+     */
     public Menu getMenuByName(String name) {
         String sqlStatement = "SELECT * FROM menu WHERE name = '" + name + "';";
         ResultSet res = this.executeSQL(sqlStatement);
@@ -215,6 +276,11 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets all the menu items from the database.
+     *
+     * @return a vector of menu items
+     */
     public Vector<Menu> getAllMenuItems() {
         String sqlStatement = "SELECT * FROM menu;";
         Vector<Menu> out = new Vector<Menu>();
@@ -236,6 +302,12 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets all the orders from the database that match the specified foodType.
+     *
+     * @param foodType a String for foodtype to search by
+     * @return a vector of orders matching the foodType
+     */
     public Vector<Menu> getMenuByType(String foodType) {
         String sqlStatement = "SELECT * FROM menu WHERE type = '" + foodType + "';";
         Vector<Menu> out = new Vector<Menu>();
@@ -257,6 +329,12 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets the inventory item from the database that matches the inventory_id.
+     *
+     * @param inventory_id an id for the inventory item to search by
+     * @return an inventory id that matches the inventory_id
+     */
     public Inventory getInventory(int inventory_id) {
         String sqlStatement = "SELECT * FROM inventory WHERE inventory_id = " + inventory_id + ";";
         ResultSet res = this.executeSQL(sqlStatement);
@@ -272,6 +350,12 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets inventory from the database that match the specified name.
+     *
+     * @param name a String for name to search by
+     * @return a Inventory object matching the name
+     */
     public Inventory getInventoryByName(String name) {
         String sqlStatement = "SELECT * FROM inventory WHERE name = '" + name + "';";
         System.out.println(sqlStatement);
@@ -289,6 +373,11 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets all the inventory items from the database.
+     *
+     * @return a vector of inventory items
+     */
     public Vector<Inventory> getAllInventoryItems() {
         String sqlStatement = "SELECT * FROM inventory;";
         Vector<Inventory> out = new Vector<Inventory>();
@@ -307,6 +396,11 @@ public class Data {
         return null;
     }
 
+    /**
+     * Get the restaurant entity.
+     *
+     * @return a Restaurant object
+     */
     public Restaurant getRestaurant() {
         String sqlStatement = "SELECT * FROM restaurant;";
         ResultSet res = this.executeSQL(sqlStatement);
@@ -328,6 +422,15 @@ public class Data {
     // * Menu-Order
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Gets all the menu items that make use of an inventory item. That is, returns
+     * all menu items in the
+     * inventory_to_menu junction table such that the inventory_id matches the
+     * provided parameter.
+     *
+     * @param inventory_id an id for the inventory item to search by
+     * @return a vector of menu items that have the inventory item
+     */
     public Vector<Menu> getMenuItemsByInventoryId(int inventory_id) {
         String sqlStatement = "SELECT * FROM inventory_to_menu WHERE inventory_id = " + inventory_id + ";";
         Vector<Menu> out = new Vector<Menu>();
@@ -346,6 +449,17 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets all the inventory items that are in a menu item. That is, returns all
+     * inventory items in the
+     * inventory_to_menu junction table such that the menu_id matches the provided
+     * parameter.
+     *
+     * @param menu_id an id for the menu item to search by
+     * @return a {@code Vector<MyPair<Integer, Integer>>} of (inventory item,
+     *         quantity)
+     *         pairs that are in the menu item
+     */
     public Vector<MyPair<Integer, Integer>> getInventoryItemsByMenuId(int menu_id) {
         String sqlStatement = "SELECT * FROM inventory_to_menu WHERE inventory_id = " + menu_id + ";";
         Vector<MyPair<Integer, Integer>> out = new Vector<MyPair<Integer, Integer>>();
@@ -363,6 +477,15 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets all the order items that make use of a menu item. That is, returns all
+     * order items in the
+     * menu_to_order junction table such that the menu_id matches the provided
+     * parameter.
+     *
+     * @param menu_id an id for the menu item to search by
+     * @return a vector of order items that have the menu item
+     */
     public Vector<Order> getOrdersByMenuId(int menu_id) {
         String sqlStatement = "SELECT * FROM menu_to_order WHERE menu_id = " + menu_id + ";";
         Vector<Order> out = new Vector<Order>();
@@ -381,6 +504,15 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets menu items that are in a order from the database given the order_id
+     *
+     * @param order_id a int for order_id to search by
+     * @return a {@code Vector<MyPair<Integer, Integer>>} object with the consisting
+     *         of
+     *         pairs
+     *         of the menu_id and quantity
+     */
     public Vector<MyPair<Integer, Integer>> getMenuItemsByOrderId(int order_id) {
         String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id = " + order_id + ";";
         Vector<MyPair<Integer, Integer>> out = new Vector<MyPair<Integer, Integer>>();
@@ -406,6 +538,23 @@ public class Data {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Makes order and make all necessary changes to database and returns the status
+     * of the queries
+     * - adds new order entry into orders table
+     * - adds all menu_to_order entries
+     * - decrements all inventory items by the amounts used
+     * 
+     *
+     * @param cost_total  a int for cost_total of the order
+     * @param date        a date for date of the order
+     * @param customer_id a int for customer_id of the order
+     * @param staff_id    a int for staff_id of the order
+     * @param menu_items  a {@code Vector<MyPair<Integer, Integer>>} for menu_items
+     *                    in the
+     *                    order
+     * @return newly generated order_id
+     */
     public int makeOrder(
             double cost_total, java.sql.Date date, int customer_id, int staff_id,
             Vector<MyPair<Integer, Integer>> menu_items) {
@@ -466,6 +615,14 @@ public class Data {
         return order_id;
     }
 
+    /**
+     * Removes order and make all necessary changes to database and
+     * - removes all corresponding menu_to_order entries
+     * - removes order entry into orders table
+     *
+     * @param order_id a int for order_id to search by
+     * @return a boolean value for success (true) or failure (false)
+     */
     public boolean removeOrder(int order_id) {
         String sqlStatement1 = "DELETE * FROM menu_to_order WHERE order_id = " + order_id + ";";
         try {
@@ -490,6 +647,19 @@ public class Data {
         return true;
     }
 
+    /**
+     * Adds a menu item and make all necessary changes to database and
+     * - adds new menu entry into menu table
+     * - adds all inventory_to_menu entries
+     *
+     * @param name            a name for the new menu item
+     * @param price           a double for price of the menu item
+     * @param type            a string for type of the menu item
+     * @param inventory_items a {@code Vector<MyPair<Integer, Integer>>} for
+     *                        inventory_items
+     *                        in the menu item
+     * @return a boolean value for success (true) or failure (false)
+     */
     public boolean addMenuItem(String name, double price, String type,
             Vector<MyPair<Integer, Integer>> inventory_items) {
         // Make Menu Entry
@@ -515,9 +685,9 @@ public class Data {
 
         // Make inventory_to_menu Entry(ies)
         for (int i = 0; i < inventory_items.size(); i++) {
-            String sqlStatement2 = "INSERT INTO inventory_to_menu (inventory_id, menu_id, quantity) VALUES " 
-            + "(" + inventory_items.get(i).getFirst() + ", " + menu_id + ", "
-            + inventory_items.get(i).getSecond() + ");";
+            String sqlStatement2 = "INSERT INTO inventory_to_menu (inventory_id, menu_id, quantity) VALUES "
+                    + "(" + inventory_items.get(i).getFirst() + ", " + menu_id + ", "
+                    + inventory_items.get(i).getSecond() + ");";
             try {
                 this.executeUpdateSQL(sqlStatement2);
             } catch (Exception e) {
@@ -531,6 +701,15 @@ public class Data {
         return true;
     }
 
+    /**
+     * Removes a menu item and make all necessary changes to database and
+     * - removes all corresponding inventory_to_menu entries
+     * - removes all corresponding menu_to_order entries
+     * - removes menu entry from menu table
+     *
+     * @param menu_id a menu_id to search by
+     * @return a boolean value for success (true) or failure (false)
+     */
     public boolean removeMenuItem(int menu_id) {
         String sqlStatement1 = "DELETE * FROM inventory_to_menu WHERE menu_id = " + menu_id + ";";
         try {
@@ -566,6 +745,13 @@ public class Data {
         return true;
     }
 
+    /**
+     * Updates a menu item and sets its price.
+     *
+     * @param menu_id  a menu_id to search by
+     * @param newPrice a new price to set
+     * @return a boolean value for success (true) or failure (false)
+     */
     public boolean updateMenuPriceById(int menu_id, double newPrice) {
         String query = "UPDATE menu SET price = " + newPrice + " WHERE menu_id = " + menu_id + ";";
         try {
@@ -578,6 +764,13 @@ public class Data {
         return false; // ERROR
     }
 
+    /**
+     * Updates a menu item and sets its price.
+     *
+     * @param name     a name to search by
+     * @param newPrice a new price to set
+     * @return a boolean value for success (true) or failure (false)
+     */
     public boolean updateMenuPriceByName(String name, double newPrice) {
         String query = "UPDATE menu SET price = " + newPrice + " WHERE name = '" + name + "';";
         try {
@@ -590,6 +783,14 @@ public class Data {
         return false; // ERROR
     }
 
+    /**
+     * Adds a menu item to an order.
+     *
+     * @param order_id an order id to search by
+     * @param menu_id  a menu_id to add
+     * @param quantity a quantity for the menu item added
+     * @return a boolean value for success (true) or failure (false)
+     */
     public boolean addMenuItemToOrder(int order_id, int menu_id, int quantity) {
         // Get order
         Order original_order = this.getOrder(order_id);
@@ -631,6 +832,13 @@ public class Data {
         return true;
     }
 
+    /**
+     * Removes a menu item from an order.
+     *
+     * @param order_id a order_id to search by
+     * @param menu_id  a menu_id to search b
+     * @return a boolean value for success (true) or failure (false)
+     */
     public boolean removeMenuItemFromOrder(int order_id, int menu_id) {
         // Get order
         Order original_order = this.getOrder(order_id);
@@ -667,6 +875,15 @@ public class Data {
         return true;
     }
 
+    /**
+     * Updates the price of an order to a new cost from the user
+     *
+     * @param order_id     id of the order that is being updated
+     * @param newCostTotal the new price of the order
+     *                     o be set
+     * @return A boolean that indicates success or failure of the update
+     */
+
     public boolean updateOrderPriceById(int order_id, double newCostTotal) {
         String template = "UPDATE orders SET cost_total = " + newCostTotal + " WHERE order_id = " + order_id + ";";
         try {
@@ -678,6 +895,14 @@ public class Data {
         }
         return false; // ERROR
     }
+
+    /**
+     * Updates the revenue of a restaurnt by the restaurant id and summing order
+     * totals
+     *
+     * @param restaurant_id id of the restaurant that is being updated
+     * @return A boolean that indicates success or failure of the update
+     */
 
     public boolean updateRevenue(int restaurant_id) {
         String sqlStatement1 = "SELECT SUM(cost_total) AS total_revenue FROM orders;";
@@ -705,6 +930,14 @@ public class Data {
         return true;
     }
 
+    /**
+     * Updates the quantity of an inventory item by the ID
+     *
+     * @param inventory_id id of the inventory item being updated
+     * @param quantity     amount of Inventory being restocked/deleted
+     * @return A boolean that indicates success or failure of the update
+     */
+
     public boolean addInventoryQuantityById(int inventory_id, int quantity) {
         String sqlStatement = "UPDATE inventory SET quantity = (quantity + " + quantity
                 + ") WHERE inventory_id = " + inventory_id + ";";
@@ -718,6 +951,14 @@ public class Data {
 
         return true;
     }
+
+    /**
+     * Updates the quantity of an inventory item by name
+     *
+     * @param name     name of the Inventory item to be restocked
+     * @param quantity amount of Inventory being restocked/deleted
+     * @return A boolean that indicates success or failure of the update
+     */
 
     public boolean addInventoryQuantityByName(String name, int quantity) {
         String sqlStatement = "UPDATE inventory SET quantity = (quantity + " + quantity
@@ -733,6 +974,14 @@ public class Data {
         return true;
     }
 
+    /**
+     * Updates and decreases the quantity of an inventory item by ID
+     *
+     * @param inventory_id id of the Inventory item to be updated
+     * @param quantity     amount of Inventory being restocked/deleted
+     * @return A boolean that indicates success or failure of the update
+     */
+
     public boolean deleteInventoryQuantityById(int inventory_id, int quantity) {
         String sqlStatement = "UPDATE inventory SET quantity = (quantity - " + quantity
                 + ") WHERE inventory_id = " + inventory_id + ";";
@@ -746,6 +995,14 @@ public class Data {
 
         return true;
     }
+
+    /**
+     * Creates a new Inventory entry in the Database
+     *
+     * @param name     name of the Inventory item to be created
+     * @param quantity amount of Inventory being created
+     * @return A boolean that indicates success or failure of the creation
+     */
 
     public boolean addNewInventoryItem(String name, int quantity) {
         String sqlStatement = "INSERT INTO inventory (name, quantity) VALUES ('" + name + "', " + quantity + ");";
