@@ -71,9 +71,11 @@ public class ManagerMainDisplayPanel {
     }
 
     public void drawDisplay(boolean isInventory) {
+        JPanel newItemPanel;
         JPanel btnPanel;
         if (isInventory) {
             int rows = inventoryItems.size() / 3 + 1;
+            newItemPanel = new JPanel(new GridLayout(2, 4));
             btnPanel = new JPanel(new GridLayout(rows, 3, 10, 10));
             btnPanel.setPreferredSize(new Dimension(600, 500));
 
@@ -108,12 +110,12 @@ public class ManagerMainDisplayPanel {
 
             JButton submitButton = new JButton("Add by Name to inventory");
             submitButton.addActionListener(changeInventoryItemsDisplay);
-
-            btnPanel.add(nameLabel);
-            btnPanel.add(nameTextField);
-            btnPanel.add(quantityLabel);
-            btnPanel.add(quantityTextField);
-            btnPanel.add(submitButton);
+            
+            newItemPanel.add(nameLabel);
+            newItemPanel.add(nameTextField);
+            newItemPanel.add(quantityLabel);
+            newItemPanel.add(quantityTextField);
+            newItemPanel.add(submitButton);
 
             for (int i = 0; i < inventoryItems.size(); i++) {
                 // button for selecting item to add
@@ -125,6 +127,7 @@ public class ManagerMainDisplayPanel {
 
         } else {
             int rows = menuItems.size() / 3 + 1;
+            newItemPanel = new JPanel(new GridLayout(2, 4));
             btnPanel = new JPanel(new GridLayout(rows, 3, 10, 10));
             btnPanel.setPreferredSize(new Dimension(550, 500));
 
@@ -156,11 +159,11 @@ public class ManagerMainDisplayPanel {
             JButton submitButton = new JButton("Change Price of Menu Item");
             submitButton.addActionListener(changeMenuItemsDisplay);
 
-            btnPanel.add(nameLabel);
-            btnPanel.add(nameTextField);
-            btnPanel.add(priceLabel);
-            btnPanel.add(priceTextField);
-            btnPanel.add(submitButton);
+            newItemPanel.add(nameLabel);
+            newItemPanel.add(nameTextField);
+            newItemPanel.add(priceLabel);
+            newItemPanel.add(priceTextField);
+            newItemPanel.add(submitButton);
 
             for (int i = 0; i < menuItems.size(); i++) {
                 // panel with two rows and second row is split into two columns
@@ -224,6 +227,7 @@ public class ManagerMainDisplayPanel {
         itemCreationPanel.add(addNewItemButton);
 
         panel.removeAll();
+        this.panel.add(newItemPanel);
         this.panel.add(btnPanel);
         this.panel.add(itemCreationPanel);
         this.panel.validate();

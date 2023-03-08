@@ -514,21 +514,19 @@ public class Data {
         }
 
         // Make inventory_to_menu Entry(ies)
-        // for (int i = 0; i < inventory_items.size(); i++) {
-        // String sqlStatement2 = "INSERT INTO menu_to_order (menu_id, order_id,
-        // quantity) VALUES " +
-        // "(" + inventory_items.get(i).getFirst() + ", " + menu_id + ", "
-        // + inventory_items.get(i).getSecond() + ");";
-        // try {
-        // this.executeUpdateSQL(sqlStatement2);
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // System.out.println("Above error happened while creating menu_to_order
-        // entry.");
-        // System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        // return false;
-        // }
-        // }
+        for (int i = 0; i < inventory_items.size(); i++) {
+            String sqlStatement2 = "INSERT INTO inventory_to_menu (inventory_id, menu_id, quantity) VALUES " 
+            + "(" + inventory_items.get(i).getFirst() + ", " + menu_id + ", "
+            + inventory_items.get(i).getSecond() + ");";
+            try {
+                this.executeUpdateSQL(sqlStatement2);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Above error happened while creating inventory_to_menu entry.");
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                return false;
+            }
+        }
 
         return true;
     }
