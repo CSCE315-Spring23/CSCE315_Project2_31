@@ -3,9 +3,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
 
-
 public class ItemListPanel {
     JPanel panel;
+
 
     ItemListPanel(Data db, MainDisplayPanel mdp) {
         this.panel = new JPanel();
@@ -42,7 +42,7 @@ public class ItemListPanel {
             }
         };
 
-        for(int i = 0; i < buttons.size(); i++){
+        for (int i = 0; i < buttons.size(); i++) {
             buttons.get(i).addActionListener(changeMenuItemsDisplay);
             buttons.get(i).setPreferredSize(new Dimension(150, 80));
             btnPanel.add(buttons.get(i));
