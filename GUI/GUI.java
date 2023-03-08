@@ -110,7 +110,6 @@ public class GUI extends JFrame implements ActionListener {
       }
     });
   }
-
   // if button is pressed
   public void actionPerformed(ActionEvent e) {
     String s = e.getActionCommand();
