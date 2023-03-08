@@ -37,8 +37,7 @@ public class MainDisplayPanel {
             total += currOrderItems.get(i).getFirst().price * currOrderItems.get(i).getSecond();
         }
         this.totalCost = total;
-        System.out.println(this.totalCost);
-        this.totalCostLabel.setText(String.format("Total cost: $%.2f", this.totalCost));
+        System.out.println(String.format("Total Cost: $%.2f", totalCost));
         // updating the label in basicControlPanel
         updateOrderTotal();
     }
@@ -91,7 +90,7 @@ public class MainDisplayPanel {
         this.totalCost = 0;
 
         // Update the totalCostLabel text
-        this.totalCostLabel.setText("Total cost: $00.00");
+        this.totalCostLabel.setText("$00.00");
     }
 
     public Vector<MyPair<Integer, Integer>> convertOrderToReturnVector() {
@@ -106,20 +105,22 @@ public class MainDisplayPanel {
         return out;
     }
 
-    public void finalizeOrder() {
+    public int finalizeOrder() {
+        int order_id = -1;
         if (currOrderItems.size() != 0) {
             Random rand = new Random();
 
             int customer_id = rand.nextInt(1000);
-            int staff_id = rand.nextInt(16);
+            int staff_id = rand.nextInt(15) + 1;
 
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
 
             Vector<MyPair<Integer, Integer>> finalOrder = convertOrderToReturnVector();
-            db.makeOrder(totalCost, date, customer_id, staff_id, finalOrder);
+            order_id = db.makeOrder(totalCost, date, customer_id, staff_id, finalOrder);
 
             orderCompleted();
         }
+        return order_id;
     }
 
     public void updateServerDisplay(String type) {
@@ -192,10 +193,12 @@ public class MainDisplayPanel {
 
         completeOrderBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JButton temp = (JButton) e.getSource();
-                String menuItemName = (String) temp.getClientProperty("menuItemName");
-                System.out.println("Completing order for \"" + menuItemName + "\"!");
-                finalizeOrder();
+                int completedOrder = finalizeOrder();
+                if (completedOrder > 0) {
+                    System.out.println("Completed order for " + completedOrder + "!");
+                } else {
+                    System.out.println("There was an error with completing the order!");
+                }
             }
         });
         JPanel orderDetail = new JPanel(new FlowLayout());
