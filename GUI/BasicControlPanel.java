@@ -9,11 +9,11 @@ public class BasicControlPanel {
         this.panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         
         // Create some buttons and add them to the panel
-        JButton button1 = new JButton("Bottom Control 1");
-        JButton button2 = new JButton("Bottom Control 2");
-        JButton button3 = new JButton("Bottom Control 3");
-        this.panel.add(button1);
-        this.panel.add(button2);
-        this.panel.add(button3);
+        JButton checkInBtn = new JButton("Check In");
+        JButton checkOutBtn = new JButton("Check Out");
+        JButton CompleteOrderBtn = new JButton("Complete Order");
+        this.panel.add(checkInBtn);
+        this.panel.add(checkOutBtn);
+        this.panel.add(CompleteOrderBtn);
     }
 }
