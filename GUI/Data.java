@@ -339,7 +339,7 @@ public class Data {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public boolean makeOrder(
+    public int makeOrder(
             double cost_total, java.sql.Date date, int customer_id, int staff_id,
             Vector<MyPair<Integer, Integer>> menu_items) {
         // Make Order Entry
@@ -358,7 +358,7 @@ public class Data {
             e.printStackTrace();
             System.out.println("Above error happened while creating order entry.");
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            return false;
+            return -1;
         }
 
         // Make menu_to_order Entry(ies)
@@ -371,8 +371,32 @@ public class Data {
                 e.printStackTrace();
                 System.out.println("Above error happened while creating menu_to_order entry.");
                 System.err.println(e.getClass().getName() + ": " + e.getMessage());
-                return false;
+                return -1;
             }
+        }
+
+        return order_id;
+    }
+    
+    public boolean removeOrder(int order_id) {
+        String sqlStatement1 = "DELETE * FROM menu_to_order WHERE order_id = " + order_id + ";";
+        try {
+            this.executeSQL(sqlStatement1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Above error happened while deleting menu_to_order entry (called from removeOrder).");
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false; // ERROR
+        }
+
+        String sqlStatement2 = "DELETE FROM order WHERE order_id = " + order_id + ";";
+        try {
+            this.executeSQL(sqlStatement2);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Above error happened while deleting order entry.");
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false; // ERROR
         }
 
         return true;
@@ -388,7 +412,7 @@ public class Data {
         try {
             ResultSet res = this.executeSQL(sqlStatement1);
             if (res.next()) {
-                menu_id = res.getInt("order_id");
+                menu_id = res.getInt("menu_id");
                 System.out.println("new menuItem with menuid: " + menu_id);
                 // use the order_id value as needed
             }
@@ -418,23 +442,37 @@ public class Data {
     }
 
     public boolean removeMenuItem(int menu_id) {
-        String query = "DELETE FROM menu WHERE menu_id = " + menu_id + ";";
+        String sqlStatement1 = "DELETE * FROM inventory_to_menu WHERE menu_id = " + menu_id + ";";
         try {
-            this.executeSQL(query);
-            return true; // SUCCESS
+            this.executeSQL(sqlStatement1);
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Above error happened while deleting inventory_to_menu entry (called from removeMenuItem).");
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false; // ERROR
         }
-        return false; // ERROR
-    }
 
-    public boolean addItemToOrder(String item_name) {
-        return false;
-    }
+        String sqlStatement2 = "DELETE * FROM menu_to_order WHERE menu_id = " + menu_id + ";";
+        try {
+            this.executeSQL(sqlStatement2);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Above error happened while deleting menu_to_order entry (called from removeMenuItem).");
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false; // ERROR
+        }
 
-    public boolean removeItemFromOrder() {
-        return false;
+        String sqlStatement3 = "DELETE FROM menu WHERE menu_id = " + menu_id + ";";
+        try {
+            this.executeSQL(sqlStatement3);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Above error happened while deleting menu entry.");
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false; // ERROR
+        }
+
+        return true;
     }
 
     public boolean updateMenuPrice(int menu_id, double newPrice) {
