@@ -108,10 +108,9 @@ public class Data {
             while (res.next()) {
                 Vector<MyPair<Integer, Integer>> menu_items = this.getMenuItemsByOrderId(res.getInt("order_id"));
                 Order order = new Order(
-                    res.getInt("order_id"), res.getDouble("cost_total"), res.getDate("date"),
-                    res.getInt("customer_id"), res.getInt("staff_id"),
-                    menu_items
-                );
+                        res.getInt("order_id"), res.getDouble("cost_total"), res.getDate("date"),
+                        res.getInt("customer_id"), res.getInt("staff_id"),
+                        menu_items);
                 out.add(order);
             }
             return out;
@@ -150,7 +149,7 @@ public class Data {
             res.next();
             Vector<MyPair<Integer, Integer>> inventory_items = this.getInventoryItemsByMenuId(menu_id);
             Menu out = new Menu(
-                    res.getInt("menu_id"), res.getString("name"), res.getDouble("price"),
+                    res.getInt("menu_id"), res.getString("name"), res.getDouble("price"), res.getString("type"),
                     inventory_items);
             return out;
         } catch (Exception e) {
@@ -166,9 +165,31 @@ public class Data {
         ResultSet res = this.executeSQL(sqlStatement);
         try {
             while (res.next()) {
-                Vector<MyPair<Integer, Integer>> inventory_items = this.getInventoryItemsByMenuId(res.getInt("menu_id"));
+                Vector<MyPair<Integer, Integer>> inventory_items = this
+                        .getInventoryItemsByMenuId(res.getInt("menu_id"));
                 Menu item = new Menu(
-                        res.getInt("menu_id"), res.getString("name"), res.getDouble("price"),
+                        res.getInt("menu_id"), res.getString("name"), res.getDouble("price"), res.getString("type"),
+                        inventory_items);
+                out.add(item);
+            }
+            return out;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return null;
+    }
+
+    public Vector<Menu> getMenuByType(String foodType) {
+        String sqlStatement = "SELECT * FROM menu WHERE type = '" + foodType + "';";
+        Vector<Menu> out = new Vector<Menu>();
+        ResultSet res = this.executeSQL(sqlStatement);
+        try {
+            while (res.next()) {
+                Vector<MyPair<Integer, Integer>> inventory_items = this
+                        .getInventoryItemsByMenuId(res.getInt("menu_id"));
+                Menu item = new Menu(
+                        res.getInt("menu_id"), res.getString("name"), res.getDouble("price"), res.getString("type"),
                         inventory_items);
                 out.add(item);
             }
