@@ -13,8 +13,9 @@ public class OrderListPanel {
         DefaultListModel<String> model = new DefaultListModel<String>();
 
         Vector<Order> orders = db.getRecentOrders();
-        for (int i = orders.size()-9; i < orders.size(); i++){
-            String orderContent = "Order #" + orders.get(i).order_id + " --- Total Cost: " + orders.get(i).cost_total;
+        for (int i = orders.size() - 9; i < orders.size(); i++) {
+            String orderContent = String
+                    .format("Order #%d --- Total Cost: %.2f", orders.get(i).order_id, orders.get(i).cost_total);
             model.addElement(orderContent);
         }
 

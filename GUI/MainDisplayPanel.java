@@ -107,6 +107,7 @@ public class MainDisplayPanel {
 
     public int finalizeOrder() {
         int order_id = -1;
+        System.out.println("Processing Order...");
         if (currOrderItems.size() != 0) {
             Random rand = new Random();
 
@@ -193,9 +194,9 @@ public class MainDisplayPanel {
 
         completeOrderBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int completedOrder = finalizeOrder();
-                if (completedOrder > 0) {
-                    System.out.println("Completed order for " + completedOrder + "!");
+                int newOrderID = finalizeOrder();
+                if (newOrderID > 0) {
+                    System.out.println("Completed order!\nNew order with orderid: " + newOrderID);
                 } else {
                     System.out.println("There was an error with completing the order!");
                 }

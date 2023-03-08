@@ -401,7 +401,6 @@ public class Data {
             ResultSet res = this.executeSQL(sqlStatement1);
             if (res.next()) {
                 order_id = res.getInt("order_id");
-                System.out.println("new order with orderid: " + order_id);
                 // use the order_id value as needed
             }
         } catch (Exception e) {
@@ -433,9 +432,9 @@ public class Data {
             Vector<MyPair<Integer, Integer>> inventory_items = this
                     .getInventoryItemsByMenuId(menu_items.get(i).getFirst());
             for (int j = 0; j < inventory_items.size(); j++) {
-                String sqlStatement3 = "UPDATE inventory SET quantity = quantity - "
+                String sqlStatement3 = "UPDATE inventory SET quantity = (quantity - "
                         + inventory_items.get(j).getSecond()
-                        + " WHERE inventory_id = " + inventory_items.get(j).getFirst() + ";";
+                        + ") WHERE inventory_id = " + inventory_items.get(j).getFirst() + ";";
                 try {
                     this.executeUpdateSQL(sqlStatement3);
                 } catch (Exception e) {

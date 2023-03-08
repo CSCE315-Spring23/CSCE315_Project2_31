@@ -30,10 +30,6 @@ public class GUI extends JFrame implements ActionListener {
       JOptionPane.showMessageDialog(null, "Error accessing Database.");
       System.exit(0);
     }
-    Vector<Menu> a = db.getMenuByType("Sandwiches");
-    for (int i = 0; i < a.size(); i++) {
-      System.out.println(a.get(i).name);
-    }
 
     // create a new frame
     f = new JFrame("Chick-fil-A Order System");
