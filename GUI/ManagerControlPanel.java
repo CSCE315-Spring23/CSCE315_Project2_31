@@ -9,11 +9,21 @@ public class ManagerControlPanel {
         this.panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         
         // Create some buttons and add them to the panel
-        JButton button1 = new JButton("Bottom Control 1");
-        JButton button2 = new JButton("Bottom Control 2");
-        JButton button3 = new JButton("Bottom Control 3");
-        this.panel.add(button1);
-        this.panel.add(button2);
-        this.panel.add(button3);
+        JButton checkInBtn = new JButton("Check In");
+        JButton checkOutBtn = new JButton("Check Out");
+        JButton completeOrderBtn = new JButton("Complete Order");
+        JButton viewInventoryBtn = new JButton("View Inventory");
+        JButton employeeListBtn = new JButton("Employee List");
+        JButton revenueBtn = new JButton("Revenue");
+        JButton registerBtn = new JButton("Open Register");
+        JButton couponBtn = new JButton("Apply Coupon");
+        this.panel.add(checkInBtn);
+        this.panel.add(checkOutBtn);
+        this.panel.add(completeOrderBtn);
+        this.panel.add(viewInventoryBtn);
+        this.panel.add(employeeListBtn);
+        this.panel.add(revenueBtn);
+        this.panel.add(registerBtn);
+        this.panel.add(couponBtn);
     }
 }

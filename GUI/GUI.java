@@ -89,7 +89,7 @@ public class GUI extends JFrame implements ActionListener {
     
     // Create the footer panel with a label and add it to the bottom of the frame
     JPanel footerPanel = new JPanel();
-    BasicControlPanel basicControlP = new BasicControlPanel(db);
+    BasicControlPanel basicControlP = new BasicControlPanel(db, mainDisplayP);
     footerPanel.add(basicControlP.panel, BorderLayout.CENTER);
     f.add(footerPanel, BorderLayout.SOUTH);
 
