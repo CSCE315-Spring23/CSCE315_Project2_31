@@ -1,7 +1,7 @@
-import java.sql.*;
 import java.util.Vector;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.border.EmptyBorder;
 
 import javax.swing.*;
 
@@ -49,23 +49,7 @@ public class GUI extends JFrame implements ActionListener {
     
     // // Make sure the JFrame is undecorated
     // f.setUndecorated(true);
-    f.setSize(1000, 800);
-    
-    // create a object
-    GUI s = new GUI();
-    // button to close program
-    JButton b = new JButton("Close");
-    // add actionlistener to button
-    b.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (db.disconnect()) {
-          JOptionPane.showMessageDialog(null, "Connection Closed.");
-        } else {
-          JOptionPane.showMessageDialog(null, "Connection NOT Closed.");
-          System.exit(0);
-        }
-      }
-    });
+    f.setSize(1250, 750);
 
     // Create the main panel with a FlowLayout and add three panels to it
     JPanel mainPanel = new JPanel();
@@ -78,7 +62,6 @@ public class GUI extends JFrame implements ActionListener {
     OrderListPanel orderListP = new OrderListPanel(db);
     MainDisplayPanel mainDisplayP = new MainDisplayPanel(db);
     ItemListPanel itemListP = new ItemListPanel(db, mainDisplayP);
-    
 
     // Add the sub-panels to the main panel
     mainPanel.add(orderListP.panel, BorderLayout.WEST);
@@ -86,27 +69,46 @@ public class GUI extends JFrame implements ActionListener {
     mainPanel.add(mainDisplayP.panel, BorderLayout.EAST);
 
     // Set the size of sub-panels to have a 20-20-60 split
-    orderListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.2), 
+    orderListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.30), 
                                                     (int)(frameSize.height * 0.85)));
-    itemListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.2), 
+    itemListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.30), 
                                                    (int)(frameSize.height * 0.85)));
-    mainDisplayP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.6), 
+    mainDisplayP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.40), 
                                                       (int)(frameSize.height * 0.85)));
+
+    // Create a new empty border with 10 pixels of padding on the left and right edges
+    EmptyBorder padding = new EmptyBorder(0, 20, 0, 20);
+
+    // Add the padding to each sub-panel
+    orderListP.panel.setBorder(padding);
+    itemListP.panel.setBorder(padding);
+    mainDisplayP.panel.setBorder(padding);
     
     // Add the main panel to the top of the frame
     f.add(mainPanel, BorderLayout.NORTH);
     
     // Create the footer panel with a label and add it to the bottom of the frame
     JPanel footerPanel = new JPanel();
-    footerPanel.add(b);
+    BasicControlPanel basicControlP = new BasicControlPanel(db);
+    footerPanel.add(basicControlP.panel, BorderLayout.CENTER);
     f.add(footerPanel, BorderLayout.SOUTH);
 
     // Make the JFrame visible
     f.setVisible(true);
 
     // closing the connection
-    
-
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // add a WindowListener to the JFrame
+    f.addWindowListener(new WindowAdapter() {
+      public void windowClosing(WindowEvent e) {
+        if (db.disconnect()) {
+          JOptionPane.showMessageDialog(null, "Connection Closed.");
+        } else {
+          JOptionPane.showMessageDialog(null, "Connection NOT Closed.");
+          System.exit(0);
+        }
+      }
+    });
   }
 
   // if button is pressed
