@@ -179,6 +179,23 @@ public class Data {
         }
         return null;
     }
+    
+    public Menu getMenuByName(String name) {
+        String sqlStatement = "SELECT * FROM menu WHERE name = '" + name + "';";
+        ResultSet res = this.executeSQL(sqlStatement);
+        try {
+            res.next();
+            Vector<MyPair<Integer, Integer>> inventory_items = this.getInventoryItemsByMenuId(res.getInt("menu_id"));
+            Menu out = new Menu(
+                    res.getInt("menu_id"), res.getString("name"), res.getDouble("price"), res.getString("type"),
+                    inventory_items);
+            return out;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return null;
+    }
 
     public Vector<Menu> getAllMenuItems() {
         String sqlStatement = "SELECT * FROM menu;";
@@ -224,6 +241,21 @@ public class Data {
 
     public Inventory getInventory(int inventory_id) {
         String sqlStatement = "SELECT * FROM inventory WHERE inventory_id = " + inventory_id + ";";
+        ResultSet res = this.executeSQL(sqlStatement);
+        try {
+            res.next();
+            Inventory out = new Inventory(
+                    res.getInt("inventory_id"), res.getString("name"), res.getInt("quantity"));
+            return out;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return null;
+    }
+
+    public Inventory getInventoryByName(String name) {
+        String sqlStatement = "SELECT * FROM inventory WHERE inventory_id = '" + name + "';";
         ResultSet res = this.executeSQL(sqlStatement);
         try {
             res.next();
@@ -487,6 +519,83 @@ public class Data {
         return false; // ERROR
     }
 
+    public boolean addMenuItemToOrder(int order_id, int menu_id, int quantity) {
+        // Get order
+        Order original_order = this.getOrder(order_id);
+        if (original_order == null) {
+            System.out.println("addMenuItemToOrder error: order not found");
+            return false;
+        }
+        int original_quantity = 0;
+        
+        for (int i = 0; i < original_order.menu_items.size(); i++) {
+            MyPair<Integer, Integer> menu_item = original_order.menu_items.get(i);
+            if (menu_item.getFirst() == menu_id) {
+                original_quantity = menu_item.getSecond();
+                break;
+            }
+        }
+        int new_quantity = original_quantity + quantity;
+        
+        String sqlStatement;
+        // If menu item was present
+        if (original_quantity > 0) {
+            sqlStatement = "UPDATE menu_to_order SET quantity = " + new_quantity + " WHERE "
+            + "(menu_id = " + menu_id + " AND order_id = " + order_id + ");";
+        } else {
+            sqlStatement = "INSERT INTO menu_to_order (menu_id, order_id, quantity) VALUES "
+            + "(" + menu_id + ", " + order_id + ", " + new_quantity + ");";
+        }
+
+        try {
+            this.executeSQL(sqlStatement);
+            System.out.println("new (updated) menu_to_order for order: " + order_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Above error happened while updating menu_to_order entry.");
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false;
+        }
+        
+        return true;
+    }
+
+    public boolean removeMenuItemFromOrder(int order_id, int menu_id) {
+        // Get order
+        Order original_order = this.getOrder(order_id);
+        if (original_order == null) {
+            System.out.println("removeMenuItemFromOrder error: order not found");
+            return false;
+        }
+        boolean present = false;
+        
+        for (int i = 0; i < original_order.menu_items.size(); i++) {
+            MyPair<Integer, Integer> menu_item = original_order.menu_items.get(i);
+            if (menu_item.getFirst() == menu_id) {
+                present = true;
+                break;
+            }
+        }
+        if (present == false) {
+            System.out.println("Error deleting item not present in order.");
+        }
+        
+        String sqlStatement = "DELETE FROM menu_to_order WHERE "
+        + "(menu_id = " + menu_id + " AND order_id = " + order_id + ");";
+
+        try {
+            this.executeSQL(sqlStatement);
+            System.out.println("deleted menu_to_order for order: " + order_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Above error happened while deleting menu_to_order entry.");
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false;
+        }
+        
+        return true;
+    }    
+
     public boolean updateOrderPrice(int order_id, double newCostTotal) {
         String template = "UPDATE orders SET cost_total = " + newCostTotal + " WHERE order_id = " + order_id + ";";
         try {
@@ -497,5 +606,30 @@ public class Data {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return false; // ERROR
+    }
+
+    public boolean updateRevenue(int restaurant_id) {
+        String sqlStatement1 = "SELECT SUM(cost_total) AS total_revenue FROM orders;";
+        double revenue = -1;
+        try {
+            ResultSet res = this.executeSQL(sqlStatement1);
+            res.next();
+            revenue = res.getDouble("total_revenue");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false;
+        }
+
+        String sqlStatement2 = "UPDATE restaurant SET revenue = " + revenue + " WHERE restaurant_id = " + restaurant_id + ";";
+        try {
+            this.executeSQL(sqlStatement2);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false;
+        }
+        
+        return true;
     }
 }
