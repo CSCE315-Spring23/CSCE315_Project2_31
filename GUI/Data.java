@@ -358,9 +358,10 @@ public class Data {
             e.printStackTrace();
             System.out.println("Above error happened while creating order entry.");
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false;
         }
 
-        // Make Inventory Entry(ies)
+        // Make menu_to_order Entry(ies)
         for (int i = 0; i < menu_items.size(); i++) {
             String sqlStatement2 = "INSERT INTO menu_to_order (menu_id, order_id, quantity) VALUES " +
                     "(" + menu_items.get(i).getFirst() + ", " + order_id + ", '" + menu_items.get(i).getSecond() + ");";
@@ -370,22 +371,50 @@ public class Data {
                 e.printStackTrace();
                 System.out.println("Above error happened while creating menu_to_order entry.");
                 System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                return false;
             }
         }
 
-        return false; // ERROR
+        return true;
     }
 
-    public boolean addMenuItem(String name, double price, String type) {
-        String query = "INSERT INTO menu (name, price, type) VALUES ('" + name + "', " + price + ", '" + type + "');";
+    public boolean addMenuItem(String name, double price, String type,
+            Vector<MyPair<Integer, Integer>> inventory_items) {
+        // Make Menu Entry
+        String sqlStatement1 = "INSERT INTO menu (name, price, type) VALUES ('" + name + "', " + price + ", '" + type
+                + "') RETURNING menu_id;";
+
+        int menu_id = -1;
         try {
-            this.executeSQL(query);
-            return true; // SUCCESS
+            ResultSet res = this.executeSQL(sqlStatement1);
+            if (res.next()) {
+                menu_id = res.getInt("order_id");
+                System.out.println("new menuItem with menuid: " + menu_id);
+                // use the order_id value as needed
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Above error happened while creating order entry.");
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false;
         }
-        return false; // ERROR
+
+        // Make inventory_to_menu Entry(ies)
+        for (int i = 0; i < inventory_items.size(); i++) {
+            String sqlStatement2 = "INSERT INTO menu_to_order (menu_id, order_id, quantity) VALUES " +
+                    "(" + inventory_items.get(i).getFirst() + ", " + menu_id + ", '"
+                    + inventory_items.get(i).getSecond() + ");";
+            try {
+                this.executeSQL(sqlStatement2);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Above error happened while creating menu_to_order entry.");
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean removeMenuItem(int menu_id) {
