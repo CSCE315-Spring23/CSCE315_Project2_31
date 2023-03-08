@@ -77,7 +77,7 @@ public class GUI extends JFrame implements ActionListener {
                                                       (int)(frameSize.height * 0.85)));
 
     // Create a new empty border with 10 pixels of padding on the left and right edges
-    EmptyBorder padding = new EmptyBorder(0, 20, 0, 20);
+    EmptyBorder padding = new EmptyBorder(0, 10, 0, 10);
 
     // Add the padding to each sub-panel
     orderListP.panel.setBorder(padding);

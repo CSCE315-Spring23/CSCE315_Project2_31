@@ -31,7 +31,7 @@ public class MainDisplayPanel {
     public void drawDisplay(){
         int rows = menuItems.size() / 3 + 1;
         JPanel btnPanel = new JPanel(new GridLayout(rows, 3, 10, 10));
-        btnPanel.setPreferredSize(new Dimension(300, 400));
+        btnPanel.setPreferredSize(new Dimension(450, 500));
         
         // create buttons (up to )
         ActionListener addToOrder = new ActionListener() {
@@ -43,7 +43,7 @@ public class MainDisplayPanel {
         for (int i = 0; i < menuItems.size(); i++){
             JButton btn = new JButton();
             btn.setText(menuItems.get(i).name);
-            btn.setPreferredSize(new Dimension(80, 40));
+            btn.setPreferredSize(new Dimension(120, 40));
             btn.addActionListener(addToOrder);
             btnPanel.add(btn);
         }
