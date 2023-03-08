@@ -339,17 +339,40 @@ public class Data {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public boolean makeOrder(int order_id, double cost_total, String date, int customer_id, int staff_id) {
-        String template = "INSERT INTO orders (order_id, cost_total, date, customer_id, staff_id) VALUES " +
-                "(" + order_id + ", " + cost_total + ", '" + date + "', " + customer_id + ", " + staff_id + ");";
-
+    public boolean makeOrder(
+            double cost_total, java.sql.Date date, int customer_id, int staff_id,
+            Vector<MyPair<Integer, Integer>> menu_items) {
+        // Make Order Entry
+        String sqlStatement1 = "INSERT INTO orders (cost_total, date, customer_id, staff_id) " +
+                "VALUES (" + cost_total + ", '" + date.toString() + "', " + customer_id + ", " + staff_id + ") " +
+                "RETURNING order_id;";
+        int order_id = -1;
         try {
-            this.executeSQL(template);
-            return true; // SUCCESS
+            ResultSet res = this.executeSQL(sqlStatement1);
+            if (res.next()) {
+                order_id = res.getInt("order_id");
+                System.out.println("new order with orderid: " + order_id);
+                // use the order_id value as needed
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Above error happened while creating order entry.");
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
+
+        // Make Inventory Entry(ies)
+        for (int i = 0; i < menu_items.size(); i++) {
+            String sqlStatement2 = "INSERT INTO menu_to_order (menu_id, order_id, quantity) VALUES " +
+                    "(" + menu_items.get(i).getFirst() + ", " + order_id + ", '" + menu_items.get(i).getSecond() + ");";
+            try {
+                this.executeSQL(sqlStatement2);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Above error happened while creating menu_to_order entry.");
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            }
+        }
+
         return false; // ERROR
     }
 
