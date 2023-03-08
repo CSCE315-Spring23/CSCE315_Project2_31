@@ -50,13 +50,6 @@ public class GUI extends JFrame implements ActionListener {
     // // Make sure the JFrame is undecorated
     // f.setUndecorated(true);
     f.setSize(1250, 750);
-    
-    // create a object
-    GUI s = new GUI();
-    // button to close program
-    JButton b = new JButton("Close");
-    // add actionlistener to button
-    b.addActionListener(s);
 
     // Create the main panel with a FlowLayout and add three panels to it
     JPanel mainPanel = new JPanel();
@@ -96,20 +89,26 @@ public class GUI extends JFrame implements ActionListener {
     
     // Create the footer panel with a label and add it to the bottom of the frame
     JPanel footerPanel = new JPanel();
-    footerPanel.add(b);
+    BasicControlPanel basicControlP = new BasicControlPanel(db);
+    footerPanel.add(basicControlP.panel, BorderLayout.CENTER);
     f.add(footerPanel, BorderLayout.SOUTH);
 
     // Make the JFrame visible
     f.setVisible(true);
 
     // closing the connection
-    if (db.disconnect()) {
-      JOptionPane.showMessageDialog(null, "Connection Closed.");
-    } else {
-      JOptionPane.showMessageDialog(null, "Connection NOT Closed.");
-      System.exit(0);
-    }
-
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // add a WindowListener to the JFrame
+    f.addWindowListener(new WindowAdapter() {
+      public void windowClosing(WindowEvent e) {
+        if (db.disconnect()) {
+          JOptionPane.showMessageDialog(null, "Connection Closed.");
+        } else {
+          JOptionPane.showMessageDialog(null, "Connection NOT Closed.");
+          System.exit(0);
+        }
+      }
+    });
   }
 
   // if button is pressed
