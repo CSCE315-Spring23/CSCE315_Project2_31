@@ -1,10 +1,37 @@
 import java.sql.*;
 import java.util.*;
 
+/**
+ * <dl>
+ * <dt><b>Chick-fil-A Database</b></dt>
+ * <dd>
+ * The Data class handles all communication between the Chick-fil-A point of
+ * sales(POS) GUI and PostgreSQL database.
+ * </dd>
+ * </dl>
+ * 
+ * @author Jeffrey Li
+ * @author David Chi
+ * @version 1.0
+ * @since 2023-03-08
+ */
 public class Data {
+
+    /**
+     * The url for connecting to the database
+     */
     public String database_url;
+    /**
+     * The username for connecting to the database.
+     */
     public String username;
+    /**
+     * The password for connecting to the database.
+     */
     public String password;
+    /**
+     * The instance of the database connection.
+     */
     public Connection conn;
 
     Data(String database_url, String username, String password) {
