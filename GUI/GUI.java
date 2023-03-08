@@ -1,7 +1,7 @@
-import java.sql.*;
 import java.util.Vector;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.border.EmptyBorder;
 
 import javax.swing.*;
 
@@ -49,7 +49,7 @@ public class GUI extends JFrame implements ActionListener {
     
     // // Make sure the JFrame is undecorated
     // f.setUndecorated(true);
-    f.setSize(1000, 800);
+    f.setSize(1250, 750);
     
     // create a object
     GUI s = new GUI();
@@ -76,12 +76,20 @@ public class GUI extends JFrame implements ActionListener {
     mainPanel.add(mainDisplayP.panel, BorderLayout.EAST);
 
     // Set the size of sub-panels to have a 20-20-60 split
-    orderListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.2), 
+    orderListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.30), 
                                                     (int)(frameSize.height * 0.85)));
-    itemListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.2), 
+    itemListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.30), 
                                                    (int)(frameSize.height * 0.85)));
-    mainDisplayP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.6), 
+    mainDisplayP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.40), 
                                                       (int)(frameSize.height * 0.85)));
+
+    // Create a new empty border with 10 pixels of padding on the left and right edges
+    EmptyBorder padding = new EmptyBorder(0, 20, 0, 20);
+
+    // Add the padding to each sub-panel
+    orderListP.panel.setBorder(padding);
+    itemListP.panel.setBorder(padding);
+    mainDisplayP.panel.setBorder(padding);
     
     // Add the main panel to the top of the frame
     f.add(mainPanel, BorderLayout.NORTH);
