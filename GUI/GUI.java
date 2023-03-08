@@ -15,7 +15,8 @@ TODO:
 
 public class GUI extends JFrame implements ActionListener {
   static JFrame f;
-  
+  static boolean isManager;
+
   public static void main(String[] args) {
     // Building the connection
     String database_url = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce315331_team_31";
@@ -36,17 +37,17 @@ public class GUI extends JFrame implements ActionListener {
 
     // create a new frame
     f = new JFrame("Chick-fil-A Order System");
-
-    // set the size of frame to default fullscreen
+    isManager = false;
+    // set the siz of frame to default fullscreen
     // Get the default graphics device and set it to fullscreen mode
     // GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
     // GraphicsDevice device = env.getDefaultScreenDevice();
     // device.setFullScreenWindow(f);
-    
+
     // // Make sure the JFrame is properly sized
     // f.setSize(device.getDisplayMode().getWidth(),
     // device.getDisplayMode().getHeight());
-    
+
     // // Make sure the JFrame is undecorated
     // f.setUndecorated(true);
     f.setSize(1250, 750);
@@ -55,47 +56,80 @@ public class GUI extends JFrame implements ActionListener {
     JPanel mainPanel = new JPanel();
     mainPanel.setLayout(new BorderLayout());
     Dimension frameSize = f.getSize();
-    mainPanel.setPreferredSize(new Dimension(frameSize.width, 
-                                       (int)(frameSize.height * 0.85)));
-    
+    mainPanel.setPreferredSize(new Dimension(frameSize.width,
+        (int) (frameSize.height * 0.85)));
+
+    // Create the footer panel with a label and add it to the bottom of the frame
+    JPanel footerPanel = new JPanel();
+    BasicControlPanel basicControlP = new BasicControlPanel(db);
+    footerPanel.add(basicControlP.panel, BorderLayout.CENTER);
+
     // Create Individual Display Panels
     OrderListPanel orderListP = new OrderListPanel(db);
     MainDisplayPanel mainDisplayP = new MainDisplayPanel(db);
     ItemListPanel itemListP = new ItemListPanel(db, mainDisplayP);
+    ManagerMainDisplayPanel managerMainDisplayP = new ManagerMainDisplayPanel(db);
+    ManagerItemListPanel managerItemListP = new ManagerItemListPanel(db, managerMainDisplayP);
+
+    EmptyBorder padding = new EmptyBorder(0, 10, 0, 10);
 
     // Add the sub-panels to the main panel
     mainPanel.add(orderListP.panel, BorderLayout.WEST);
-    mainPanel.add(itemListP.panel, BorderLayout.CENTER);
-    mainPanel.add(mainDisplayP.panel, BorderLayout.EAST);
 
-    // Set the size of sub-panels to have a 20-20-60 split
-    orderListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.30), 
-                                                    (int)(frameSize.height * 0.85)));
-    itemListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.30), 
-                                                   (int)(frameSize.height * 0.85)));
-    mainDisplayP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.40), 
-                                                      (int)(frameSize.height * 0.85)));
+    if (isManager) {
+      mainPanel.add(managerItemListP.panel, BorderLayout.CENTER);
+      mainPanel.add(managerMainDisplayP.panel, BorderLayout.EAST);
+      orderListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
+      (int) (frameSize.height * 0.85)));
+      managerItemListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
+          (int) (frameSize.height * 0.85)));
+      managerMainDisplayP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.40),
+          (int) (frameSize.height * 0.85)));
+          orderListP.panel.setBorder(padding);
+      managerItemListP.panel.setBorder(padding);
+      managerMainDisplayP.panel.setBorder(padding);
 
-    // Create a new empty border with 10 pixels of padding on the left and right edges
-    EmptyBorder padding = new EmptyBorder(0, 10, 0, 10);
-
-    // Add the padding to each sub-panel
-    orderListP.panel.setBorder(padding);
-    itemListP.panel.setBorder(padding);
-    mainDisplayP.panel.setBorder(padding);
+    } else {
+      mainPanel.add(itemListP.panel, BorderLayout.CENTER);
+      mainPanel.add(mainDisplayP.panel, BorderLayout.EAST);
+      orderListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
+      (int) (frameSize.height * 0.85)));
+      itemListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
+          (int) (frameSize.height * 0.85)));
+      mainDisplayP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.40),
+          (int) (frameSize.height * 0.85)));
+      orderListP.panel.setBorder(padding);
+      itemListP.panel.setBorder(padding);
+      mainDisplayP.panel.setBorder(padding);
+      orderListP.panel.setBorder(padding);
+      itemListP.panel.setBorder(padding);
+      mainDisplayP.panel.setBorder(padding);
+    }
     
+    // Create a new empty border with 10 pixels of padding on the left and right
+    // edges
+
     // Add the main panel to the top of the frame
     f.add(mainPanel, BorderLayout.NORTH);
-    
-    // Create the footer panel with a label and add it to the bottom of the frame
-    JPanel footerPanel = new JPanel();
-    BasicControlPanel basicControlP = new BasicControlPanel(db, mainDisplayP);
-    footerPanel.add(basicControlP.panel, BorderLayout.CENTER);
+
+    JButton switchServerToManagerButton = new JButton();
+    if (isManager) {
+      switchServerToManagerButton.setText("Server View");
+    } else {
+      switchServerToManagerButton.setText("Manager View");
+    }
+
+    switchServerToManagerButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        isManager = !isManager;
+        
+      }
+    });
+    footerPanel.add(switchServerToManagerButton);
     f.add(footerPanel, BorderLayout.SOUTH);
 
     // Make the JFrame visible
     f.setVisible(true);
-
     // closing the connection
     f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     // add a WindowListener to the JFrame

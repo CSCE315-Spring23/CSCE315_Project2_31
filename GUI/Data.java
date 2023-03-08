@@ -179,7 +179,7 @@ public class Data {
         }
         return null;
     }
-    
+
     public Menu getMenuByName(String name) {
         String sqlStatement = "SELECT * FROM menu WHERE name = '" + name + "';";
         ResultSet res = this.executeSQL(sqlStatement);
@@ -407,9 +407,31 @@ public class Data {
             }
         }
 
+        // loop through all menu items, read inventory for each menu item from
+        // inventory_to_menu,
+        // decrement each inventory item by (quantity in inventory_to_menu * quantity of
+        // menu item in order)
+        for (int i = 0; i < menu_items.size(); i++) {
+            Vector<MyPair<Integer, Integer>> inventory_items = this
+                    .getInventoryItemsByMenuId(menu_items.get(i).getFirst());
+            for (int j = 0; j < inventory_items.size(); j++) {
+                String sqlStatement3 = "UPDATE inventory SET quantity = quantity - "
+                        + inventory_items.get(j).getSecond()
+                        + " WHERE inventory_id = " + inventory_items.get(j).getFirst() + ");";
+                try {
+                    this.executeSQL(sqlStatement3);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("Above error happened while decrementing inventory entry.");
+                    System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                    return -1;
+                }
+            }
+        }
+
         return order_id;
     }
-    
+
     public boolean removeOrder(int order_id) {
         String sqlStatement1 = "DELETE * FROM menu_to_order WHERE order_id = " + order_id + ";";
         try {
@@ -479,7 +501,8 @@ public class Data {
             this.executeSQL(sqlStatement1);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Above error happened while deleting inventory_to_menu entry (called from removeMenuItem).");
+            System.out.println(
+                    "Above error happened while deleting inventory_to_menu entry (called from removeMenuItem).");
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             return false; // ERROR
         }
@@ -527,7 +550,7 @@ public class Data {
             return false;
         }
         int original_quantity = 0;
-        
+
         for (int i = 0; i < original_order.menu_items.size(); i++) {
             MyPair<Integer, Integer> menu_item = original_order.menu_items.get(i);
             if (menu_item.getFirst() == menu_id) {
@@ -536,15 +559,15 @@ public class Data {
             }
         }
         int new_quantity = original_quantity + quantity;
-        
+
         String sqlStatement;
         // If menu item was present
         if (original_quantity > 0) {
             sqlStatement = "UPDATE menu_to_order SET quantity = " + new_quantity + " WHERE "
-            + "(menu_id = " + menu_id + " AND order_id = " + order_id + ");";
+                    + "(menu_id = " + menu_id + " AND order_id = " + order_id + ");";
         } else {
             sqlStatement = "INSERT INTO menu_to_order (menu_id, order_id, quantity) VALUES "
-            + "(" + menu_id + ", " + order_id + ", " + new_quantity + ");";
+                    + "(" + menu_id + ", " + order_id + ", " + new_quantity + ");";
         }
 
         try {
@@ -556,7 +579,7 @@ public class Data {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             return false;
         }
-        
+
         return true;
     }
 
@@ -568,7 +591,7 @@ public class Data {
             return false;
         }
         boolean present = false;
-        
+
         for (int i = 0; i < original_order.menu_items.size(); i++) {
             MyPair<Integer, Integer> menu_item = original_order.menu_items.get(i);
             if (menu_item.getFirst() == menu_id) {
@@ -579,9 +602,9 @@ public class Data {
         if (present == false) {
             System.out.println("Error deleting item not present in order.");
         }
-        
+
         String sqlStatement = "DELETE FROM menu_to_order WHERE "
-        + "(menu_id = " + menu_id + " AND order_id = " + order_id + ");";
+                + "(menu_id = " + menu_id + " AND order_id = " + order_id + ");";
 
         try {
             this.executeSQL(sqlStatement);
@@ -592,9 +615,9 @@ public class Data {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             return false;
         }
-        
+
         return true;
-    }    
+    }
 
     public boolean updateOrderPrice(int order_id, double newCostTotal) {
         String template = "UPDATE orders SET cost_total = " + newCostTotal + " WHERE order_id = " + order_id + ";";
@@ -621,7 +644,8 @@ public class Data {
             return false;
         }
 
-        String sqlStatement2 = "UPDATE restaurant SET revenue = " + revenue + " WHERE restaurant_id = " + restaurant_id + ";";
+        String sqlStatement2 = "UPDATE restaurant SET revenue = " + revenue + " WHERE restaurant_id = " + restaurant_id
+                + ";";
         try {
             this.executeSQL(sqlStatement2);
         } catch (Exception e) {
@@ -629,7 +653,7 @@ public class Data {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             return false;
         }
-        
+
         return true;
     }
 }
