@@ -15,7 +15,8 @@ TODO:
 
 public class GUI extends JFrame implements ActionListener {
   static JFrame f;
-  
+  static boolean isManager;
+
   public static void main(String[] args) {
     // Building the connection
     String database_url = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce315331_team_31";
@@ -36,17 +37,17 @@ public class GUI extends JFrame implements ActionListener {
 
     // create a new frame
     f = new JFrame("Chick-fil-A Order System");
-
+    isManager = false;
     // set the size of frame to default fullscreen
     // Get the default graphics device and set it to fullscreen mode
     // GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
     // GraphicsDevice device = env.getDefaultScreenDevice();
     // device.setFullScreenWindow(f);
-    
+
     // // Make sure the JFrame is properly sized
     // f.setSize(device.getDisplayMode().getWidth(),
     // device.getDisplayMode().getHeight());
-    
+
     // // Make sure the JFrame is undecorated
     // f.setUndecorated(true);
     f.setSize(1250, 750);
@@ -55,9 +56,14 @@ public class GUI extends JFrame implements ActionListener {
     JPanel mainPanel = new JPanel();
     mainPanel.setLayout(new BorderLayout());
     Dimension frameSize = f.getSize();
-    mainPanel.setPreferredSize(new Dimension(frameSize.width, 
-                                       (int)(frameSize.height * 0.85)));
-    
+    mainPanel.setPreferredSize(new Dimension(frameSize.width,
+        (int) (frameSize.height * 0.85)));
+
+    // Create the footer panel with a label and add it to the bottom of the frame
+    JPanel footerPanel = new JPanel();
+    BasicControlPanel basicControlP = new BasicControlPanel(db);
+    footerPanel.add(basicControlP.panel, BorderLayout.CENTER);
+
     // Create Individual Display Panels
     OrderListPanel orderListP = new OrderListPanel(db);
     MainDisplayPanel mainDisplayP = new MainDisplayPanel(db);
@@ -69,28 +75,38 @@ public class GUI extends JFrame implements ActionListener {
     mainPanel.add(mainDisplayP.panel, BorderLayout.EAST);
 
     // Set the size of sub-panels to have a 20-20-60 split
-    orderListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.30), 
-                                                    (int)(frameSize.height * 0.85)));
-    itemListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.30), 
-                                                   (int)(frameSize.height * 0.85)));
-    mainDisplayP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.40), 
-                                                      (int)(frameSize.height * 0.85)));
+    orderListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
+        (int) (frameSize.height * 0.85)));
+    itemListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
+        (int) (frameSize.height * 0.85)));
+    mainDisplayP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.40),
+        (int) (frameSize.height * 0.85)));
 
-    // Create a new empty border with 10 pixels of padding on the left and right edges
+    // Create a new empty border with 10 pixels of padding on the left and right
+    // edges
     EmptyBorder padding = new EmptyBorder(0, 10, 0, 10);
 
     // Add the padding to each sub-panel
     orderListP.panel.setBorder(padding);
     itemListP.panel.setBorder(padding);
     mainDisplayP.panel.setBorder(padding);
-    
+
     // Add the main panel to the top of the frame
     f.add(mainPanel, BorderLayout.NORTH);
-    
-    // Create the footer panel with a label and add it to the bottom of the frame
-    JPanel footerPanel = new JPanel();
-    BasicControlPanel basicControlP = new BasicControlPanel(db, mainDisplayP);
-    footerPanel.add(basicControlP.panel, BorderLayout.CENTER);
+
+    JButton switchServerToManagerButton = new JButton();
+    if (isManager) {
+      switchServerToManagerButton.setText("Server View");
+    } else {
+      switchServerToManagerButton.setText("Manager View");
+    }
+
+    switchServerToManagerButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        isManager = !isManager;
+      }
+    });
+    footerPanel.add(switchServerToManagerButton);
     f.add(footerPanel, BorderLayout.SOUTH);
 
     // Make the JFrame visible
