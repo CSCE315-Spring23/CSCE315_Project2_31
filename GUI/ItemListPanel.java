@@ -9,7 +9,6 @@ public class ItemListPanel {
 
     ItemListPanel() {
         this.panel = new JPanel();
-        this.panel.setPreferredSize(new Dimension(50, 400));
         this.panel.setBackground(Color.gray);
 
         JPanel btnPanel = new JPanel(new GridLayout(6, 1, 10, 20));
@@ -18,27 +17,27 @@ public class ItemListPanel {
         // Sandwiches, Other Entrees, Sides, Dessert, Drinks
 
         JButton sandwichesButton = new JButton("Sandwiches");
-        sandwichesButton.setPreferredSize(new Dimension(200, 80));
+        sandwichesButton.setPreferredSize(new Dimension(150, 80));
         sandwichesButton.setBackground(Color.yellow);
         buttons.add(sandwichesButton);
 
         JButton otherEntreesButton = new JButton("Other Entrees");
-        otherEntreesButton.setPreferredSize(new Dimension(200, 80));
+        otherEntreesButton.setPreferredSize(new Dimension(150, 80));
         otherEntreesButton.setBackground(Color.green);
         buttons.add(otherEntreesButton);
 
         JButton sidesButton = new JButton("Sides");
-        sidesButton.setPreferredSize(new Dimension(200, 80));
+        sidesButton.setPreferredSize(new Dimension(150, 80));
         sidesButton.setBackground(Color.yellow);
         buttons.add(sidesButton);
 
         JButton dessertsButton = new JButton("Desserts");
-        dessertsButton.setPreferredSize(new Dimension(200, 80));
+        dessertsButton.setPreferredSize(new Dimension(150, 80));
         dessertsButton.setBackground(Color.green);
         buttons.add(dessertsButton);
 
         JButton drinksButton = new JButton("Drinks");
-        drinksButton.setPreferredSize(new Dimension(200, 80));
+        drinksButton.setPreferredSize(new Dimension(150, 80));
         drinksButton.setBackground(Color.yellow);
         buttons.add(drinksButton);
 

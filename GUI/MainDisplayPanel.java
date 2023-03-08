@@ -2,7 +2,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
-import java.lang.Math;
 
 public class MainDisplayPanel {
     JPanel panel;
@@ -10,14 +9,13 @@ public class MainDisplayPanel {
 
     MainDisplayPanel(Data db) {
         this.panel = new JPanel();
-        this.panel.setPreferredSize(new Dimension(300, 400));
         this.panel.setBackground(Color.gray);
 
         menuItems = db.getAllMenuItems();
         
 
-        int dims = ((int) Math.sqrt((double) menuItems.size())) + 1;
-        JPanel btnPanel = new JPanel(new GridLayout(dims, dims, 10, 10));
+        int rows = menuItems.size() / 3 + 1;
+        JPanel btnPanel = new JPanel(new GridLayout(rows, 3, 10, 10));
         
         // create buttons (up to )
         ActionListener addToOrder = new ActionListener() {
@@ -27,9 +25,10 @@ public class MainDisplayPanel {
             }
         };
         
-        for (int i = 0; i < menuItems.size() - 15; i++){
+        for (int i = 0; i < menuItems.size(); i++){
             JButton btn = new JButton();
             btn.setText(menuItems.get(i).name);
+            btn.setPreferredSize(new Dimension(80, 40));
             btn.addActionListener(addToOrder);
             btnPanel.add(btn);
         }

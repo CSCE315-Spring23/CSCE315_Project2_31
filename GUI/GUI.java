@@ -5,16 +5,16 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /*
-  TODO:
-  1) Change credentials for your own team's database
-  2) Change SQL command to a relevant query that retrieves a small amount of data
-  3) Create a JTextArea object using the queried data
-  4) Add the new object to the JPanel p
+TODO:
+1) Change credentials for your own team's database
+2) Change SQL command to a relevant query that retrieves a small amount of data
+3) Create a JTextArea object using the queried data
+4) Add the new object to the JPanel p
 */
 
 public class GUI extends JFrame implements ActionListener {
   static JFrame f;
-
+  
   public static void main(String[] args) {
     // Building the connection
     String database_url = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce315331_team_31";
@@ -34,6 +34,20 @@ public class GUI extends JFrame implements ActionListener {
     
     // create a new frame
     f = new JFrame("Chick-fil-A Order System");
+
+    // set the size of frame to default fullscreen
+    // Get the default graphics device and set it to fullscreen mode
+    // GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    // GraphicsDevice device = env.getDefaultScreenDevice();
+    // device.setFullScreenWindow(f);
+    
+    // // Make sure the JFrame is properly sized
+    // f.setSize(device.getDisplayMode().getWidth(),
+    // device.getDisplayMode().getHeight());
+    
+    // // Make sure the JFrame is undecorated
+    // f.setUndecorated(true);
+    f.setSize(1000, 800);
     
     // create a object
     GUI s = new GUI();
@@ -42,95 +56,39 @@ public class GUI extends JFrame implements ActionListener {
     // add actionlistener to button
     b.addActionListener(s);
 
-    // Set the layout manager of the content pane to GridBagLayout
-    f.getContentPane().setLayout(new GridBagLayout());
-
-    // Create the first row panel
-    JPanel rowPanel1 = new JPanel();
-    rowPanel1.setPreferredSize(new Dimension(200, 50));
-    rowPanel1.setBackground(Color.RED);
-
-    // Create the second row panel
-    JPanel rowPanel2 = new JPanel(new GridBagLayout());
-    rowPanel2.setPreferredSize(new Dimension(200, 400));
-
-    // Create the third row panel
-    JPanel rowPanel3 = new JPanel();
-    rowPanel3.setPreferredSize(new Dimension(200, 50));
-    rowPanel3.setBackground(Color.BLUE);
-
+    // Create the main panel with a FlowLayout and add three panels to it
+    JPanel mainPanel = new JPanel();
+    mainPanel.setLayout(new BorderLayout());
+    Dimension frameSize = f.getSize();
+    mainPanel.setPreferredSize(new Dimension(frameSize.width, 
+                                       (int)(frameSize.height * 0.85)));
+    
+    // Create Individual Display Panels
     OrderListPanel orderListP = new OrderListPanel();
     ItemListPanel itemListP = new ItemListPanel();
     MainDisplayPanel mainDisplayP = new MainDisplayPanel(db);
 
-    // Add the panels to the content pane using GridBagConstraints
-    GridBagConstraints mainGrid = new GridBagConstraints();
+    // Add the sub-panels to the main panel
+    mainPanel.add(orderListP.panel, BorderLayout.WEST);
+    mainPanel.add(itemListP.panel, BorderLayout.CENTER);
+    mainPanel.add(mainDisplayP.panel, BorderLayout.EAST);
 
-    // First row
-    mainGrid.gridx = 0;
-    mainGrid.gridy = 0;
-    mainGrid.gridwidth = 3;
-    mainGrid.fill = GridBagConstraints.BOTH;
-    mainGrid.anchor = GridBagConstraints.CENTER;
-    mainGrid.weightx = 1.0;
-    mainGrid.weighty = 0.1;
-    f.getContentPane().add(rowPanel1, mainGrid);
-    rowPanel1.add(b);
+    // Set the size of sub-panels to have a 20-20-60 split
+    orderListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.2), 
+                                                    (int)(frameSize.height * 0.85)));
+    itemListP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.2), 
+                                                   (int)(frameSize.height * 0.85)));
+    mainDisplayP.panel.setPreferredSize(new Dimension((int)(frameSize.width * 0.6), 
+                                                      (int)(frameSize.height * 0.85)));
+    
+    // Add the main panel to the top of the frame
+    f.add(mainPanel, BorderLayout.NORTH);
+    
+    // Create the footer panel with a label and add it to the bottom of the frame
+    JPanel footerPanel = new JPanel();
+    footerPanel.add(b);
+    f.add(footerPanel, BorderLayout.SOUTH);
 
-    // Second row
-    // Add the columns to the second row panel
-    rowPanel2.add(orderListP.panel);
-    rowPanel2.add(itemListP.panel);
-    rowPanel2.add(mainDisplayP.panel);
-
-    mainGrid.gridx = 0;
-    mainGrid.gridy = 1;
-    mainGrid.fill = GridBagConstraints.VERTICAL;
-    mainGrid.anchor = GridBagConstraints.WEST;
-    mainGrid.weightx = 0.25;
-    mainGrid.weighty = 0.8;
-    f.getContentPane().add(orderListP.panel, mainGrid);
-
-    mainGrid.gridx = 1;
-    mainGrid.gridy = 1;
-    mainGrid.fill = GridBagConstraints.VERTICAL;
-    mainGrid.anchor = GridBagConstraints.CENTER;
-    mainGrid.weightx = 0.25;
-    mainGrid.weighty = 0.8;
-    f.getContentPane().add(itemListP.panel, mainGrid);
-
-    mainGrid.gridx = 2;
-    mainGrid.gridy = 1;
-    mainGrid.fill = GridBagConstraints.VERTICAL;
-    mainGrid.anchor = GridBagConstraints.EAST;
-    mainGrid.weightx = 1.0;
-    mainGrid.weighty = 0.8;
-    f.getContentPane().add(mainDisplayP.panel, mainGrid);
-
-    // Third row
-    mainGrid.gridx = 0;
-    mainGrid.gridy = 2;
-    mainGrid.gridwidth = 3;
-    mainGrid.fill = GridBagConstraints.BOTH;
-    mainGrid.anchor = GridBagConstraints.CENTER;
-    mainGrid.weightx = 1.0;
-    mainGrid.weighty = 0.1;
-    f.getContentPane().add(rowPanel3, mainGrid);
-
-
-    // set the size of frame to default fullscreen
-    // Get the default graphics device and set it to fullscreen mode
-    // GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-    // GraphicsDevice device = env.getDefaultScreenDevice();
-    // device.setFullScreenWindow(f);
-
-    // // Make sure the JFrame is properly sized
-    // f.setSize(device.getDisplayMode().getWidth(),
-    // device.getDisplayMode().getHeight());
-
-    // // Make sure the JFrame is undecorated
-    // f.setUndecorated(true);
-    f.setSize(1000, 800);
     // Make the JFrame visible
     f.setVisible(true);
 
