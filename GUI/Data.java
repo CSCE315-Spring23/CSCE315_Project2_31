@@ -143,7 +143,7 @@ public class Data {
     }
 
     public Vector<Order> getRecentOrders() {
-        String sqlStatement = "SELECT * FROM orders LIMIT 10;";
+        String sqlStatement = "SELECT * FROM orders ORDER BY order_id DESC LIMIT 10;";
         Vector<Order> out = new Vector<Order>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
