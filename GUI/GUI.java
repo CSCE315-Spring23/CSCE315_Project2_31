@@ -1,21 +1,12 @@
-import java.util.Vector;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.border.EmptyBorder;
 
 import javax.swing.*;
 
-/*
-TODO:
-1) Change credentials for your own team's database
-2) Change SQL command to a relevant query that retrieves a small amount of data
-3) Create a JTextArea object using the queried data
-4) Add the new object to the JPanel p
-*/
-
 public class GUI extends JFrame implements ActionListener {
   static JFrame f;
-  static boolean isManager;
+  static boolean shouldSwitchToManager;
 
   public static void main(String[] args) {
     // Building the connection
@@ -33,7 +24,6 @@ public class GUI extends JFrame implements ActionListener {
 
     // create a new frame
     f = new JFrame("Chick-fil-A Order System");
-    isManager = false;
     // set the siz of frame to default fullscreen
     // Get the default graphics device and set it to fullscreen mode
     // GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -49,10 +39,10 @@ public class GUI extends JFrame implements ActionListener {
     f.setSize(1250, 750);
 
     // Create the main panel with a FlowLayout and add three panels to it
-    JPanel mainPanel = new JPanel();
-    mainPanel.setLayout(new BorderLayout());
+    JPanel mainPanel1 = new JPanel();
+    mainPanel1.setLayout(new BorderLayout());
     Dimension frameSize = f.getSize();
-    mainPanel.setPreferredSize(new Dimension(frameSize.width,
+    mainPanel1.setPreferredSize(new Dimension(frameSize.width,
         (int) (frameSize.height * 0.85)));
 
     // Create the footer panel with a label and add it to the bottom of the frame
@@ -62,68 +52,97 @@ public class GUI extends JFrame implements ActionListener {
 
     // Create Individual Display Panels
     OrderListPanel orderListP = new OrderListPanel(db);
-    MainDisplayPanel mainDisplayP = new MainDisplayPanel(db);
-    ItemListPanel itemListP = new ItemListPanel(db, mainDisplayP);
     ManagerMainDisplayPanel managerMainDisplayP = new ManagerMainDisplayPanel(db);
     ManagerItemListPanel managerItemListP = new ManagerItemListPanel(db, managerMainDisplayP);
 
-    EmptyBorder padding = new EmptyBorder(0, 10, 0, 10);
-
     // Add the sub-panels to the main panel
-    mainPanel.add(orderListP.panel, BorderLayout.WEST);
+    mainPanel1.add(orderListP.panel, BorderLayout.WEST);
+    mainPanel1.add(managerItemListP.panel, BorderLayout.CENTER);
+    mainPanel1.add(managerMainDisplayP.panel, BorderLayout.EAST);
 
-    if (isManager) {
-      mainPanel.add(managerItemListP.panel, BorderLayout.CENTER);
-      mainPanel.add(managerMainDisplayP.panel, BorderLayout.EAST);
-      orderListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
-      (int) (frameSize.height * 0.85)));
-      managerItemListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
-          (int) (frameSize.height * 0.85)));
-      managerMainDisplayP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.40),
-          (int) (frameSize.height * 0.85)));
-          orderListP.panel.setBorder(padding);
-      managerItemListP.panel.setBorder(padding);
-      managerMainDisplayP.panel.setBorder(padding);
-
-    } else {
-      mainPanel.add(itemListP.panel, BorderLayout.CENTER);
-      mainPanel.add(mainDisplayP.panel, BorderLayout.EAST);
-      orderListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
-      (int) (frameSize.height * 0.85)));
-      itemListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
-          (int) (frameSize.height * 0.85)));
-      mainDisplayP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.40),
-          (int) (frameSize.height * 0.85)));
-      orderListP.panel.setBorder(padding);
-      itemListP.panel.setBorder(padding);
-      mainDisplayP.panel.setBorder(padding);
-      orderListP.panel.setBorder(padding);
-      itemListP.panel.setBorder(padding);
-      mainDisplayP.panel.setBorder(padding);
-    }
-    
     // Create a new empty border with 10 pixels of padding on the left and right
     // edges
+    managerItemListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.20),
+        (int) (frameSize.height * 0.85)));
+    managerMainDisplayP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.70),
+        (int) (frameSize.height * 0.85)));
 
-    // Add the main panel to the top of the frame
-    f.add(mainPanel, BorderLayout.NORTH);
+    // pad panels
+    EmptyBorder padding = new EmptyBorder(0, 10, 0, 10);
+    orderListP.panel.setBorder(padding);
+    managerItemListP.panel.setBorder(padding);
+    managerMainDisplayP.panel.setBorder(padding);
+
+    // Create the main panel with a FlowLayout and add three panels to it
+    JPanel mainPanel2 = new JPanel();
+    mainPanel2.setLayout(new BorderLayout());
+    mainPanel2.setPreferredSize(new Dimension(frameSize.width,
+        (int) (frameSize.height * 0.85)));
+
+    MainDisplayPanel mainDisplayP = new MainDisplayPanel(db, orderListP);
+    ItemListPanel itemListP = new ItemListPanel(db, mainDisplayP);
+
+    // Add the sub-panels to the main panel
+    mainPanel2.add(orderListP.panel, BorderLayout.WEST);
+    mainPanel2.add(itemListP.panel, BorderLayout.CENTER);
+    mainPanel2.add(mainDisplayP.panel, BorderLayout.EAST);
+
+    // Create a new empty border with 10 pixels of padding on the left and right
+    // edges
+    orderListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
+        (int) (frameSize.height * 0.85)));
+    itemListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
+        (int) (frameSize.height * 0.85)));
+    mainDisplayP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.40),
+        (int) (frameSize.height * 0.85)));
+
+    // pad panels
+    itemListP.panel.setBorder(padding);
+    managerMainDisplayP.panel.setBorder(padding);
+
+    shouldSwitchToManager = true;
+    // assigning visibility
+    mainPanel1.setVisible(!shouldSwitchToManager);
+    mainPanel2.setVisible(shouldSwitchToManager);
 
     JButton switchServerToManagerButton = new JButton();
-    if (isManager) {
-      switchServerToManagerButton.setText("Server View");
-    } else {
+    if (shouldSwitchToManager) { // we are in the manager ready to go to server
       switchServerToManagerButton.setText("Manager View");
+      // Add the main panel 1 to the top of the frame
+      f.add(mainPanel2, BorderLayout.NORTH);
+    } else {
+      switchServerToManagerButton.setText("Server View");
+      // Add the main panel 2 to the top of the frame
+      f.add(mainPanel1, BorderLayout.NORTH);
     }
 
     switchServerToManagerButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        isManager = !isManager;
-        
+        // show manager view
+        mainPanel1.setVisible(shouldSwitchToManager);
+        // show server view
+        mainPanel2.setVisible(!shouldSwitchToManager);
+        if (shouldSwitchToManager) { // currently in the server
+          System.out.println("Switching to manager");
+          switchServerToManagerButton.setText("Server View");
+
+          // Add the main panel 2 to the top of the frame
+          f.add(mainPanel1, BorderLayout.NORTH);
+        } else { // currently in the manager
+          System.out.println("Switching to server");
+          switchServerToManagerButton.setText("Manager View");
+
+          // Add the main panel 1 to the top of the frame
+          f.add(mainPanel2, BorderLayout.NORTH);
+        }
+        // flip boolean to match new state
+        shouldSwitchToManager = !shouldSwitchToManager;
       }
     });
     footerPanel.add(switchServerToManagerButton);
+
+    // Add the footer panel to the bottom of the frame
     f.add(footerPanel, BorderLayout.SOUTH);
-    
     // Make the JFrame visible
     f.setVisible(true);
     // closing the connection
@@ -140,6 +159,7 @@ public class GUI extends JFrame implements ActionListener {
       }
     });
   }
+
   // if button is pressed
   public void actionPerformed(ActionEvent e) {
     String s = e.getActionCommand();

@@ -161,7 +161,7 @@ public class Data {
     }
 
     public Vector<Order> getRecentOrders() {
-        String sqlStatement = "SELECT * FROM orders ORDER BY order_id DESC LIMIT 10;";
+        String sqlStatement = "SELECT * FROM orders ORDER BY order_id DESC LIMIT 25;";
         Vector<Order> out = new Vector<Order>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
@@ -273,13 +273,15 @@ public class Data {
     }
 
     public Inventory getInventoryByName(String name) {
-        String sqlStatement = "SELECT * FROM inventory WHERE inventory_id = '" + name + "';";
+        String sqlStatement = "SELECT * FROM inventory WHERE name = '" + name + "';";
+        System.out.println(sqlStatement);
         ResultSet res = this.executeSQL(sqlStatement);
         try {
-            res.next();
-            Inventory out = new Inventory(
-                    res.getInt("inventory_id"), res.getString("name"), res.getInt("quantity"));
-            return out;
+            if (res.next()) {
+                Inventory out = new Inventory(
+                        res.getInt("inventory_id"), res.getString("name"), res.getInt("quantity"));
+                return out;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -297,6 +299,21 @@ public class Data {
                         res.getInt("inventory_id"), res.getString("name"), res.getInt("quantity"));
                 out.add(item);
             }
+            return out;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return null;
+    }
+
+    public Restaurant getRestaurant() {
+        String sqlStatement = "SELECT * FROM restaurant;";
+        ResultSet res = this.executeSQL(sqlStatement);
+        try {
+            res.next();
+            Restaurant out = new Restaurant(
+                    res.getInt("restaurant_id"), res.getString("name"), res.getInt("revenue"));
             return out;
         } catch (Exception e) {
             e.printStackTrace();
@@ -479,6 +496,8 @@ public class Data {
         String sqlStatement1 = "INSERT INTO menu (name, price, type) VALUES ('" + name + "', " + price + ", '" + type
                 + "') RETURNING menu_id;";
 
+        System.out.println(sqlStatement1);
+
         int menu_id = -1;
         try {
             ResultSet res = this.executeSQL(sqlStatement1);
@@ -495,19 +514,21 @@ public class Data {
         }
 
         // Make inventory_to_menu Entry(ies)
-        for (int i = 0; i < inventory_items.size(); i++) {
-            String sqlStatement2 = "INSERT INTO menu_to_order (menu_id, order_id, quantity) VALUES " +
-                    "(" + inventory_items.get(i).getFirst() + ", " + menu_id + ", '"
-                    + inventory_items.get(i).getSecond() + ");";
-            try {
-                this.executeUpdateSQL(sqlStatement2);
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Above error happened while creating menu_to_order entry.");
-                System.err.println(e.getClass().getName() + ": " + e.getMessage());
-                return false;
-            }
-        }
+        // for (int i = 0; i < inventory_items.size(); i++) {
+        // String sqlStatement2 = "INSERT INTO menu_to_order (menu_id, order_id,
+        // quantity) VALUES " +
+        // "(" + inventory_items.get(i).getFirst() + ", " + menu_id + ", "
+        // + inventory_items.get(i).getSecond() + ");";
+        // try {
+        // this.executeUpdateSQL(sqlStatement2);
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // System.out.println("Above error happened while creating menu_to_order
+        // entry.");
+        // System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        // return false;
+        // }
+        // }
 
         return true;
     }
@@ -547,8 +568,20 @@ public class Data {
         return true;
     }
 
-    public boolean updateMenuPrice(int menu_id, double newPrice) {
+    public boolean updateMenuPriceById(int menu_id, double newPrice) {
         String query = "UPDATE menu SET price = " + newPrice + " WHERE menu_id = " + menu_id + ";";
+        try {
+            this.executeUpdateSQL(query);
+            return true; // SUCCESS
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return false; // ERROR
+    }
+
+    public boolean updateMenuPriceByName(String name, double newPrice) {
+        String query = "UPDATE menu SET price = " + newPrice + " WHERE name = '" + name + "';";
         try {
             this.executeUpdateSQL(query);
             return true; // SUCCESS
@@ -636,7 +669,7 @@ public class Data {
         return true;
     }
 
-    public boolean updateOrderPrice(int order_id, double newCostTotal) {
+    public boolean updateOrderPriceById(int order_id, double newCostTotal) {
         String template = "UPDATE orders SET cost_total = " + newCostTotal + " WHERE order_id = " + order_id + ";";
         try {
             this.executeUpdateSQL(template);
@@ -673,4 +706,60 @@ public class Data {
 
         return true;
     }
+
+    public boolean addInventoryQuantityById(int inventory_id, int quantity) {
+        String sqlStatement = "UPDATE inventory SET quantity = (quantity + " + quantity
+                + ") WHERE inventory_id = " + inventory_id + ";";
+        try {
+            this.executeUpdateSQL(sqlStatement);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean addInventoryQuantityByName(String name, int quantity) {
+        String sqlStatement = "UPDATE inventory SET quantity = (quantity + " + quantity
+                + ") WHERE name = '" + name + "';";
+        try {
+            this.executeUpdateSQL(sqlStatement);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean deleteInventoryQuantityById(int inventory_id, int quantity) {
+        String sqlStatement = "UPDATE inventory SET quantity = (quantity - " + quantity
+                + ") WHERE inventory_id = " + inventory_id + ";";
+        try {
+            this.executeUpdateSQL(sqlStatement);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean addNewInventoryItem(String name, int quantity) {
+        String sqlStatement = "INSERT INTO inventory (name, quantity) VALUES ('" + name + "', " + quantity + ");";
+        try {
+            this.executeUpdateSQL(sqlStatement);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
 }

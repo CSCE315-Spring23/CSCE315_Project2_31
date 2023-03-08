@@ -11,14 +11,17 @@ public class MainDisplayPanel {
     double totalCost = 0;
     Data db;
     JLabel totalCostLabel;
+    OrderListPanel olp;
 
-    MainDisplayPanel(Data db) {
+    MainDisplayPanel(Data db, OrderListPanel olp) {
         this.panel = new JPanel();
         this.panel.setBackground(Color.gray);
 
         this.menuItems = db.getAllMenuItems();
         this.db = db;
         this.totalCost = 0;
+
+        this.olp = olp;
 
         drawDisplay();
     }
@@ -91,6 +94,7 @@ public class MainDisplayPanel {
 
         // Update the totalCostLabel text
         this.totalCostLabel.setText("$00.00");
+        olp.drawPanel();
     }
 
     public Vector<MyPair<Integer, Integer>> convertOrderToReturnVector() {
@@ -120,6 +124,7 @@ public class MainDisplayPanel {
             order_id = db.makeOrder(totalCost, date, customer_id, staff_id, finalOrder);
 
             orderCompleted();
+
         }
         return order_id;
     }
