@@ -16,6 +16,7 @@ public class MainDisplayPanel {
 
         int rows = menuItems.size() / 3 + 1;
         JPanel btnPanel = new JPanel(new GridLayout(rows, 3, 10, 10));
+        btnPanel.setPreferredSize(new Dimension(400, 400));
         
         // create buttons (up to )
         ActionListener addToOrder = new ActionListener() {
