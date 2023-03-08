@@ -49,10 +49,28 @@ public class Data {
             // }
             // return resultString;
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("failed");
             // JOptionPane.showMessageDialog(null, "Error accessing Database.");
         }
         return null;
+    }
+
+    public void executeUpdateSQL(String sqlStatement) {
+        try {
+            // create a statement object
+            Statement stmt = this.conn.createStatement();
+            // send statement to DBMS
+            stmt.executeUpdate(sqlStatement);
+            // while (result.next()) {
+            // resultString += result.getString(colName) + "\n";
+            // }
+            // return resultString;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("failed");
+            // JOptionPane.showMessageDialog(null, "Error accessing Database.");
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -294,7 +312,7 @@ public class Data {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Vector<Menu> getMenuItemsByInventoryId(int inventory_id) {
-        String sqlStatement = "SELECT * FROM inventory_to_menu WHERE inventory_id = " + inventory_id + ';';
+        String sqlStatement = "SELECT * FROM inventory_to_menu WHERE inventory_id = " + inventory_id + ";";
         Vector<Menu> out = new Vector<Menu>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
@@ -312,7 +330,7 @@ public class Data {
     }
 
     public Vector<MyPair<Integer, Integer>> getInventoryItemsByMenuId(int menu_id) {
-        String sqlStatement = "SELECT * FROM inventory_to_menu WHERE inventory_id = " + menu_id + ';';
+        String sqlStatement = "SELECT * FROM inventory_to_menu WHERE inventory_id = " + menu_id + ";";
         Vector<MyPair<Integer, Integer>> out = new Vector<MyPair<Integer, Integer>>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
@@ -329,7 +347,7 @@ public class Data {
     }
 
     public Vector<Order> getOrdersByMenuId(int menu_id) {
-        String sqlStatement = "SELECT * FROM menu_to_order WHERE menu_id = " + menu_id + ';';
+        String sqlStatement = "SELECT * FROM menu_to_order WHERE menu_id = " + menu_id + ";";
         Vector<Order> out = new Vector<Order>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
@@ -347,7 +365,7 @@ public class Data {
     }
 
     public Vector<MyPair<Integer, Integer>> getMenuItemsByOrderId(int order_id) {
-        String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id = " + order_id + ';';
+        String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id = " + order_id + ";";
         Vector<MyPair<Integer, Integer>> out = new Vector<MyPair<Integer, Integer>>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
@@ -383,7 +401,6 @@ public class Data {
             ResultSet res = this.executeSQL(sqlStatement1);
             if (res.next()) {
                 order_id = res.getInt("order_id");
-                System.out.println("new order with orderid: " + order_id);
                 // use the order_id value as needed
             }
         } catch (Exception e) {
@@ -396,9 +413,9 @@ public class Data {
         // Make menu_to_order Entry(ies)
         for (int i = 0; i < menu_items.size(); i++) {
             String sqlStatement2 = "INSERT INTO menu_to_order (menu_id, order_id, quantity) VALUES " +
-                    "(" + menu_items.get(i).getFirst() + ", " + order_id + ", '" + menu_items.get(i).getSecond() + ");";
+                    "(" + menu_items.get(i).getFirst() + ", " + order_id + ", " + menu_items.get(i).getSecond() + ");";
             try {
-                this.executeSQL(sqlStatement2);
+                this.executeUpdateSQL(sqlStatement2);
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Above error happened while creating menu_to_order entry.");
@@ -415,11 +432,11 @@ public class Data {
             Vector<MyPair<Integer, Integer>> inventory_items = this
                     .getInventoryItemsByMenuId(menu_items.get(i).getFirst());
             for (int j = 0; j < inventory_items.size(); j++) {
-                String sqlStatement3 = "UPDATE inventory SET quantity = quantity - "
+                String sqlStatement3 = "UPDATE inventory SET quantity = (quantity - "
                         + inventory_items.get(j).getSecond()
-                        + " WHERE inventory_id = " + inventory_items.get(j).getFirst() + ");";
+                        + ") WHERE inventory_id = " + inventory_items.get(j).getFirst() + ";";
                 try {
-                    this.executeSQL(sqlStatement3);
+                    this.executeUpdateSQL(sqlStatement3);
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println("Above error happened while decrementing inventory entry.");
@@ -435,7 +452,7 @@ public class Data {
     public boolean removeOrder(int order_id) {
         String sqlStatement1 = "DELETE * FROM menu_to_order WHERE order_id = " + order_id + ";";
         try {
-            this.executeSQL(sqlStatement1);
+            this.executeUpdateSQL(sqlStatement1);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Above error happened while deleting menu_to_order entry (called from removeOrder).");
@@ -445,7 +462,7 @@ public class Data {
 
         String sqlStatement2 = "DELETE FROM order WHERE order_id = " + order_id + ";";
         try {
-            this.executeSQL(sqlStatement2);
+            this.executeUpdateSQL(sqlStatement2);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Above error happened while deleting order entry.");
@@ -483,7 +500,7 @@ public class Data {
                     "(" + inventory_items.get(i).getFirst() + ", " + menu_id + ", '"
                     + inventory_items.get(i).getSecond() + ");";
             try {
-                this.executeSQL(sqlStatement2);
+                this.executeUpdateSQL(sqlStatement2);
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Above error happened while creating menu_to_order entry.");
@@ -498,7 +515,7 @@ public class Data {
     public boolean removeMenuItem(int menu_id) {
         String sqlStatement1 = "DELETE * FROM inventory_to_menu WHERE menu_id = " + menu_id + ";";
         try {
-            this.executeSQL(sqlStatement1);
+            this.executeUpdateSQL(sqlStatement1);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(
@@ -509,7 +526,7 @@ public class Data {
 
         String sqlStatement2 = "DELETE * FROM menu_to_order WHERE menu_id = " + menu_id + ";";
         try {
-            this.executeSQL(sqlStatement2);
+            this.executeUpdateSQL(sqlStatement2);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Above error happened while deleting menu_to_order entry (called from removeMenuItem).");
@@ -519,7 +536,7 @@ public class Data {
 
         String sqlStatement3 = "DELETE FROM menu WHERE menu_id = " + menu_id + ";";
         try {
-            this.executeSQL(sqlStatement3);
+            this.executeUpdateSQL(sqlStatement3);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Above error happened while deleting menu entry.");
@@ -533,7 +550,7 @@ public class Data {
     public boolean updateMenuPrice(int menu_id, double newPrice) {
         String query = "UPDATE menu SET price = " + newPrice + " WHERE menu_id = " + menu_id + ";";
         try {
-            this.executeSQL(query);
+            this.executeUpdateSQL(query);
             return true; // SUCCESS
         } catch (Exception e) {
             e.printStackTrace();
@@ -571,7 +588,7 @@ public class Data {
         }
 
         try {
-            this.executeSQL(sqlStatement);
+            this.executeUpdateSQL(sqlStatement);
             System.out.println("new (updated) menu_to_order for order: " + order_id);
         } catch (Exception e) {
             e.printStackTrace();
@@ -607,7 +624,7 @@ public class Data {
                 + "(menu_id = " + menu_id + " AND order_id = " + order_id + ");";
 
         try {
-            this.executeSQL(sqlStatement);
+            this.executeUpdateSQL(sqlStatement);
             System.out.println("deleted menu_to_order for order: " + order_id);
         } catch (Exception e) {
             e.printStackTrace();
@@ -622,7 +639,7 @@ public class Data {
     public boolean updateOrderPrice(int order_id, double newCostTotal) {
         String template = "UPDATE orders SET cost_total = " + newCostTotal + " WHERE order_id = " + order_id + ";";
         try {
-            this.executeSQL(template);
+            this.executeUpdateSQL(template);
             return true; // SUCCESS
         } catch (Exception e) {
             e.printStackTrace();
@@ -647,7 +664,7 @@ public class Data {
         String sqlStatement2 = "UPDATE restaurant SET revenue = " + revenue + " WHERE restaurant_id = " + restaurant_id
                 + ";";
         try {
-            this.executeSQL(sqlStatement2);
+            this.executeUpdateSQL(sqlStatement2);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
