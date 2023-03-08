@@ -77,7 +77,7 @@ public class GUI extends JFrame implements ActionListener {
                                                       (int)(frameSize.height * 0.85)));
 
     // Create a new empty border with 10 pixels of padding on the left and right edges
-    EmptyBorder padding = new EmptyBorder(0, 20, 0, 20);
+    EmptyBorder padding = new EmptyBorder(0, 10, 0, 10);
 
     // Add the padding to each sub-panel
     orderListP.panel.setBorder(padding);
@@ -89,7 +89,7 @@ public class GUI extends JFrame implements ActionListener {
     
     // Create the footer panel with a label and add it to the bottom of the frame
     JPanel footerPanel = new JPanel();
-    BasicControlPanel basicControlP = new BasicControlPanel(db);
+    BasicControlPanel basicControlP = new BasicControlPanel(db, mainDisplayP);
     footerPanel.add(basicControlP.panel, BorderLayout.CENTER);
     f.add(footerPanel, BorderLayout.SOUTH);
 
