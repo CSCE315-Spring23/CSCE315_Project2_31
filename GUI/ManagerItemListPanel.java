@@ -3,14 +3,14 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
 
-
 public class ManagerItemListPanel {
     JPanel panel;
+
     ManagerItemListPanel(Data db, ManagerMainDisplayPanel mmdp) {
         this.panel = new JPanel();
         this.panel.setBackground(Color.gray);
 
-        JPanel btnPanel = new JPanel(new GridLayout(6, 1, 10, 20));
+        JPanel btnPanel = new JPanel(new GridLayout(5, 1, 10, 20));
 
         ArrayList<JButton> buttons = new ArrayList<JButton>();
         // Sandwiches, Other Entrees, Sides, Dessert, Drinks
@@ -44,7 +44,7 @@ public class ManagerItemListPanel {
             }
         };
 
-        for(int i = 0; i < buttons.size(); i++){
+        for (int i = 0; i < buttons.size(); i++) {
             buttons.get(i).addActionListener(changeMenuItemsDisplay);
             buttons.get(i).setPreferredSize(new Dimension(150, 80));
             btnPanel.add(buttons.get(i));
@@ -52,5 +52,5 @@ public class ManagerItemListPanel {
 
         this.panel.add(btnPanel);
     }
-    
+
 }
