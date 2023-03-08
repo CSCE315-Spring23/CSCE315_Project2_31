@@ -43,7 +43,7 @@ public class GUI extends JFrame implements ActionListener {
     mainPanel1.setLayout(new BorderLayout());
     Dimension frameSize = f.getSize();
     mainPanel1.setPreferredSize(new Dimension(frameSize.width,
-        (int) (frameSize.height * 0.85)));
+        (int) (frameSize.height * 0.90)));
 
     // Create the footer panel with a label and add it to the bottom of the frame
     JPanel footerPanel = new JPanel();
@@ -63,9 +63,9 @@ public class GUI extends JFrame implements ActionListener {
     // Create a new empty border with 10 pixels of padding on the left and right
     // edges
     managerItemListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.20),
-        (int) (frameSize.height * 0.85)));
+        (int) (frameSize.height * 0.90)));
     managerMainDisplayP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.70),
-        (int) (frameSize.height * 0.85)));
+        (int) (frameSize.height * 0.90)));
 
     // pad panels
     EmptyBorder padding = new EmptyBorder(0, 10, 0, 10);
@@ -77,7 +77,7 @@ public class GUI extends JFrame implements ActionListener {
     JPanel mainPanel2 = new JPanel();
     mainPanel2.setLayout(new BorderLayout());
     mainPanel2.setPreferredSize(new Dimension(frameSize.width,
-        (int) (frameSize.height * 0.85)));
+        (int) (frameSize.height * 0.90)));
 
     MainDisplayPanel mainDisplayP = new MainDisplayPanel(db, orderListP);
     ItemListPanel itemListP = new ItemListPanel(db, mainDisplayP);
@@ -90,11 +90,11 @@ public class GUI extends JFrame implements ActionListener {
     // Create a new empty border with 10 pixels of padding on the left and right
     // edges
     orderListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
-        (int) (frameSize.height * 0.85)));
+        (int) (frameSize.height * 0.90)));
     itemListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
-        (int) (frameSize.height * 0.85)));
+        (int) (frameSize.height * 0.90)));
     mainDisplayP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.40),
-        (int) (frameSize.height * 0.85)));
+        (int) (frameSize.height * 0.90)));
 
     // pad panels
     itemListP.panel.setBorder(padding);

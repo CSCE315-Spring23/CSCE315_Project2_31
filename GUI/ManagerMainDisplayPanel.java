@@ -182,7 +182,7 @@ public class ManagerMainDisplayPanel {
         // menu_id; name; price; type; inventory_items
         // (Vector<MyPair<inventory_id, quantity>>);
 
-        JPanel itemCreationPanel = new JPanel(new FlowLayout());
+        JPanel itemCreationPanel = new JPanel(new GridLayout(5, 2));
 
         JLabel nameLabel = new JLabel("Menu Item Name: ");
         JLabel priceLabel = new JLabel("Menu Item Price: ");
