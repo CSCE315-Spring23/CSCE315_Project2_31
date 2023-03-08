@@ -9,7 +9,6 @@ public class MainDisplayPanel {
 
     MainDisplayPanel(Data db) {
         this.panel = new JPanel();
-        this.panel.setPreferredSize(new Dimension(350, 400));
         this.panel.setBackground(Color.gray);
 
         menuItems = db.getAllMenuItems();

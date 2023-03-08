@@ -9,7 +9,6 @@ public class ItemListPanel {
 
     ItemListPanel(Data db) {
         this.panel = new JPanel();
-        this.panel.setPreferredSize(new Dimension(200, 400));
         this.panel.setBackground(Color.gray);
 
         JPanel btnPanel = new JPanel(new GridLayout(6, 1, 10, 20));

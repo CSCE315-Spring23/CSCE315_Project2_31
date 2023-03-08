@@ -8,7 +8,11 @@ public class OrderListPanel {
 
     OrderListPanel(Data db) {
         this.panel = new JPanel();
+<<<<<<< HEAD
         this.panel.setPreferredSize(new Dimension(350, 400));
+=======
+
+>>>>>>> 1776546135c653ffa06b165ca50a650af4a85e23
         this.panel.setBackground(Color.gray);
 
         JPanel orderListView = new JPanel(new GridLayout(10, 1, 10, 10)); 
