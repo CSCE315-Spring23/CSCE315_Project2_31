@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 
@@ -11,20 +10,22 @@ public class OrderListPanel {
         this.panel.setPreferredSize(new Dimension(350, 400));
         this.panel.setBackground(Color.gray);
 
-        JPanel orderListView = new JPanel(new GridLayout(10, 1, 10, 10)); 
-        orderListView.setPreferredSize(new Dimension(340, 400));
-        
+        DefaultListModel<String> model = new DefaultListModel<String>();
+
         Vector<Order> orders = db.getRecentOrders();
         for (int i = orders.size()-9; i < orders.size(); i++){
-            JPanel order = new JPanel();
-            order.setPreferredSize(new Dimension(300, 50));
-            JTextArea orderContent = new JTextArea();
-            orderContent.setPreferredSize(new Dimension(300, 50));
-            orderContent.append("Order #" + orders.get(i).order_id + " --- Total Cost: " + orders.get(i).cost_total);
-            order.add(orderContent);
-            orderListView.add(order);
+            String orderContent = "Order #" + orders.get(i).order_id + " --- Total Cost: " + orders.get(i).cost_total;
+            model.addElement(orderContent);
         }
 
-        this.panel.add(orderListView);
+        JList<String> orderList = new JList<>(model);
+        orderList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        orderList.setLayoutOrientation(JList.VERTICAL);
+        orderList.setVisibleRowCount(-1);
+
+        JScrollPane scrollPane = new JScrollPane(orderList);
+        scrollPane.setPreferredSize(new Dimension(340, 400));
+
+        this.panel.add(scrollPane);
     }
 }
