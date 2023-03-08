@@ -15,6 +15,7 @@ public class OrderListPanel {
         orderListView.setPreferredSize(new Dimension(340, 400));
         
         Vector<Order> orders = db.getRecentOrders();
+        
         for (int i = orders.size()-9; i < orders.size(); i++){
             JPanel order = new JPanel();
             order.setPreferredSize(new Dimension(300, 50));

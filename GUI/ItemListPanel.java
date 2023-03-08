@@ -7,7 +7,7 @@ import java.util.*;
 public class ItemListPanel {
     JPanel panel;
 
-    ItemListPanel(Data db) {
+    ItemListPanel(Data db, MainDisplayPanel mdp) {
         this.panel = new JPanel();
         this.panel.setBackground(Color.gray);
 
@@ -16,68 +16,35 @@ public class ItemListPanel {
         ArrayList<JButton> buttons = new ArrayList<JButton>();
         // Sandwiches, Other Entrees, Sides, Dessert, Drinks
 
+        JButton allbutton = new JButton("All");
+        buttons.add(allbutton);
+
         JButton sandwichesButton = new JButton("Sandwiches");
-        sandwichesButton.setPreferredSize(new Dimension(150, 80));
-        sandwichesButton.setBackground(Color.yellow);
         buttons.add(sandwichesButton);
 
-        JButton otherEntreesButton = new JButton("Other Entrees");
-        otherEntreesButton.setPreferredSize(new Dimension(150, 80));
-        otherEntreesButton.setBackground(Color.green);
+        JButton otherEntreesButton = new JButton("Other");
         buttons.add(otherEntreesButton);
 
         JButton sidesButton = new JButton("Sides");
-        sidesButton.setPreferredSize(new Dimension(150, 80));
-        sidesButton.setBackground(Color.yellow);
         buttons.add(sidesButton);
 
         JButton dessertsButton = new JButton("Desserts");
-        dessertsButton.setPreferredSize(new Dimension(150, 80));
-        dessertsButton.setBackground(Color.green);
         buttons.add(dessertsButton);
 
         JButton drinksButton = new JButton("Drinks");
-        drinksButton.setPreferredSize(new Dimension(150, 80));
-        drinksButton.setBackground(Color.yellow);
         buttons.add(drinksButton);
 
-        sandwichesButton.addActionListener(new ActionListener() {
+        ActionListener changeMenuItemsDisplay = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("ItemListPanel: Button 1 Pressed");
-                MainDisplayPanel.testingConnection(1);
+                System.out.println("ItemListPanel: Button Pressed");
+                JButton pressedBtn = (JButton) e.getSource();
+                mdp.updateServerDisplay(pressedBtn.getText());
             }
-        });
-
-
-        otherEntreesButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("ItemListPanel: Button 2 Pressed");
-                MainDisplayPanel.testingConnection(2);
-            }
-        });
-
-        sidesButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("ItemListPanel: Button 3 Pressed");
-                MainDisplayPanel.testingConnection(3);
-            }
-        });
-
-        dessertsButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("ItemListPanel: Button 4 Pressed");
-                MainDisplayPanel.testingConnection(4);
-            }
-        });
-
-        drinksButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("ItemListPanel: Button 5 Pressed");
-                MainDisplayPanel.testingConnection(5);
-            }
-        });
+        };
 
         for(int i = 0; i < buttons.size(); i++){
+            buttons.get(i).addActionListener(changeMenuItemsDisplay);
+            buttons.get(i).setPreferredSize(new Dimension(150, 80));
             btnPanel.add(buttons.get(i));
         }
 

@@ -56,7 +56,16 @@ public class GUI extends JFrame implements ActionListener {
     // button to close program
     JButton b = new JButton("Close");
     // add actionlistener to button
-    b.addActionListener(s);
+    b.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        if (db.disconnect()) {
+          JOptionPane.showMessageDialog(null, "Connection Closed.");
+        } else {
+          JOptionPane.showMessageDialog(null, "Connection NOT Closed.");
+          System.exit(0);
+        }
+      }
+    });
 
     // Create the main panel with a FlowLayout and add three panels to it
     JPanel mainPanel = new JPanel();
@@ -67,8 +76,9 @@ public class GUI extends JFrame implements ActionListener {
     
     // Create Individual Display Panels
     OrderListPanel orderListP = new OrderListPanel(db);
-    ItemListPanel itemListP = new ItemListPanel(db);
     MainDisplayPanel mainDisplayP = new MainDisplayPanel(db);
+    ItemListPanel itemListP = new ItemListPanel(db, mainDisplayP);
+    
 
     // Add the sub-panels to the main panel
     mainPanel.add(orderListP.panel, BorderLayout.WEST);
@@ -95,12 +105,7 @@ public class GUI extends JFrame implements ActionListener {
     f.setVisible(true);
 
     // closing the connection
-    if (db.disconnect()) {
-      JOptionPane.showMessageDialog(null, "Connection Closed.");
-    } else {
-      JOptionPane.showMessageDialog(null, "Connection NOT Closed.");
-      System.exit(0);
-    }
+    
 
   }
 
