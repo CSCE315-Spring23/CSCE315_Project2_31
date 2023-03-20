@@ -1,7 +1,6 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.*;
 
 public class ManagerControlPanel {
     JPanel panel;
@@ -10,7 +9,7 @@ public class ManagerControlPanel {
         // Set the layout manager to FlowLayout with left alignment
         this.panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        // X Report generation
+        // Create some buttons and add them to the panel
         JButton getXReport = new JButton("X Report");
         getXReport.addActionListener(new ActionListener() {
             @Override
@@ -39,7 +38,8 @@ public class ManagerControlPanel {
         getSalesReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                SalesReportPanel srp = new SalesReportPanel(db);
+                JOptionPane.showMessageDialog(panel, srp.panel);
             }
         });
 
@@ -86,6 +86,7 @@ public class ManagerControlPanel {
         });
 
         // TODO: Implement the functionality of the get_Report buttons
+        this.panel.add(getSalesReport);
         this.panel.add(getXReport);
         this.panel.add(getZReport);
         this.panel.add(getSalesReport);
