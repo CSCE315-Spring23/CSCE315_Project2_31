@@ -25,11 +25,11 @@ public class ManagerControlPanel {
         getZReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double salesTotal = db.generateXReport(1);
-                if (salesTotal >= 0) {
-                    JOptionPane.showMessageDialog(panel, "Success");
+                boolean success = db.generateZReport(1);
+                if (success) {
+                    JOptionPane.showMessageDialog(panel, "Z Report generated successfully!");
                 } else {
-                    JOptionPane.showMessageDialog(panel, "Fail");
+                    JOptionPane.showMessageDialog(panel, "Z Report generation failed. Please try again.");
                 }
             }
         });
