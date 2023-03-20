@@ -488,7 +488,7 @@ public class Data {
      *         pairs that are in the menu item
      */
     public Vector<MyPair<Integer, Integer>> getInventoryItemsByMenuId(int menu_id) {
-        String sqlStatement = "SELECT * FROM inventory_to_menu WHERE inventory_id = " + menu_id + ";";
+        String sqlStatement = "SELECT * FROM inventory_to_menu WHERE menu_id = " + menu_id + ";";
         Vector<MyPair<Integer, Integer>> out = new Vector<MyPair<Integer, Integer>>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {

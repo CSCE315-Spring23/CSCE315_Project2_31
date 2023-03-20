@@ -121,8 +121,9 @@ public class MainDisplayPanel {
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
 
             Vector<MyPair<Integer, Integer>> finalOrder = convertOrderToReturnVector();
-            order_id = db.makeOrder(totalCost, date, customer_id, staff_id, finalOrder);
 
+            order_id = db.makeOrder(totalCost, date, customer_id, staff_id, finalOrder);
+            System.out.print(finalOrder.size());
             orderCompleted();
 
         }
