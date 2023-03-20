@@ -20,9 +20,9 @@ public class ManagerControlPanel {
             }
         });
 
-        JButton getYReport = new JButton("Z Report");
+        JButton getZReport = new JButton("Z Report");
 
-        getXReport.addActionListener(new ActionListener() {
+        getZReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 double salesTotal = db.generateXReport(1);
@@ -38,7 +38,7 @@ public class ManagerControlPanel {
         JButton getRestockReport = new JButton("Restock Report");
         // TODO: Implement the functionality of the get_Report buttons
         this.panel.add(getXReport);
-        this.panel.add(getYReport);
+        this.panel.add(getZReport);
         this.panel.add(getExcessReport);
         this.panel.add(getRestockReport);
 
