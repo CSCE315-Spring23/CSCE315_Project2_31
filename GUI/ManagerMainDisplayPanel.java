@@ -2,7 +2,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
-import java.util.concurrent.Flow;
 
 public class ManagerMainDisplayPanel {
     JPanel panel;
@@ -72,13 +71,25 @@ public class ManagerMainDisplayPanel {
     }
 
     public void drawDisplay(boolean isInventory) {
+        JPanel fullNewItemPanel;
         JPanel newItemPanel;
         JPanel btnPanel;
         if (isInventory) {
             int rows = inventoryItems.size() / 3 + 1;
-            newItemPanel = new JPanel(new GridLayout(2, 4));
             btnPanel = new JPanel(new GridLayout(rows, 3, 10, 10));
-            btnPanel.setPreferredSize(new Dimension(600, 500));
+            btnPanel.setPreferredSize(new Dimension(600, 450));
+
+            for (int i = 0; i < inventoryItems.size(); i++) {
+                // button for selecting item to add
+                JLabel btn = new JLabel();
+                btn.setPreferredSize(new Dimension(100, 40));
+                btn.setText(
+                        inventoryItems.get(i).name + " | " + inventoryItems.get(i).quantity);
+                btnPanel.add(btn);
+            }
+
+            fullNewItemPanel = new JPanel(new FlowLayout());
+            newItemPanel = new JPanel(new GridLayout(2, 2));
 
             // Set up the labels
             JLabel nameLabel = new JLabel("Inventory Name:");
@@ -116,30 +127,26 @@ public class ManagerMainDisplayPanel {
             newItemPanel.add(nameTextField);
             newItemPanel.add(quantityLabel);
             newItemPanel.add(quantityTextField);
-            newItemPanel.add(submitButton);
-
-            for (int i = 0; i < inventoryItems.size(); i++) {
-                // panel with two rows and second row is split into two columns
-                JPanel qtyBtnPanel = new JPanel(new BorderLayout());
-                Dimension panelSize = qtyBtnPanel.getSize();
-                qtyBtnPanel.setPreferredSize(new Dimension(panelSize.width, (int) (panelSize.height * 0.85)));
-
-                // button for selecting item to add
-                JLabel btn = new JLabel();
-                btn.setText(
-                        inventoryItems.get(i).name + " | " + inventoryItems.get(i).quantity);
-                btnPanel.add(btn);
-
-                // add buttons to handle quantity edits
-                btnPanel.add(qtyBtnPanel);
-            }
-
+            fullNewItemPanel.add(newItemPanel);
+            fullNewItemPanel.add(submitButton);
         } else {
             int rows = menuItems.size() / 3 + 1;
-            newItemPanel = new JPanel(new GridLayout(2, 4));
             btnPanel = new JPanel(new GridLayout(rows, 3, 10, 10));
-            btnPanel.setPreferredSize(new Dimension(550, 500));
+            btnPanel.setPreferredSize(new Dimension(600, 450));
 
+            for (int i = 0; i < menuItems.size(); i++) {
+                // button for selecting item to add
+                JLabel btn = new JLabel();
+                btn.setPreferredSize(new Dimension(100, 40));
+                btn.setText(
+                        "$" + menuItems.get(i).price + " " + menuItems.get(i).name);
+                btnPanel.add(btn);
+            }
+
+            fullNewItemPanel = new JPanel(new FlowLayout());
+            newItemPanel = new JPanel(new GridLayout(2, 2));
+
+            // Set up the labels
             JLabel nameLabel = new JLabel("Menu Item Name: ");
             JLabel priceLabel = new JLabel("New Price: ");
 
@@ -172,23 +179,8 @@ public class ManagerMainDisplayPanel {
             newItemPanel.add(nameTextField);
             newItemPanel.add(priceLabel);
             newItemPanel.add(priceTextField);
-            newItemPanel.add(submitButton);
-
-            for (int i = 0; i < menuItems.size(); i++) {
-                // panel with two rows and second row is split into two columns
-                JPanel qtyBtnPanel = new JPanel(new BorderLayout());
-                Dimension panelSize = qtyBtnPanel.getSize();
-                qtyBtnPanel.setPreferredSize(new Dimension(panelSize.width, (int) (panelSize.height * 0.85)));
-
-                // button for selecting item to add
-                JLabel btn = new JLabel();
-                btn.setText(
-                        "$" + menuItems.get(i).price + " " + menuItems.get(i).name);
-                btnPanel.add(btn);
-
-                // add buttons to handle quantity edits
-                btnPanel.add(qtyBtnPanel);
-            }
+            fullNewItemPanel.add(newItemPanel);
+            fullNewItemPanel.add(submitButton);
         }
 
         // menu_id; name; price; type; inventory_items
@@ -238,7 +230,7 @@ public class ManagerMainDisplayPanel {
         fullItemCreatePanel.add(addNewItemButton);
 
         panel.removeAll();
-        this.panel.add(newItemPanel);
+        this.panel.add(fullNewItemPanel);
         this.panel.add(btnPanel);
         this.panel.add(fullItemCreatePanel);
         this.panel.validate();

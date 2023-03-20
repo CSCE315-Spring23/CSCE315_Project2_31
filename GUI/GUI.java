@@ -43,12 +43,7 @@ public class GUI extends JFrame implements ActionListener {
     mainPanel1.setLayout(new BorderLayout());
     Dimension frameSize = f.getSize();
     mainPanel1.setPreferredSize(new Dimension(frameSize.width,
-        (int) (frameSize.height * 0.90)));
-
-    // Create the footer panel with a label and add it to the bottom of the frame
-    JPanel footerPanel = new JPanel();
-    BasicControlPanel basicControlP = new BasicControlPanel(db);
-    footerPanel.add(basicControlP.panel, BorderLayout.CENTER);
+        (int) (frameSize.height * 0.875)));
 
     // Create Individual Display Panels
     OrderListPanel orderListP = new OrderListPanel(db);
@@ -63,9 +58,9 @@ public class GUI extends JFrame implements ActionListener {
     // Create a new empty border with 10 pixels of padding on the left and right
     // edges
     managerItemListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.20),
-        (int) (frameSize.height * 0.90)));
+        (int) (frameSize.height * 0.875)));
     managerMainDisplayP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.70),
-        (int) (frameSize.height * 0.90)));
+        (int) (frameSize.height * 0.875)));
 
     // pad panels
     EmptyBorder padding = new EmptyBorder(0, 10, 0, 10);
@@ -77,7 +72,7 @@ public class GUI extends JFrame implements ActionListener {
     JPanel mainPanel2 = new JPanel();
     mainPanel2.setLayout(new BorderLayout());
     mainPanel2.setPreferredSize(new Dimension(frameSize.width,
-        (int) (frameSize.height * 0.90)));
+        (int) (frameSize.height * 0.875)));
 
     MainDisplayPanel mainDisplayP = new MainDisplayPanel(db, orderListP);
     ItemListPanel itemListP = new ItemListPanel(db, mainDisplayP);
@@ -90,11 +85,11 @@ public class GUI extends JFrame implements ActionListener {
     // Create a new empty border with 10 pixels of padding on the left and right
     // edges
     orderListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
-        (int) (frameSize.height * 0.90)));
-    itemListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.30),
-        (int) (frameSize.height * 0.90)));
-    mainDisplayP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.40),
-        (int) (frameSize.height * 0.90)));
+        (int) (frameSize.height * 0.875)));
+    itemListP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.20),
+        (int) (frameSize.height * 0.875)));
+    mainDisplayP.panel.setPreferredSize(new Dimension((int) (frameSize.width * 0.50),
+        (int) (frameSize.height * 0.875)));
 
     // pad panels
     itemListP.panel.setBorder(padding);
@@ -105,13 +100,24 @@ public class GUI extends JFrame implements ActionListener {
     mainPanel1.setVisible(!shouldSwitchToManager);
     mainPanel2.setVisible(shouldSwitchToManager);
 
+    // Create the footer panel with a label and add it to the bottom of the frame
+    JPanel footerPanel = new JPanel();
+    BasicControlPanel basicControlP = new BasicControlPanel(db);
+
     JButton switchServerToManagerButton = new JButton();
     if (shouldSwitchToManager) { // we are in the manager ready to go to server
       switchServerToManagerButton.setText("Manager View");
+      footerPanel.add(basicControlP.panel);
+      footerPanel.add(switchServerToManagerButton);
       // Add the main panel 1 to the top of the frame
       f.add(mainPanel2, BorderLayout.NORTH);
     } else {
       switchServerToManagerButton.setText("Server View");
+      footerPanel.add(basicControlP.panel);
+      // Add Manager controls to footer
+      ManagerControlPanel managerControlP = new ManagerControlPanel(db);
+      footerPanel.add(managerControlP.panel);
+      footerPanel.add(switchServerToManagerButton);
       // Add the main panel 2 to the top of the frame
       f.add(mainPanel1, BorderLayout.NORTH);
     }
@@ -126,11 +132,30 @@ public class GUI extends JFrame implements ActionListener {
           System.out.println("Switching to manager");
           switchServerToManagerButton.setText("Server View");
 
+          footerPanel.removeAll();
+
+          footerPanel.add(basicControlP.panel);
+          // Add Manager controls to footer
+          ManagerControlPanel managerControlP = new ManagerControlPanel(db);
+          footerPanel.add(managerControlP.panel);
+          footerPanel.add(switchServerToManagerButton);
+
+          footerPanel.validate();
+          footerPanel.repaint();
+
           // Add the main panel 2 to the top of the frame
           f.add(mainPanel1, BorderLayout.NORTH);
         } else { // currently in the manager
           System.out.println("Switching to server");
           switchServerToManagerButton.setText("Manager View");
+
+          footerPanel.removeAll();
+
+          footerPanel.add(basicControlP.panel);
+          footerPanel.add(switchServerToManagerButton);
+
+          footerPanel.validate();
+          footerPanel.repaint();
 
           // Add the main panel 1 to the top of the frame
           f.add(mainPanel2, BorderLayout.NORTH);
@@ -139,7 +164,6 @@ public class GUI extends JFrame implements ActionListener {
         shouldSwitchToManager = !shouldSwitchToManager;
       }
     });
-    footerPanel.add(switchServerToManagerButton);
 
     // Add the footer panel to the bottom of the frame
     f.add(footerPanel, BorderLayout.SOUTH);
