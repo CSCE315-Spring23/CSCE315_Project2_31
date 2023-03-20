@@ -104,8 +104,11 @@ public class MainDisplayPanel {
             out.add(new MyPair<Integer, Integer>(
                     this.currOrderItems.get(i).getFirst().menu_id,
                     this.currOrderItems.get(i).getSecond()));
+            // System.out.println(
+            // "[" + currOrderItems.get(i).getFirst().name + "-" +
+            // currOrderItems.get(i).getFirst().menu_id + ","
+            // + currOrderItems.get(i).getSecond() + "]");
         }
-
         return out;
     }
 
@@ -143,7 +146,7 @@ public class MainDisplayPanel {
     public void drawDisplay() {
         int rows = menuItems.size() / 3 + 1;
         JPanel btnPanel = new JPanel(new GridLayout(rows, 3, 10, 10));
-        btnPanel.setPreferredSize(new Dimension(450, 500));
+        btnPanel.setPreferredSize(new Dimension(600, 500));
 
         // create buttons (up to )
         ActionListener addToOrder = new ActionListener() {
@@ -169,28 +172,29 @@ public class MainDisplayPanel {
         };
         for (int i = 0; i < menuItems.size(); i++) {
             // panel with two rows and second row is split into two columns
-            JPanel qtyBtnPanel = new JPanel(new BorderLayout());
-            Dimension panelSize = qtyBtnPanel.getSize();
-            qtyBtnPanel.setPreferredSize(new Dimension(panelSize.width, (int) (panelSize.height * 0.85)));
+            JPanel qtyBtnPanel = new JPanel(new GridLayout(2, 1));
 
             // button for selecting item to add
             JButton btn = new JButton();
             btn.setText(menuItems.get(i).name);
             btn.addActionListener(addToOrder);
-            qtyBtnPanel.add(btn, BorderLayout.NORTH);
 
             // add buttons to handle quantity edits
             JPanel qtyPanel = new JPanel(new GridLayout(1, 2));
+
             JButton decreaseQtyBtn = new JButton("-");
             decreaseQtyBtn.putClientProperty("menuItemName", menuItems.get(i).name);
             decreaseQtyBtn.addActionListener(decreaseQty);
+
             JButton increaseQtyBtn = new JButton("+");
             increaseQtyBtn.putClientProperty("menuItemName", menuItems.get(i).name);
             increaseQtyBtn.addActionListener(increaseQty);
 
             qtyPanel.add(decreaseQtyBtn);
             qtyPanel.add(increaseQtyBtn);
-            qtyBtnPanel.add(qtyPanel, BorderLayout.SOUTH);
+
+            qtyBtnPanel.add(btn);
+            qtyBtnPanel.add(qtyPanel);
 
             btnPanel.add(qtyBtnPanel);
         }

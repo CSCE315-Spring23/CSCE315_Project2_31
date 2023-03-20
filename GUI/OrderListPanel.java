@@ -10,7 +10,7 @@ public class OrderListPanel {
         this.panel = new JPanel();
         this.db = db;
 
-        this.panel.setPreferredSize(new Dimension(350, 400));
+        this.panel.setPreferredSize(new Dimension(350, 700));
         this.panel.setBackground(Color.gray);
 
         drawPanel();
