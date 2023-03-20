@@ -309,7 +309,7 @@ public class Data {
         return null;
     }
 
-    public String getMenuName(int menu_id){
+    public String getMenuName(int menu_id) {
         String sqlStatement = "SELECT * FROM menu WHERE menu_id = " + menu_id + ";";
         ResultSet res = this.executeSQL(sqlStatement);
         try {
@@ -579,9 +579,7 @@ public class Data {
      *
      * @param order_id a int for order_id to search by
      * @return a {@code Vector<MyPair<Integer, Integer>>} object with the consisting
-     *         of
-     *         pairs
-     *         of the menu_id and quantity
+     *         of pairs of the menu_id and quantity
      */
     public Vector<MyPair<Integer, Integer>> getMenuItemsByOrderId(int order_id) {
         String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id = " + order_id + ";";
@@ -600,21 +598,24 @@ public class Data {
         return null;
     }
 
-    // public Vector<MyPair<String, Integer>> getMenuItemsSaleDataByOrderId(int order_id) {
-    //     String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id = " + order_id + ";";
-    //     Vector<MyPair<String, Integer>> out = new Vector<MyPair<String, Integer>>();
-    //     ResultSet res = this.executeSQL(sqlStatement);
-    //     try {
-    //         while (res.next()) {
-    //             // (menu_id, order_id, quantity)
-    //             out.add(new MyPair<String, Integer>(getMenuName(res.getInt("menu_id")), res.getInt("quantity")));
-    //         }
-    //         return out;
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         System.err.println(e.getClass().getName() + ": " + e.getMessage());
-    //     }
-    //     return null;
+    // public Vector<MyPair<String, Integer>> getMenuItemsSaleDataByOrderId(int
+    // order_id) {
+    // String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id = " +
+    // order_id + ";";
+    // Vector<MyPair<String, Integer>> out = new Vector<MyPair<String, Integer>>();
+    // ResultSet res = this.executeSQL(sqlStatement);
+    // try {
+    // while (res.next()) {
+    // // (menu_id, order_id, quantity)
+    // out.add(new MyPair<String, Integer>(getMenuName(res.getInt("menu_id")),
+    // res.getInt("quantity")));
+    // }
+    // return out;
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // System.err.println(e.getClass().getName() + ": " + e.getMessage());
+    // }
+    // return null;
     // }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1265,7 +1266,8 @@ public class Data {
                 for (int j = 0; j < menu_items.size(); j++) {
                     int qty = menu_items.get(j).getSecond();
                     int itemName = menu_items.get(j).getFirst();
-                    menuItemsSales.put(Integer.toString(itemName), menuItemsSales.getOrDefault(Integer.toString(itemName), qty) + qty);
+                    menuItemsSales.put(Integer.toString(itemName),
+                            menuItemsSales.getOrDefault(Integer.toString(itemName), qty) + qty);
                 }
             }
             return menuItemsSales;
