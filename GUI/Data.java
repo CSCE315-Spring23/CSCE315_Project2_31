@@ -266,7 +266,7 @@ public class Data {
      * @return a vector of recent Order object
      */
     public Vector<Order> getRecentOrders() {
-        String sqlStatement = "SELECT * FROM orders ORDER BY order_id DESC LIMIT 25;";
+        String sqlStatement = "SELECT * FROM orders ORDER BY order_id DESC LIMIT 50;";
         Vector<Order> out = new Vector<Order>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
@@ -1192,7 +1192,7 @@ public class Data {
      * @return double representing the total sales for that day since last z report
      *         id
      */
-    public double generateXReport(int restaurant_id) {
+    public double getXReport(int restaurant_id) {
         double totalSales = getTotalSalesSinceLastZReport(restaurant_id);
         System.out.println("X Report - Total Sales: " + totalSales);
         return totalSales;
@@ -1204,7 +1204,7 @@ public class Data {
      * @param restaurantId id of restaurant to generate z report
      * @return boolean representing the success or faliure of the operation
      */
-    public boolean generateZReport(int restaurant_id) {
+    public boolean getZReport(int restaurant_id) {
         double totalSales = getTotalSalesForToday(restaurant_id);
         System.out.println("Z Report - Total Sales: " + totalSales);
         String sql = "INSERT INTO z_reports (report_date, total_sales, restaurant_id) VALUES (CURRENT_DATE, "
@@ -1266,6 +1266,7 @@ public class Data {
         String sqlStatement = "SELECT * FROM inventory WHERE quantity <= " + minimumQty + ";";
         Vector<Inventory> refillItems = new Vector<Inventory>();
         try {
+            System.out.println("Starting restock report generation...");
             ResultSet res = this.executeSQL(sqlStatement);
             while (res.next()) {
                 Inventory item = new Inventory(
@@ -1274,11 +1275,11 @@ public class Data {
                         res.getInt("quantity"));
                 refillItems.add(item);
             }
+            System.out.println("Report generated successfully.");
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-
         return refillItems;
     }
 }
