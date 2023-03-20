@@ -309,6 +309,20 @@ public class Data {
         return null;
     }
 
+    public String getMenuName(int menu_id){
+        String sqlStatement = "SELECT * FROM menu WHERE menu_id = " + menu_id + ";";
+        ResultSet res = this.executeSQL(sqlStatement);
+        try {
+            res.next();
+            return res.getString("name");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return null;
+
+    }
+
     /**
      * Gets the menu item from the database that matches the name.
      *
@@ -585,6 +599,23 @@ public class Data {
         }
         return null;
     }
+
+    // public Vector<MyPair<String, Integer>> getMenuItemsSaleDataByOrderId(int order_id) {
+    //     String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id = " + order_id + ";";
+    //     Vector<MyPair<String, Integer>> out = new Vector<MyPair<String, Integer>>();
+    //     ResultSet res = this.executeSQL(sqlStatement);
+    //     try {
+    //         while (res.next()) {
+    //             // (menu_id, order_id, quantity)
+    //             out.add(new MyPair<String, Integer>(getMenuName(res.getInt("menu_id")), res.getInt("quantity")));
+    //         }
+    //         return out;
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         System.err.println(e.getClass().getName() + ": " + e.getMessage());
+    //     }
+    //     return null;
+    // }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1220,40 +1251,29 @@ public class Data {
         }
     }
 
-    public Vector<Order> getOrdersByTimeframe(java.sql.Date sDate, java.sql.Date eDate) {
+    public HashMap<String, Integer> getSalesReport(java.sql.Date sDate, java.sql.Date eDate) {
+        System.out.println("I AM HERE IN THE QUERY!!!");
         String sqlStatement = "SELECT * FROM orders WHERE date >= '" + sDate.toString() + "' AND date <= '"
                 + eDate.toString() + "';";
-        Vector<Order> out = new Vector<Order>();
+        HashMap<String, Integer> menuItemsSales = new HashMap<String, Integer>();
         ResultSet res = this.executeSQL(sqlStatement);
+        int i = 0;
         try {
             while (res.next()) {
+                System.out.println(Integer.toString(i++) + " IN THE ORDER LOOP WHILE RES.NEXT");
                 Vector<MyPair<Integer, Integer>> menu_items = this.getMenuItemsByOrderId(res.getInt("order_id"));
-                Order order = new Order(
-                        res.getInt("order_id"), res.getDouble("cost_total"), res.getDate("date"),
-                        res.getInt("customer_id"), res.getInt("staff_id"),
-                        menu_items);
-                out.add(order);
+                for (int j = 0; j < menu_items.size(); j++) {
+                    int qty = menu_items.get(j).getSecond();
+                    int itemName = menu_items.get(j).getFirst();
+                    menuItemsSales.put(Integer.toString(itemName), menuItemsSales.getOrDefault(Integer.toString(itemName), qty) + qty);
+                }
             }
-            return out;
+            return menuItemsSales;
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return null;
-    }
-
-    public HashMap<String, Integer> getSalesReport(java.sql.Date sDate, java.sql.Date eDate) {
-        Vector<Order> orders = getOrdersByTimeframe(sDate, eDate);
-        HashMap<String, Integer> menuItemsSales = new HashMap<String, Integer>();
-        for (int i = 0; i < orders.size(); i++) {
-            Vector<MyPair<Integer, Integer>> menu_items = this.getMenuItemsByOrderId(orders.get(i).order_id);
-            for (int j = 0; j < menu_items.size(); j++) {
-                int qty = menu_items.get(j).getSecond();
-                String itemName = getMenu(menu_items.get(j).getFirst()).name;
-                menuItemsSales.put(itemName, menuItemsSales.getOrDefault(itemName, qty) + qty);
-            }
-        }
-        return menuItemsSales;
     }
 
     /**
