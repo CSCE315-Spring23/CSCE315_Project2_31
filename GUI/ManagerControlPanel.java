@@ -60,6 +60,8 @@ public class ManagerControlPanel {
                 excessFrame.add(excessReportPanel.panel);
                 excessFrame.setSize(400, 600);
                 excessFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                excessFrame.setLocationRelativeTo(null);
+                excessFrame.setResizable(false);
                 excessFrame.setVisible(true);
             }
         });
@@ -93,6 +95,8 @@ public class ManagerControlPanel {
                 restockFrame.add(scrollPane);
                 restockFrame.setSize(400, 600);
                 restockFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                restockFrame.setLocationRelativeTo(null);
+                restockFrame.setResizable(false);
                 restockFrame.setVisible(true);
             }
         });
