@@ -37,6 +37,7 @@ public class GUI extends JFrame implements ActionListener {
     // // Make sure the JFrame is undecorated
     // f.setUndecorated(true);
     f.setSize(1250, 750);
+    f.setLocationRelativeTo(null);
 
     // Create the main panel with a FlowLayout and add three panels to it
     JPanel mainPanel1 = new JPanel();
