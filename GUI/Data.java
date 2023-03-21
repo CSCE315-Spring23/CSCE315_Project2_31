@@ -644,11 +644,11 @@ public class Data {
      * @return newly generated order_id
      */
     public int makeOrder(
-            double cost_total, java.sql.Date date, int customer_id, int staff_id,
+            double cost_total, Timestamp timestamp, int customer_id, int staff_id,
             Vector<MyPair<Integer, Integer>> menu_items) {
         // Make Order Entry
         String sqlStatement1 = "INSERT INTO orders (cost_total, date, customer_id, staff_id) " +
-                "VALUES (" + cost_total + ", '" + date.toString() + "', " + customer_id + ", " + staff_id + ") " +
+                "VALUES (" + cost_total + ", '" + timestamp.toString() + "', " + customer_id + ", " + staff_id + ") " +
                 "RETURNING order_id;";
         int order_id = -1;
         try {
