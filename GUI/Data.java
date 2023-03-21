@@ -266,7 +266,7 @@ public class Data {
      * @return a vector of recent Order object
      */
     public Vector<Order> getRecentOrders() {
-        String sqlStatement = "SELECT * FROM orders ORDER BY order_id DESC LIMIT 25;";
+        String sqlStatement = "SELECT * FROM orders ORDER BY order_id DESC LIMIT 50;";
         Vector<Order> out = new Vector<Order>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
@@ -309,7 +309,7 @@ public class Data {
         return null;
     }
 
-    public String getMenuName(int menu_id){
+    public String getMenuName(int menu_id) {
         String sqlStatement = "SELECT * FROM menu WHERE menu_id = " + menu_id + ";";
         ResultSet res = this.executeSQL(sqlStatement);
         try {
@@ -579,9 +579,7 @@ public class Data {
      *
      * @param order_id a int for order_id to search by
      * @return a {@code Vector<MyPair<Integer, Integer>>} object with the consisting
-     *         of
-     *         pairs
-     *         of the menu_id and quantity
+     *         of pairs of the menu_id and quantity
      */
     public Vector<MyPair<Integer, Integer>> getMenuItemsByOrderId(int order_id) {
         String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id = " + order_id + ";";
@@ -626,11 +624,11 @@ public class Data {
      * @return newly generated order_id
      */
     public int makeOrder(
-            double cost_total, java.sql.Date date, int customer_id, int staff_id,
+            double cost_total, Timestamp timestamp, int customer_id, int staff_id,
             Vector<MyPair<Integer, Integer>> menu_items) {
         // Make Order Entry
         String sqlStatement1 = "INSERT INTO orders (cost_total, date, customer_id, staff_id) " +
-                "VALUES (" + cost_total + ", '" + date.toString() + "', " + customer_id + ", " + staff_id + ") " +
+                "VALUES (" + cost_total + ", '" + timestamp.toString() + "', " + customer_id + ", " + staff_id + ") " +
                 "RETURNING order_id;";
         int order_id = -1;
         try {
@@ -1139,16 +1137,22 @@ public class Data {
      * @return double representing the total sales since last z report of restaurant
      */
 
-    public double getTotalSalesSinceLastZReport(int restaurant_id) {
+     public double getTotalSalesSinceLastZReport(int restaurant_id) {
         double totalSales = 0;
 
         String sqlCheckZReports = "SELECT COUNT(*) FROM z_reports WHERE restaurant_id = " + restaurant_id + ";";
-        String sqlGetTotalSales = "SELECT SUM(o.cost_total) " +
-                "FROM orders o " +
-                "JOIN staff s ON o.staff_id = s.staff_id " +
-                "WHERE (o.date > (SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = " + restaurant_id
-                + ") " +
-                "AND s.restaurant_id = " + restaurant_id + ");";
+        String sqlGetLatestZReport = "SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = "
+                + restaurant_id + ";";
+        // String sqlGetTotalSales = "SELECT SUM(o.cost_total) " +
+        // "FROM orders o " +
+        // "JOIN staff s ON o.staff_id = s.staff_id " +
+        // "WHERE (o.date > (SELECT MAX(z.report_date) FROM z_reports z WHERE
+        // z.restaurant_id = " + restaurant_id
+        // + ") " +
+        // "AND s.restaurant_id = " + restaurant_id + ");";
+
+        Vector<Order> orders;
+        java.sql.Date latestZReportDate = new java.sql.Date(System.currentTimeMillis());
 
         try {
             ResultSet resCheckZReports = this.executeSQL(sqlCheckZReports);
@@ -1158,6 +1162,18 @@ public class Data {
                     throw new RuntimeException("No Z reports exist for restaurant " + restaurant_id);
                 }
             }
+            ResultSet resGetLatestZReportDate = this.executeSQL(sqlGetLatestZReport);
+            if (resGetLatestZReportDate.next()) {
+                latestZReportDate = resGetLatestZReportDate.getDate(1);
+                System.out.println(latestZReportDate);
+            }
+            String sqlGetTotalSales = "SELECT SUM(o.cost_total) " +
+                    "FROM orders o " +
+                    "JOIN staff s ON o.staff_id = s.staff_id " +
+                    "WHERE (o.date > (SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = "
+                    + restaurant_id
+                    + " ) AND o.date < CURRENT_DATE " +
+                    "AND s.restaurant_id = " + restaurant_id + ");";
 
             ResultSet resGetTotalSales = this.executeSQL(sqlGetTotalSales);
             if (resGetTotalSales.next()) {
@@ -1206,7 +1222,7 @@ public class Data {
      * @return double representing the total sales for that day since last z report
      *         id
      */
-    public double generateXReport(int restaurant_id) {
+    public double getXReport(int restaurant_id) {
         double totalSales = getTotalSalesSinceLastZReport(restaurant_id);
         System.out.println("X Report - Total Sales: " + totalSales);
         return totalSales;
@@ -1218,7 +1234,7 @@ public class Data {
      * @param restaurantId id of restaurant to generate z report
      * @return boolean representing the success or faliure of the operation
      */
-    public boolean generateZReport(int restaurant_id) {
+    public boolean getZReport(int restaurant_id) {
         double totalSales = getTotalSalesForToday(restaurant_id);
         System.out.println("Z Report - Total Sales: " + totalSales);
         String sql = "INSERT INTO z_reports (report_date, total_sales, restaurant_id) VALUES (CURRENT_DATE, "
@@ -1245,7 +1261,8 @@ public class Data {
             while (res.next()) {
                 int itemName = res.getInt("menu_id");
                 int qty = res.getInt("quantity");
-                menuItemsSales.put(Integer.toString(itemName), menuItemsSales.getOrDefault(Integer.toString(itemName), qty) + qty);
+                menuItemsSales.put(Integer.toString(itemName),
+                            menuItemsSales.getOrDefault(Integer.toString(itemName), qty) + qty);
             }
             return menuItemsSales;
         } catch (Exception e) {
@@ -1265,6 +1282,7 @@ public class Data {
         String sqlStatement = "SELECT * FROM inventory WHERE quantity <= " + minimumQty + ";";
         Vector<Inventory> refillItems = new Vector<Inventory>();
         try {
+            System.out.println("Starting restock report generation...");
             ResultSet res = this.executeSQL(sqlStatement);
             while (res.next()) {
                 Inventory item = new Inventory(
@@ -1273,11 +1291,11 @@ public class Data {
                         res.getInt("quantity"));
                 refillItems.add(item);
             }
+            System.out.println("Report generated successfully.");
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-
         return refillItems;
     }
 }

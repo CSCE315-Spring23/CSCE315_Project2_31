@@ -3,7 +3,6 @@ import java.awt.*;
 // import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
-import java.sql.*;
 
 public class SalesReportPanel {
     JPanel panel;
@@ -22,10 +21,9 @@ public class SalesReportPanel {
 
         this.panel.add(dateInputPanel);
         this.panel.add(salesPanel);
-        
+
         DefaultListModel<String> model = new DefaultListModel<String>();
 
-        
         System.out.println("Starting Query");
         HashMap<String, Integer> menuItemsWithQuantitySold = db.getSalesReport(sDate, eDate);
         System.out.println("Finished Query");
@@ -45,5 +43,6 @@ public class SalesReportPanel {
 
         JScrollPane scrollPane = new JScrollPane(menuItemList);
         scrollPane.setPreferredSize(new Dimension(340, 400));
+        this.panel.add(scrollPane);
     }
 }
