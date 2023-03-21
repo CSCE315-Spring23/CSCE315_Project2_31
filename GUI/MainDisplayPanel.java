@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
+import java.sql.*;
 
 public class MainDisplayPanel {
     JPanel panel;
@@ -121,10 +122,10 @@ public class MainDisplayPanel {
             int customer_id = rand.nextInt(1000);
             int staff_id = rand.nextInt(15) + 1;
 
-            java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
             Vector<MyPair<Integer, Integer>> finalOrder = convertOrderToReturnVector();
-            order_id = db.makeOrder(totalCost, date, customer_id, staff_id, finalOrder);
+            order_id = db.makeOrder(totalCost, timestamp, customer_id, staff_id, finalOrder);
 
             orderCompleted();
 

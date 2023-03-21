@@ -33,7 +33,7 @@ public class OrderListPanel {
         orderList.setVisibleRowCount(-1);
 
         JScrollPane scrollPane = new JScrollPane(orderList);
-        scrollPane.setPreferredSize(new Dimension(340, 400));
+        scrollPane.setPreferredSize(new Dimension(340, 600));
         this.panel.removeAll();
         this.panel.add(scrollPane);
         this.panel.validate();
