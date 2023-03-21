@@ -39,8 +39,12 @@ public class ManagerControlPanel {
         getSalesReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                JFrame salesFrame = new JFrame("Sales Report");
+                salesFrame.setSize(400, 700);
+                salesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 SalesReportFrame salesReportPanel = new SalesReportFrame(db);
-                salesReportPanel.salesFrame.setVisible(true);
+                salesFrame.add(salesReportPanel.panel);
+                salesFrame.setVisible(true);
             }
         });
 

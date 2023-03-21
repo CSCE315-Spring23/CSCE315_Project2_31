@@ -1157,7 +1157,7 @@ public class Data {
      * @return double representing the total sales since last z report of restaurant
      */
 
-     public double getTotalSalesSinceLastZReport(int restaurant_id) {
+    public double getTotalSalesSinceLastZReport(int restaurant_id) {
         double totalSales = 0;
 
         String sqlCheckZReports = "SELECT COUNT(*) FROM z_reports WHERE restaurant_id = " + restaurant_id + ";";
@@ -1171,7 +1171,6 @@ public class Data {
         // + ") " +
         // "AND s.restaurant_id = " + restaurant_id + ");";
 
-        Vector<Order> orders;
         java.sql.Date latestZReportDate = new java.sql.Date(System.currentTimeMillis());
 
         try {
@@ -1272,21 +1271,17 @@ public class Data {
 
     public HashMap<String, Integer> getSalesReport(java.sql.Date sDate, java.sql.Date eDate) {
         System.out.println("I AM HERE IN THE QUERY!!!");
-        String sqlStatement = "SELECT * FROM orders WHERE date >= '" + sDate.toString() + "' AND date <= '"
-                + eDate.toString() + "';";
+        String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id IN (SELECT order_id FROMT orders WHERE date >= '"
+                + sDate.toString() + "' AND date <= '" + eDate.toString() + "');";
         HashMap<String, Integer> menuItemsSales = new HashMap<String, Integer>();
         ResultSet res = this.executeSQL(sqlStatement);
         int i = 0;
         try {
             while (res.next()) {
-                System.out.println(Integer.toString(i++) + " IN THE ORDER LOOP WHILE RES.NEXT");
-                Vector<MyPair<Integer, Integer>> menu_items = this.getMenuItemsByOrderId(res.getInt("order_id"));
-                for (int j = 0; j < menu_items.size(); j++) {
-                    int qty = menu_items.get(j).getSecond();
-                    int itemName = menu_items.get(j).getFirst();
-                    menuItemsSales.put(Integer.toString(itemName),
-                            menuItemsSales.getOrDefault(Integer.toString(itemName), qty) + qty);
-                }
+                int itemName = res.getInt("menu_id");
+                int qty = res.getInt("quantity");
+                menuItemsSales.put(Integer.toString(itemName),
+                        menuItemsSales.getOrDefault(Integer.toString(itemName), qty) + qty);
             }
             return menuItemsSales;
         } catch (Exception e) {
