@@ -53,16 +53,12 @@ public class ManagerControlPanel {
         getExcessReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Vector<MyPair<Inventory, Float>> result = db.getLowSellingInventorySinceTimestamp(java.sql.Date.valueOf("2023-03-20"));
-                if (result != null) {
-                    String res = "Low sales since 2023-03-20\n";
-                    for (int i = 0; i < result.size(); i++) {
-                        res += result.get(i).getFirst().name + " | " + result.get(i).getSecond() + "%\n";
-                    }
-                    JOptionPane.showMessageDialog(panel, res);
-                } else {
-                    JOptionPane.showMessageDialog(panel, "Excess Report generation failed. Please try again.");
-                }
+                ExcessReportPanel excessReportPanel = new ExcessReportPanel(db);
+                JFrame excessFrame = new JFrame("Excess Report");
+                excessFrame.add(excessReportPanel.panel);
+                excessFrame.setSize(400, 600);
+                excessFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                excessFrame.setVisible(true);
             }
         });
 
