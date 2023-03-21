@@ -1092,21 +1092,22 @@ public class Data {
     public Vector<MyPair<Inventory, Float>> getInventorySalesSinceTimestamp(java.sql.Date timestamp) {
         Vector<MyPair<Inventory, Float>> inventory_sales_percentages = new Vector<MyPair<Inventory, Float>>();
 
-        String sqlStatement = "SELECT inventory.name, inventory_to_menu.inventory_id, SUM(menu_to_order.quantity * inventory_to_menu.quantity) as total_quantity_sold, "
-                + "SUM(inventory_to_menu.quantity) as current_quantity FROM menu_to_order INNER JOIN (SELECT order_id FROM orders WHERE date >= '"
-                + timestamp.toString()
-                + "') filtered_orders ON menu_to_order.order_id = filtered_orders.order_id INNER JOIN inventory_to_menu "
-                + "ON menu_to_order.menu_id = inventory_to_menu.menu_id INNER JOIN inventory ON inventory_to_menu.inventory_id = inventory.inventory_id "
-                + "GROUP BY inventory_to_menu.inventory_id, inventory.name;";
+        String sqlStatement = "SELECT i.inventory_id, i.name, i.quantity, "
+                            + "COALESCE(SUM(im.quantity * mo.quantity), 0) AS total_sold "
+                            + "FROM inventory i LEFT JOIN inventory_to_menu im ON i.inventory_id = im.inventory_id "
+                            + "LEFT JOIN menu m ON m.menu_id = im.menu_id LEFT JOIN menu_to_order mo ON m.menu_id = mo.menu_id "
+                            + "LEFT JOIN orders o ON o.order_id = mo.order_id "
+                            + "WHERE o.date >= '" + timestamp.toString() + "'GROUP BY i.inventory_id, i.name, i.quantity;";
 
         try {
             ResultSet res = this.executeSQL(sqlStatement);
             while (res.next()) {
                 int inventory_id = res.getInt("inventory_id");
                 String name = res.getString("name");
-                int total_quantity_sold = res.getInt("total_quantity_sold");
-                int quantity = res.getInt("current_quantity");
-                float percentage_sold = (float) total_quantity_sold / (total_quantity_sold + quantity);
+                int total_quantity_sold = res.getInt("total_sold");
+                int quantity = res.getInt("quantity");
+                float percentage_sold = (float) total_quantity_sold / (total_quantity_sold + quantity) * 100;
+                System.out.println(quantity + ", " + total_quantity_sold);
                 inventory_sales_percentages.add(
                         new MyPair<Inventory, Float>(new Inventory(inventory_id, name, quantity), percentage_sold));
             }
@@ -1116,6 +1117,29 @@ public class Data {
             return null;
         }
         return inventory_sales_percentages;
+    }
+
+    /**
+     * Gets inventory items with below 10% sales since timestamp
+     * 
+     * @param timestamp date for query
+     * @return Vector<MyPair<Inventory, Float>> for the percentage of each inventory
+     *         item sold
+     */
+
+     public Vector<MyPair<Inventory, Float>> getLowSellingInventorySinceTimestamp(java.sql.Date timestamp) {
+        Vector<MyPair<Inventory, Float>> inventory_sales_percentages = this.getInventorySalesSinceTimestamp(timestamp);
+        Vector<MyPair<Inventory, Float>> out = new Vector<MyPair<Inventory, Float>>();
+
+        if (inventory_sales_percentages == null) return null;
+
+        for (int i = 0; i < inventory_sales_percentages.size(); i++) {
+            if (inventory_sales_percentages.get(i).getSecond() < 10) {
+                out.add(inventory_sales_percentages.get(i));
+            }
+        }
+
+        return out;
     }
 
     /**
