@@ -17,7 +17,7 @@ public class SalesReportPanel {
         JPanel dateInputPanel = new JPanel();
         JPanel salesPanel = new JPanel();
 
-        sDate = java.sql.Date.valueOf("2023-02-15");
+        sDate = java.sql.Date.valueOf("2022-08-15");
         eDate = java.sql.Date.valueOf("2023-02-15");
 
         this.panel.add(dateInputPanel);

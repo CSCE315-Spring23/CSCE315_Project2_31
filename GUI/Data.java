@@ -600,23 +600,6 @@ public class Data {
         return null;
     }
 
-    // public Vector<MyPair<String, Integer>> getMenuItemsSaleDataByOrderId(int order_id) {
-    //     String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id = " + order_id + ";";
-    //     Vector<MyPair<String, Integer>> out = new Vector<MyPair<String, Integer>>();
-    //     ResultSet res = this.executeSQL(sqlStatement);
-    //     try {
-    //         while (res.next()) {
-    //             // (menu_id, order_id, quantity)
-    //             out.add(new MyPair<String, Integer>(getMenuName(res.getInt("menu_id")), res.getInt("quantity")));
-    //         }
-    //         return out;
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         System.err.println(e.getClass().getName() + ": " + e.getMessage());
-    //     }
-    //     return null;
-    // }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Modifying (makeOrder, addItem, changeMenuPrice, changeOrderPrice,
@@ -1253,20 +1236,16 @@ public class Data {
 
     public HashMap<String, Integer> getSalesReport(java.sql.Date sDate, java.sql.Date eDate) {
         System.out.println("I AM HERE IN THE QUERY!!!");
-        String sqlStatement = "SELECT * FROM orders WHERE date >= '" + sDate.toString() + "' AND date <= '"
-                + eDate.toString() + "';";
+        String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id IN (SELECT order_id FROM orders WHERE date >= '" + 
+                sDate.toString() + "' AND date <= '" + eDate.toString() + "');";
+
         HashMap<String, Integer> menuItemsSales = new HashMap<String, Integer>();
         ResultSet res = this.executeSQL(sqlStatement);
-        int i = 0;
         try {
             while (res.next()) {
-                System.out.println(Integer.toString(i++) + " IN THE ORDER LOOP WHILE RES.NEXT");
-                Vector<MyPair<Integer, Integer>> menu_items = this.getMenuItemsByOrderId(res.getInt("order_id"));
-                for (int j = 0; j < menu_items.size(); j++) {
-                    int qty = menu_items.get(j).getSecond();
-                    int itemName = menu_items.get(j).getFirst();
-                    menuItemsSales.put(Integer.toString(itemName), menuItemsSales.getOrDefault(Integer.toString(itemName), qty) + qty);
-                }
+                int itemName = res.getInt("menu_id");
+                int qty = res.getInt("quantity");
+                menuItemsSales.put(Integer.toString(itemName), menuItemsSales.getOrDefault(Integer.toString(itemName), qty) + qty);
             }
             return menuItemsSales;
         } catch (Exception e) {
