@@ -1157,16 +1157,22 @@ public class Data {
      * @return double representing the total sales since last z report of restaurant
      */
 
-    public double getTotalSalesSinceLastZReport(int restaurant_id) {
+     public double getTotalSalesSinceLastZReport(int restaurant_id) {
         double totalSales = 0;
 
         String sqlCheckZReports = "SELECT COUNT(*) FROM z_reports WHERE restaurant_id = " + restaurant_id + ";";
-        String sqlGetTotalSales = "SELECT SUM(o.cost_total) " +
-                "FROM orders o " +
-                "JOIN staff s ON o.staff_id = s.staff_id " +
-                "WHERE (o.date > (SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = " + restaurant_id
-                + ") " +
-                "AND s.restaurant_id = " + restaurant_id + ");";
+        String sqlGetLatestZReport = "SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = "
+                + restaurant_id + ";";
+        // String sqlGetTotalSales = "SELECT SUM(o.cost_total) " +
+        // "FROM orders o " +
+        // "JOIN staff s ON o.staff_id = s.staff_id " +
+        // "WHERE (o.date > (SELECT MAX(z.report_date) FROM z_reports z WHERE
+        // z.restaurant_id = " + restaurant_id
+        // + ") " +
+        // "AND s.restaurant_id = " + restaurant_id + ");";
+
+        Vector<Order> orders;
+        java.sql.Date latestZReportDate = new java.sql.Date(System.currentTimeMillis());
 
         try {
             ResultSet resCheckZReports = this.executeSQL(sqlCheckZReports);
@@ -1176,6 +1182,18 @@ public class Data {
                     throw new RuntimeException("No Z reports exist for restaurant " + restaurant_id);
                 }
             }
+            ResultSet resGetLatestZReportDate = this.executeSQL(sqlGetLatestZReport);
+            if (resGetLatestZReportDate.next()) {
+                latestZReportDate = resGetLatestZReportDate.getDate(1);
+                System.out.println(latestZReportDate);
+            }
+            String sqlGetTotalSales = "SELECT SUM(o.cost_total) " +
+                    "FROM orders o " +
+                    "JOIN staff s ON o.staff_id = s.staff_id " +
+                    "WHERE (o.date > (SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = "
+                    + restaurant_id
+                    + " ) AND o.date < CURRENT_DATE " +
+                    "AND s.restaurant_id = " + restaurant_id + ");";
 
             ResultSet resGetTotalSales = this.executeSQL(sqlGetTotalSales);
             if (resGetTotalSales.next()) {
