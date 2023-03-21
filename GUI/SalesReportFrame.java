@@ -4,29 +4,24 @@ import java.awt.*;
 import javax.swing.*;
 import java.util.*;
 
-public class SalesReportPanel {
-    JPanel panel;
+public class SalesReportFrame {
+    JFrame salesFrame;
     java.sql.Date sDate;
     java.sql.Date eDate;
     Data db;
 
-    public SalesReportPanel(Data db) {
-        this.panel = new JPanel();
+    public SalesReportFrame(Data db) {
+        salesFrame = new JFrame("Sales Report");
+        salesFrame.setSize(400, 600);
+        salesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.db = db;
+
         JPanel dateInputPanel = new JPanel();
         JPanel salesPanel = new JPanel();
 
-        sDate = java.sql.Date.valueOf("2023-02-15");
-        eDate = java.sql.Date.valueOf("2023-02-15");
-
-        this.panel.add(dateInputPanel);
-        this.panel.add(salesPanel);
-
         DefaultListModel<String> model = new DefaultListModel<String>();
 
-        System.out.println("Starting Query");
         HashMap<String, Integer> menuItemsWithQuantitySold = db.getSalesReport(sDate, eDate);
-        System.out.println("Finished Query");
         for (Map.Entry<String, Integer> mapElem : menuItemsWithQuantitySold.entrySet()) {
             int id = Integer.parseInt(mapElem.getKey());
             String name = db.getMenuName(id);
@@ -43,6 +38,5 @@ public class SalesReportPanel {
 
         JScrollPane scrollPane = new JScrollPane(menuItemList);
         scrollPane.setPreferredSize(new Dimension(340, 400));
-        this.panel.add(scrollPane);
     }
 }

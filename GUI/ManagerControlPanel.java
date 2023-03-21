@@ -1,6 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.*;
 
 public class ManagerControlPanel {
     JPanel panel;
@@ -38,12 +39,8 @@ public class ManagerControlPanel {
         getSalesReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SalesReportPanel salesReportPanel = new SalesReportPanel(db);
-                JFrame salesFrame = new JFrame("Sales Report");
-                salesFrame.add(salesReportPanel.panel);
-                salesFrame.setSize(400, 600);
-                salesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                salesFrame.setVisible(true);
+                SalesReportFrame salesReportPanel = new SalesReportFrame(db);
+                salesReportPanel.salesFrame.setVisible(true);
             }
         });
 
@@ -89,7 +86,6 @@ public class ManagerControlPanel {
             }
         });
 
-        // TODO: Implement the functionality of the get_Report buttons
         this.panel.add(getSalesReport);
         this.panel.add(getXReport);
         this.panel.add(getZReport);
