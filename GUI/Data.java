@@ -266,7 +266,7 @@ public class Data {
      * @return a vector of recent Order object
      */
     public Vector<Order> getRecentOrders() {
-        String sqlStatement = "SELECT * FROM orders ORDER BY order_id DESC LIMIT 25;";
+        String sqlStatement = "SELECT * FROM orders ORDER BY order_id DESC LIMIT 50;";
         Vector<Order> out = new Vector<Order>();
         ResultSet res = this.executeSQL(sqlStatement);
         try {
@@ -307,6 +307,20 @@ public class Data {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return null;
+    }
+
+    public String getMenuName(int menu_id) {
+        String sqlStatement = "SELECT * FROM menu WHERE menu_id = " + menu_id + ";";
+        ResultSet res = this.executeSQL(sqlStatement);
+        try {
+            res.next();
+            return res.getString("name");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return null;
+
     }
 
     /**
@@ -565,9 +579,7 @@ public class Data {
      *
      * @param order_id a int for order_id to search by
      * @return a {@code Vector<MyPair<Integer, Integer>>} object with the consisting
-     *         of
-     *         pairs
-     *         of the menu_id and quantity
+     *         of pairs of the menu_id and quantity
      */
     public Vector<MyPair<Integer, Integer>> getMenuItemsByOrderId(int order_id) {
         String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id = " + order_id + ";";
@@ -585,6 +597,26 @@ public class Data {
         }
         return null;
     }
+
+    // public Vector<MyPair<String, Integer>> getMenuItemsSaleDataByOrderId(int
+    // order_id) {
+    // String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id = " +
+    // order_id + ";";
+    // Vector<MyPair<String, Integer>> out = new Vector<MyPair<String, Integer>>();
+    // ResultSet res = this.executeSQL(sqlStatement);
+    // try {
+    // while (res.next()) {
+    // // (menu_id, order_id, quantity)
+    // out.add(new MyPair<String, Integer>(getMenuName(res.getInt("menu_id")),
+    // res.getInt("quantity")));
+    // }
+    // return out;
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // System.err.println(e.getClass().getName() + ": " + e.getMessage());
+    // }
+    // return null;
+    // }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1192,7 +1224,7 @@ public class Data {
      * @return double representing the total sales for that day since last z report
      *         id
      */
-    public double generateXReport(int restaurant_id) {
+    public double getXReport(int restaurant_id) {
         double totalSales = getTotalSalesSinceLastZReport(restaurant_id);
         System.out.println("X Report - Total Sales: " + totalSales);
         return totalSales;
@@ -1204,7 +1236,7 @@ public class Data {
      * @param restaurantId id of restaurant to generate z report
      * @return boolean representing the success or faliure of the operation
      */
-    public boolean generateZReport(int restaurant_id) {
+    public boolean getZReport(int restaurant_id) {
         double totalSales = getTotalSalesForToday(restaurant_id);
         System.out.println("Z Report - Total Sales: " + totalSales);
         String sql = "INSERT INTO z_reports (report_date, total_sales, restaurant_id) VALUES (CURRENT_DATE, "
@@ -1220,40 +1252,30 @@ public class Data {
         }
     }
 
-    public Vector<Order> getOrdersByTimeframe(java.sql.Date sDate, java.sql.Date eDate) {
+    public HashMap<String, Integer> getSalesReport(java.sql.Date sDate, java.sql.Date eDate) {
+        System.out.println("I AM HERE IN THE QUERY!!!");
         String sqlStatement = "SELECT * FROM orders WHERE date >= '" + sDate.toString() + "' AND date <= '"
                 + eDate.toString() + "';";
-        Vector<Order> out = new Vector<Order>();
+        HashMap<String, Integer> menuItemsSales = new HashMap<String, Integer>();
         ResultSet res = this.executeSQL(sqlStatement);
+        int i = 0;
         try {
             while (res.next()) {
+                System.out.println(Integer.toString(i++) + " IN THE ORDER LOOP WHILE RES.NEXT");
                 Vector<MyPair<Integer, Integer>> menu_items = this.getMenuItemsByOrderId(res.getInt("order_id"));
-                Order order = new Order(
-                        res.getInt("order_id"), res.getDouble("cost_total"), res.getDate("date"),
-                        res.getInt("customer_id"), res.getInt("staff_id"),
-                        menu_items);
-                out.add(order);
+                for (int j = 0; j < menu_items.size(); j++) {
+                    int qty = menu_items.get(j).getSecond();
+                    int itemName = menu_items.get(j).getFirst();
+                    menuItemsSales.put(Integer.toString(itemName),
+                            menuItemsSales.getOrDefault(Integer.toString(itemName), qty) + qty);
+                }
             }
-            return out;
+            return menuItemsSales;
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return null;
-    }
-
-    public HashMap<String, Integer> getSalesReport(java.sql.Date sDate, java.sql.Date eDate) {
-        Vector<Order> orders = getOrdersByTimeframe(sDate, eDate);
-        HashMap<String, Integer> menuItemsSales = new HashMap<String, Integer>();
-        for (int i = 0; i < orders.size(); i++) {
-            Vector<MyPair<Integer, Integer>> menu_items = this.getMenuItemsByOrderId(orders.get(i).order_id);
-            for (int j = 0; j < menu_items.size(); j++) {
-                int qty = menu_items.get(j).getSecond();
-                String itemName = getMenu(menu_items.get(j).getFirst()).name;
-                menuItemsSales.put(itemName, menuItemsSales.getOrDefault(itemName, qty) + qty);
-            }
-        }
-        return menuItemsSales;
     }
 
     /**
@@ -1266,6 +1288,7 @@ public class Data {
         String sqlStatement = "SELECT * FROM inventory WHERE quantity <= " + minimumQty + ";";
         Vector<Inventory> refillItems = new Vector<Inventory>();
         try {
+            System.out.println("Starting restock report generation...");
             ResultSet res = this.executeSQL(sqlStatement);
             while (res.next()) {
                 Inventory item = new Inventory(
@@ -1274,11 +1297,11 @@ public class Data {
                         res.getInt("quantity"));
                 refillItems.add(item);
             }
+            System.out.println("Report generated successfully.");
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-
         return refillItems;
     }
 }
