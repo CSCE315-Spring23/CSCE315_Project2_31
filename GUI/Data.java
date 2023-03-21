@@ -1250,6 +1250,9 @@ public class Data {
     }
 
     public HashMap<String, Integer> getSalesReport(java.sql.Date sDate, java.sql.Date eDate) {
+        if (eDate.compareTo(sDate) < 0) {
+            throw new IllegalArgumentException("Provided END DATE Occurs Before Provided START DATE");
+        }
         System.out.println("I AM HERE IN THE QUERY!!!");
         String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id IN (SELECT order_id FROM orders WHERE date >= '"
                 +
