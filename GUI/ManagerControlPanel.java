@@ -55,7 +55,12 @@ public class ManagerControlPanel {
         getExcessReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                ExcessReportPanel excessReportPanel = new ExcessReportPanel(db);
+                JFrame excessFrame = new JFrame("Excess Report");
+                excessFrame.add(excessReportPanel.panel);
+                excessFrame.setSize(400, 600);
+                excessFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                excessFrame.setVisible(true);
             }
         });
 
