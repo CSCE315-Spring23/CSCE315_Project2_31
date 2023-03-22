@@ -2,7 +2,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
-import java.util.concurrent.Flow;
 
 public class SalesReportPanel {
     JPanel panel;
