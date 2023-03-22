@@ -1184,7 +1184,7 @@ public class Data {
         String sqlGetLatestZReport = "SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = "
                 + restaurant_id + ";";
 
-        Timestamp latestZReportDate = new Timestamp(0);
+        Timestamp latestZReportDate = new Timestamp(-1);
 
         try {
             ResultSet resCheckZReports = this.executeSQL(sqlCheckZReports);
