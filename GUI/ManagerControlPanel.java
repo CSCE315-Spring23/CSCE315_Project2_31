@@ -2,6 +2,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
+import java.sql.*;
 
 public class ManagerControlPanel {
     JPanel panel;
@@ -15,8 +16,15 @@ public class ManagerControlPanel {
         getXReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double salesTotal = db.getXReport(1);
-                JOptionPane.showMessageDialog(panel, String.format("Sales total: $%.2f", salesTotal));
+                MyPair<Double, Timestamp> res = db.getXReport(1);
+                if (res.getFirst() == -1.0) {
+                    JOptionPane.showMessageDialog(panel,
+                            String.format("No Z reports exist for restaurant 1.\nTry Z Report"));
+                } else {
+                    JOptionPane.showMessageDialog(panel,
+                            String.format("Sales total since last Z Report (%s): $%.2f", res.getSecond(),
+                                    res.getFirst()));
+                }
             }
         });
 
@@ -25,11 +33,12 @@ public class ManagerControlPanel {
         getZReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean success = db.getZReport(1);
-                if (success) {
-                    JOptionPane.showMessageDialog(panel, "Z Report generated successfully!");
-                } else {
+                double salesTotal = db.getZReport(1);
+                if (salesTotal == -1) {
                     JOptionPane.showMessageDialog(panel, "Z Report generation failed. Please try again.");
+                } else {
+                    JOptionPane.showMessageDialog(panel,
+                            String.format("Z Report generated successfully!\nSales total today: $%.2f", salesTotal));
                 }
             }
         });

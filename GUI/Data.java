@@ -1105,11 +1105,11 @@ public class Data {
         Vector<MyPair<Inventory, Float>> inventory_sales_percentages = new Vector<MyPair<Inventory, Float>>();
 
         String sqlStatement = "SELECT i.inventory_id, i.name, i.quantity, "
-                            + "COALESCE(SUM(im.quantity * mo.quantity), 0) AS total_sold "
-                            + "FROM inventory i LEFT JOIN inventory_to_menu im ON i.inventory_id = im.inventory_id "
-                            + "LEFT JOIN menu m ON m.menu_id = im.menu_id LEFT JOIN menu_to_order mo ON m.menu_id = mo.menu_id "
-                            + "LEFT JOIN orders o ON o.order_id = mo.order_id "
-                            + "WHERE o.date >= '" + timestamp.toString() + "'GROUP BY i.inventory_id, i.name, i.quantity;";
+                + "COALESCE(SUM(im.quantity * mo.quantity), 0) AS total_sold "
+                + "FROM inventory i LEFT JOIN inventory_to_menu im ON i.inventory_id = im.inventory_id "
+                + "LEFT JOIN menu m ON m.menu_id = im.menu_id LEFT JOIN menu_to_order mo ON m.menu_id = mo.menu_id "
+                + "LEFT JOIN orders o ON o.order_id = mo.order_id "
+                + "WHERE o.date >= '" + timestamp.toString() + "'GROUP BY i.inventory_id, i.name, i.quantity;";
 
         try {
             ResultSet res = this.executeSQL(sqlStatement);
@@ -1139,11 +1139,12 @@ public class Data {
      *         item sold
      */
 
-     public Vector<MyPair<Inventory, Float>> getLowSellingInventorySinceTimestamp(java.sql.Date timestamp) {
+    public Vector<MyPair<Inventory, Float>> getLowSellingInventorySinceTimestamp(java.sql.Date timestamp) {
         Vector<MyPair<Inventory, Float>> inventory_sales_percentages = this.getInventorySalesSinceTimestamp(timestamp);
         Vector<MyPair<Inventory, Float>> out = new Vector<MyPair<Inventory, Float>>();
 
-        if (inventory_sales_percentages == null) return null;
+        if (inventory_sales_percentages == null)
+            return null;
 
         for (int i = 0; i < inventory_sales_percentages.size(); i++) {
             if (inventory_sales_percentages.get(i).getSecond() < 10) {
@@ -1161,21 +1162,14 @@ public class Data {
      * @return double representing the total sales since last z report of restaurant
      */
 
-    public double getTotalSalesSinceLastZReport(int restaurant_id) {
+    public MyPair<Double, Timestamp> getTotalSalesSinceLastZReport(int restaurant_id) {
         double totalSales = 0;
 
         String sqlCheckZReports = "SELECT COUNT(*) FROM z_reports WHERE restaurant_id = " + restaurant_id + ";";
         String sqlGetLatestZReport = "SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = "
                 + restaurant_id + ";";
-        // String sqlGetTotalSales = "SELECT SUM(o.cost_total) " +
-        // "FROM orders o " +
-        // "JOIN staff s ON o.staff_id = s.staff_id " +
-        // "WHERE (o.date > (SELECT MAX(z.report_date) FROM z_reports z WHERE
-        // z.restaurant_id = " + restaurant_id
-        // + ") " +
-        // "AND s.restaurant_id = " + restaurant_id + ");";
 
-        java.sql.Date latestZReportDate = new java.sql.Date(System.currentTimeMillis());
+        Timestamp latestZReportDate = new Timestamp(System.currentTimeMillis());
 
         try {
             ResultSet resCheckZReports = this.executeSQL(sqlCheckZReports);
@@ -1187,15 +1181,16 @@ public class Data {
             }
             ResultSet resGetLatestZReportDate = this.executeSQL(sqlGetLatestZReport);
             if (resGetLatestZReportDate.next()) {
-                latestZReportDate = resGetLatestZReportDate.getDate(1);
-                System.out.println(latestZReportDate);
+                latestZReportDate = resGetLatestZReportDate.getTimestamp(1);
+            } else {
+                throw new RuntimeException("No Z reports exist for restaurant " + restaurant_id);
             }
             String sqlGetTotalSales = "SELECT SUM(o.cost_total) " +
                     "FROM orders o " +
                     "JOIN staff s ON o.staff_id = s.staff_id " +
                     "WHERE (o.date > (SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = "
                     + restaurant_id
-                    + " ) AND o.date < CURRENT_DATE " +
+                    + " ) AND o.date < CURRENT_TIMESTAMP " +
                     "AND s.restaurant_id = " + restaurant_id + ");";
 
             ResultSet resGetTotalSales = this.executeSQL(sqlGetTotalSales);
@@ -1205,9 +1200,9 @@ public class Data {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            return -1;
+            return new MyPair(-1.0, latestZReportDate);
         }
-        return totalSales;
+        return new MyPair(totalSales, latestZReportDate);
     }
 
     /**
@@ -1223,7 +1218,8 @@ public class Data {
                 "FROM orders o " +
                 "JOIN staff s ON o.staff_id = s.staff_id " +
                 "WHERE s.restaurant_id = " + restaurant_id + " " +
-                "AND o.date = CURRENT_DATE;";
+                "AND o.date >= DATE_TRUNC('day', CURRENT_TIMESTAMP) " +
+                "AND o.date < DATE_TRUNC('day', CURRENT_TIMESTAMP) + INTERVAL '1 day';";
 
         try {
             ResultSet res = this.executeSQL(sql);
@@ -1245,10 +1241,10 @@ public class Data {
      * @return double representing the total sales for that day since last z report
      *         id
      */
-    public double getXReport(int restaurant_id) {
-        double totalSales = getTotalSalesSinceLastZReport(restaurant_id);
-        System.out.println("X Report - Total Sales: " + totalSales);
-        return totalSales;
+    public MyPair<Double, Timestamp> getXReport(int restaurant_id) {
+        MyPair<Double, Timestamp> res = getTotalSalesSinceLastZReport(restaurant_id);
+        System.out.println("X Report - Total Sales: " + res.getFirst());
+        return res;
     }
 
     /**
@@ -1257,19 +1253,19 @@ public class Data {
      * @param restaurantId id of restaurant to generate z report
      * @return boolean representing the success or faliure of the operation
      */
-    public boolean getZReport(int restaurant_id) {
+    public double getZReport(int restaurant_id) {
         double totalSales = getTotalSalesForToday(restaurant_id);
         System.out.println("Z Report - Total Sales: " + totalSales);
-        String sql = "INSERT INTO z_reports (report_date, total_sales, restaurant_id) VALUES (CURRENT_DATE, "
+        String sql = "INSERT INTO z_reports (report_date, total_sales, restaurant_id) VALUES (CURRENT_TIMESTAMP, "
                 + totalSales + ", " + restaurant_id + ");";
         try {
             this.executeUpdateSQL(sql);
             System.out.println("Z Report saved successfully");
-            return true;
+            return totalSales;
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            return false;
+            return -1;
         }
     }
 
