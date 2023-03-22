@@ -1147,14 +1147,24 @@ public class Data {
      */
     public Vector<MyPair<Inventory, Float>> getExcessReport(java.sql.Date timestamp) {
         Vector<MyPair<Inventory, Float>> inventory_sales_percentages = this.getInventorySalesSinceTimestamp(timestamp);
+        HashMap<Integer, Boolean> sold = new HashMap<Integer, Boolean>();
         Vector<MyPair<Inventory, Float>> out = new Vector<MyPair<Inventory, Float>>();
 
         if (inventory_sales_percentages == null)
             return null;
 
         for (int i = 0; i < inventory_sales_percentages.size(); i++) {
+            int key = inventory_sales_percentages.get(i).getFirst().inventory_id;
+            sold.put(key, true);
             if (inventory_sales_percentages.get(i).getSecond() < 10) {
                 out.add(inventory_sales_percentages.get(i));
+            }
+        }
+        Vector<Inventory> inventory_items = this.getAllInventoryItems();
+        
+        for (int i = 0; i < inventory_items.size(); i++) {
+            if (!sold.containsKey(inventory_items.get(i).inventory_id)) {
+                out.add(new MyPair<Inventory, Float>(inventory_items.get(i), (float)0.0));
             }
         }
 
