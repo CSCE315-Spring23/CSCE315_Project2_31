@@ -73,7 +73,7 @@ public class RestockReportPanel {
                     // populate report info into a list
                     DefaultListModel<String> model = new DefaultListModel<String>();
                     System.out.println("---------------------------------------------------");
-                    System.out.println("Restock Report:");
+                    System.out.println(String.format("Restock Report <%d>:", minimumQuantity));
                     for (int i = 0; i < restockVect.size(); i++) {
                         String content = String
                                 .format("Item: %s --- Quantity: %d", restockVect.get(i).name,
@@ -94,6 +94,8 @@ public class RestockReportPanel {
                     restockPanel.add(scrollPane);
                     restockPanel.validate();
                     restockPanel.repaint();
+                    // update the restockReportTitleLabel
+                    restockReportTitleLabel.setText(String.format("Restock Report <%d>:", minimumQuantity));
                     System.out.println("---------------------------------------------------");
                 } catch (IllegalArgumentException err) {
                     System.out.println("Invalid quantity provided - [" + err.getMessage() + "]");

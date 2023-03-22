@@ -1,7 +1,6 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.*;
 import java.sql.*;
 
 public class ManagerControlPanel {
@@ -21,7 +20,7 @@ public class ManagerControlPanel {
                     JOptionPane.showMessageDialog(panel,
                             String.format("No Z reports exist for restaurant 1.\nTry Z Report"));
                 } else {
-                    JOptionPane.showMessageDialog(panel,
+                    JOptionPane.showMessageDialog(null,
                             String.format("Sales total since last Z Report (%s): $%.2f", res.getSecond(),
                                     res.getFirst()));
                 }

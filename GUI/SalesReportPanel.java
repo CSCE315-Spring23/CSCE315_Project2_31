@@ -84,7 +84,7 @@ public class SalesReportPanel {
                     // populate report info into a list
                     DefaultListModel<String> model = new DefaultListModel<String>();
                     System.out.println("---------------------------------------------------");
-                    System.out.println("Sales Report:");
+                    System.out.println(String.format("Sales Report <%s>--<%s>:", sDate, eDate));
                     for (Map.Entry<String, Integer> mapElem : menuItemsWithQuantitySold.entrySet()) {
                         int id = Integer.parseInt(mapElem.getKey());
                         String name = db.getMenuName(id);
@@ -106,6 +106,8 @@ public class SalesReportPanel {
                     salesPanel.add(scrollPane);
                     salesPanel.validate();
                     salesPanel.repaint();
+                    // update the salesReportTitleLabel
+                    salesReportTitleLabel.setText(String.format("Sales Report <%s>--<%s>:", sDate, eDate));
                     System.out.println("---------------------------------------------------");
                 } catch (IllegalArgumentException err) {
                     if (err.getMessage() == null) {

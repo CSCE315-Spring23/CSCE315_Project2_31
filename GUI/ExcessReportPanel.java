@@ -73,7 +73,7 @@ public class ExcessReportPanel {
                     // populate report info into a list
                     DefaultListModel<String> model = new DefaultListModel<String>();
                     System.out.println("---------------------------------------------------");
-                    System.out.println("Excess Report:");
+                    System.out.println(String.format("Excess Report <%s>:", input_date));
                     for (int i = 0; i < inventoryItemsWithLowSales.size(); i++) {
                         String name = inventoryItemsWithLowSales.get(i).getFirst().name;
                         float sales_percentages = inventoryItemsWithLowSales.get(i).getSecond();
@@ -87,13 +87,15 @@ public class ExcessReportPanel {
                     excessList.setLayoutOrientation(JList.VERTICAL);
                     excessList.setVisibleRowCount(-1);
                     // populate scroll pane with list using viewport
-                    JViewport viewport = scrollPane.getViewport();
-                    viewport.setView(excessList);
-                    // update the panel
+                    JViewport viewportScroll = scrollPane.getViewport();
+                    viewportScroll.setView(excessList);
+                    // update the excessPanel
                     excessPanel.removeAll();
                     excessPanel.add(scrollPane);
                     excessPanel.validate();
                     excessPanel.repaint();
+                    // update the excessReportTitleLabel
+                    excessReportTitleLabel.setText(String.format("Excess Report <%s>:", input_date));
                     System.out.println("---------------------------------------------------");
                 } catch (IllegalArgumentException err) {
                     if (err.getMessage() == null) {
