@@ -3,9 +3,34 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.sql.*;
 
+/**
+ * <dl>
+ * <dt><b>Manager Control Panel</b></dt>
+ * <dd>
+ * ManagerControlPanel class creates a panel for the manager to access different
+ * reports such as X Report, Z Report, Sales Report, Excess Report and Restock
+ * Report.
+ * 
+ * It uses the Data class to interact with the database and generate the
+ * reports.
+ * </dd>
+ * </dl>
+ * 
+ * @author David Chi
+ * @author Jeffrey Li
+ * @author Art Young
+ * @author Andrew Mao
+ * @version 1.0
+ * @since 2023-03-21
+ */
 public class ManagerControlPanel {
     JPanel panel;
 
+    /**
+     * Constructor method for ManagerControlPanel class.
+     * 
+     * @param db an instance of the Data class
+     */
     ManagerControlPanel(Data db) {
         // Set the layout manager to FlowLayout with left alignment
         this.panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -34,9 +59,9 @@ public class ManagerControlPanel {
             public void actionPerformed(ActionEvent e) {
                 double salesTotal = db.getZReport(1);
                 if (salesTotal == -1) {
-                    JOptionPane.showMessageDialog(panel, "Z Report generation failed. Please try again.");
+                    JOptionPane.showMessageDialog(null, "Z Report generation failed. Please try again.");
                 } else {
-                    JOptionPane.showMessageDialog(panel,
+                    JOptionPane.showMessageDialog(null,
                             String.format("Z Report generated successfully!\nSales total today: $%.2f", salesTotal));
                 }
             }

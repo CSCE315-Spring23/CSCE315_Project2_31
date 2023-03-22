@@ -1,3 +1,10 @@
+
+/**
+
+    The ManagerItemListPanel class represents a JPanel that contains buttons to filter menu items by category.
+    It uses a ManagerMainDisplayPanel to update the display when a button is pressed.
+    */
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -6,6 +13,16 @@ import java.util.*;
 public class ManagerItemListPanel {
     JPanel panel;
 
+    /**
+     * Constructs a ManagerItemListPanel with a specified Data object and
+     * ManagerMainDisplayPanel.
+     * The panel is initialized with a gray background and a button panel containing
+     * buttons to filter menu items.
+     * 
+     * @param db   the Data object to retrieve menu items from
+     * @param mmdp the ManagerMainDisplayPanel to update the display when a button
+     *             is pressed
+     */
     ManagerItemListPanel(Data db, ManagerMainDisplayPanel mmdp) {
         this.panel = new JPanel();
         this.panel.setBackground(Color.gray);
@@ -37,6 +54,11 @@ public class ManagerItemListPanel {
         buttons.add(drinksButton);
 
         ActionListener changeMenuItemsDisplay = new ActionListener() {
+            /**
+             * Updates the ManagerMainDisplayPanel when a button is pressed.
+             * The method retrieves the text of the button that was pressed and calls the
+             * updateManagerDisplay method on the ManagerMainDisplayPanel.
+             */
             public void actionPerformed(ActionEvent e) {
                 System.out.println("ItemListPanel: Button Pressed");
                 JButton pressedBtn = (JButton) e.getSource();

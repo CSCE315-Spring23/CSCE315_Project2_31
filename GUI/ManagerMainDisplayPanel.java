@@ -1,3 +1,20 @@
+
+/**
+ * <dl>
+ * <dt><b>Manager Display Panel</b></dt>
+ * <dd>
+ * The ManagerMainDisplayPanel class represents the graphical user interface for the main display of the Manager application.
+    It contains methods for updating and displaying the inventory and menu items, as well as creating new menu items.
+ * </dd>
+ * </dl>
+ * 
+ * @author Art Young
+ * @author Jeffrey Li
+ * @author Andrew Mao
+ * @author David Chi
+ * @version 1.0
+ * @since 2023-03-21
+ */
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -11,6 +28,11 @@ public class ManagerMainDisplayPanel {
 
     Data db;
 
+    /**
+     * Constructs a ManagerMainDisplayPanel object with a specified database object.
+     * 
+     * @param db the database object containing the inventory and menu items
+     */
     ManagerMainDisplayPanel(Data db) {
         this.panel = new JPanel();
         this.panel.setBackground(Color.gray);
@@ -38,7 +60,13 @@ public class ManagerMainDisplayPanel {
     // currOrderItems.add(new MyPair<Menu, Integer>(menuItem, 1));
     // }
     // }
-
+    /**
+     * Updates the display of the inventory or menu items depending on the selected
+     * state.
+     * 
+     * @param type the type of display to update (i.e. "All", "Inventory", or a
+     *             specific menu item type)
+     */
     public void updateManagerDisplay(String type) {
         System.out.println("Testing from mainDisplayPanel! With Button: " + type);
         currentState = type;
@@ -54,6 +82,15 @@ public class ManagerMainDisplayPanel {
         }
     }
 
+    /**
+     * Parses a string of inventory items and their quantities and returns a vector
+     * of MyPair objects representing each item and its quantity.
+     * 
+     * @param inventoryItemsString the string containing the inventory items and
+     *                             their quantities
+     * @return a vector of MyPair objects representing each inventory item and its
+     *         quantity
+     */
     public Vector<MyPair<Integer, Integer>> parseInventoryItems(String inventoryItemsString) {
         Vector<MyPair<Integer, Integer>> inventoryItems = new Vector<MyPair<Integer, Integer>>();
 
@@ -70,6 +107,13 @@ public class ManagerMainDisplayPanel {
         return inventoryItems;
     }
 
+    /**
+     * Draws the display for the inventory or menu items and their respective
+     * buttons for updating their quantities or prices.
+     * 
+     * @param isInventory a boolean indicating whether the display is for the
+     *                    inventory items or not
+     */
     public void drawDisplay(boolean isInventory) {
         JPanel fullNewItemPanel;
         JPanel newItemPanel;
@@ -78,7 +122,7 @@ public class ManagerMainDisplayPanel {
             int rows = inventoryItems.size() / 3 + 1;
             btnPanel = new JPanel(new GridLayout(rows, 3, 10, 10));
             btnPanel.setPreferredSize(new Dimension(600, 450));
-
+            // Add buttons for each inventory item
             for (int i = 0; i < inventoryItems.size(); i++) {
                 // button for selecting item to add
                 JLabel btn = new JLabel();
@@ -99,6 +143,7 @@ public class ManagerMainDisplayPanel {
             JTextField nameTextField = new JTextField(10);
             JTextField quantityTextField = new JTextField(10);
 
+            // Listener for updating inventory items display
             ActionListener changeInventoryItemsDisplay = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String name = nameTextField.getText();
@@ -119,7 +164,7 @@ public class ManagerMainDisplayPanel {
                     }
                 }
             };
-
+            // Create submit button
             JButton submitButton = new JButton("Add by Name to inventory");
             submitButton.addActionListener(changeInventoryItemsDisplay);
 
@@ -133,7 +178,7 @@ public class ManagerMainDisplayPanel {
             int rows = menuItems.size() / 3 + 1;
             btnPanel = new JPanel(new GridLayout(rows, 3, 10, 10));
             btnPanel.setPreferredSize(new Dimension(600, 450));
-
+            // Add buttons for each menu item
             for (int i = 0; i < menuItems.size(); i++) {
                 // button for selecting item to add
                 JLabel btn = new JLabel();

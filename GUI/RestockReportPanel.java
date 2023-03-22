@@ -3,11 +3,32 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 
+/**
+ * <dl>
+ * <dt><b>Restock Report Panel</b></dt>
+ * <dd>
+ * RestockReportPanel is a JPanel that contains a UI for generating an Restock
+ * Report given an input quantity.
+ * 
+ * The report contains all inventory items that have been less than an input
+ * quantity.
+ * </dd>
+ * </dl>
+ * 
+ * @author Art Young
+ * @version 1.0
+ * @since 2023-03-21
+ */
 public class RestockReportPanel {
     JPanel panel;
     int minimumQuantity;
     Data db;
 
+    /**
+     * Constructs a new RestockReportPanel with the specified data.
+     * 
+     * @param db the data to use for querying restock reports
+     */
     public RestockReportPanel(Data db) {
         this.panel = new JPanel(new GridBagLayout());
         this.panel.setPreferredSize(new Dimension(400, 600));
@@ -55,7 +76,7 @@ public class RestockReportPanel {
         JPanel textFieldPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         // create text fields to input dates for query
         JLabel minimumQuantityLabel = new JLabel("Minimum Quantity:");
-        JTextField minimumQuantityTextField = new JTextField(4);
+        JTextField minimumQuantityTextField = new JTextField(7);
         minimumQuantityLabel.setHorizontalAlignment(JLabel.CENTER);
         minimumQuantityTextField.setHorizontalAlignment(JTextField.CENTER);
         // create button to run sales report
@@ -74,12 +95,18 @@ public class RestockReportPanel {
                     DefaultListModel<String> model = new DefaultListModel<String>();
                     System.out.println("---------------------------------------------------");
                     System.out.println(String.format("Restock Report <%d>:", minimumQuantity));
-                    for (int i = 0; i < restockVect.size(); i++) {
-                        String content = String
-                                .format("Item: %s --- Quantity: %d", restockVect.get(i).name,
-                                        restockVect.get(i).quantity);
-                        System.out.println(content);
-                        model.addElement(content);
+                    if (restockVect.isEmpty()) {
+                        System.out.println(String.format("No items with quantity less than <%d>:",
+                                minimumQuantity));
+                        model.addElement(String.format("No items with quantity less than <%d>:",
+                                minimumQuantity));
+                    } else {
+                        for (int i = 0; i < restockVect.size(); i++) {
+                            String content = String.format("Item: %s --- Quantity: %d", restockVect.get(i).name,
+                                    restockVect.get(i).quantity);
+                            System.out.println(content);
+                            model.addElement(content);
+                        }
                     }
                     // populate list to be imported into scroll pane
                     JList<String> restockList = new JList<>(model);

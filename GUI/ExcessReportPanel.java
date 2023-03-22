@@ -3,11 +3,36 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 
+/**
+ * <dl>
+ * <dt><b>Excess Report Panel</b></dt>
+ * <dd>
+ * ExcessReportPanel is a JPanel that contains a UI for generating an Excess
+ * Report given a start date.
+ * 
+ * The report contains all the items that have been less than 10% sold since the
+ * given start date.
+ * </dd>
+ * </dl>
+ * 
+ * @author David Chi
+ * @author Art Young
+ * @version 1.0
+ * @since 2023-03-21
+ */
 public class ExcessReportPanel {
     JPanel panel;
     java.sql.Date input_date;
     Data db;
 
+    /**
+     * 
+     * Constructor for the ExcessReportPanel.
+     * Initializes the JPanel, sets its preferred size, and sets the Data object
+     * used for querying the database.
+     * 
+     * @param db a Data object used for querying the database
+     */
     public ExcessReportPanel(Data db) {
         this.panel = new JPanel(new GridBagLayout());
         this.panel.setPreferredSize(new Dimension(400, 600));
@@ -74,12 +99,17 @@ public class ExcessReportPanel {
                     DefaultListModel<String> model = new DefaultListModel<String>();
                     System.out.println("---------------------------------------------------");
                     System.out.println(String.format("Excess Report <%s>:", input_date));
-                    for (int i = 0; i < inventoryItemsWithLowSales.size(); i++) {
-                        String name = inventoryItemsWithLowSales.get(i).getFirst().name;
-                        float sales_percentages = inventoryItemsWithLowSales.get(i).getSecond();
-                        String content = String.format("Item: %s --- %% Sold: %.2f%%", name, sales_percentages);
-                        System.out.println(content);
-                        model.addElement(content);
+                    if (inventoryItemsWithLowSales.isEmpty()) {
+                        System.out.println(String.format("No items less than 10% sold since <%s>:", input_date));
+                        model.addElement(String.format("No items less than 10% sold since <%s>:", input_date));
+                    } else {
+                        for (int i = 0; i < inventoryItemsWithLowSales.size(); i++) {
+                            String name = inventoryItemsWithLowSales.get(i).getFirst().name;
+                            float sales_percentages = inventoryItemsWithLowSales.get(i).getSecond();
+                            String content = String.format("Item: %s --- %% Sold: %.2f%%", name, sales_percentages);
+                            System.out.println(content);
+                            model.addElement(content);
+                        }
                     }
                     // populate list to be imported into scroll pane
                     JList<String> excessList = new JList<>(model);

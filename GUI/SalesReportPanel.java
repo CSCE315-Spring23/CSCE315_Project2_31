@@ -3,6 +3,23 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 
+/**
+ * <dl>
+ * <dt><b>Sales Report Panel</b></dt>
+ * <dd>
+ * SalesReportPanel is a JPanel that contains a UI for generating an Sales
+ * Report given a range of dates.
+ * 
+ * The report contains a report of all menu items and their total number of
+ * sales within a specified time period.
+ * </dd>
+ * </dl>
+ * 
+ * @author Andrew Mao
+ * @author Art Young
+ * @version 1.0
+ * @since 2023-03-21
+ */
 public class SalesReportPanel {
     JPanel panel;
     java.sql.Date sDate;
@@ -84,13 +101,20 @@ public class SalesReportPanel {
                     DefaultListModel<String> model = new DefaultListModel<String>();
                     System.out.println("---------------------------------------------------");
                     System.out.println(String.format("Sales Report <%s>--<%s>:", sDate, eDate));
-                    for (Map.Entry<String, Integer> mapElem : menuItemsWithQuantitySold.entrySet()) {
-                        int id = Integer.parseInt(mapElem.getKey());
-                        String name = db.getMenuName(id);
-                        int sales = mapElem.getValue();
-                        String content = "Menu Item: " + name + " --- Number of Sales: " + sales;
-                        System.out.println("Menu Item: " + name + " --- Number of Sales: " + sales);
-                        model.addElement(content);
+                    if (menuItemsWithQuantitySold.isEmpty()) {
+                        System.out.println(
+                                String.format("No sales to report for the time period: <%s>--<%s>", sDate, eDate));
+                        model.addElement(
+                                String.format("No sales to report for the time period: <%s>--<%s>", sDate, eDate));
+                    } else {
+                        for (Map.Entry<String, Integer> mapElem : menuItemsWithQuantitySold.entrySet()) {
+                            int id = Integer.parseInt(mapElem.getKey());
+                            String name = db.getMenuName(id);
+                            int sales = mapElem.getValue();
+                            String content = "Menu Item: " + name + " --- Number of Sales: " + sales;
+                            System.out.println("Menu Item: " + name + " --- Number of Sales: " + sales);
+                            model.addElement(content);
+                        }
                     }
                     // populate list to be imported into scroll pane
                     JList<String> menuItemList = new JList<>(model);

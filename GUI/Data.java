@@ -309,6 +309,12 @@ public class Data {
         return null;
     }
 
+    /**
+     * Gets the menu item from the database that matches the menu_id.
+     *
+     * @param menu_id an id for the menu item to search by
+     * @return String of the menu_id
+     */
     public String getMenuName(int menu_id) {
         String sqlStatement = "SELECT * FROM menu WHERE menu_id = " + menu_id + ";";
         ResultSet res = this.executeSQL(sqlStatement);
@@ -615,12 +621,11 @@ public class Data {
      * 
      *
      * @param cost_total  a int for cost_total of the order
-     * @param date        a date for date of the order
+     * @param timestamp   a timestamp for the order
      * @param customer_id a int for customer_id of the order
      * @param staff_id    a int for staff_id of the order
      * @param menu_items  a {@code Vector<MyPair<Integer, Integer>>} for menu_items
-     *                    in the
-     *                    order
+     *                    in the order
      * @return newly generated order_id
      */
     public int makeOrder(
@@ -1097,7 +1102,8 @@ public class Data {
      * Gets total inventory sales since timestamp
      * 
      * @param timestamp date for query
-     * @return Vector<MyPair<Inventory, Float>> for the percentage of each inventory
+     * @return {@code Vector<MyPair<Inventory, Float>>} for the percentage of each
+     *         inventory
      *         item sold
      */
 
@@ -1135,7 +1141,8 @@ public class Data {
      * Gets inventory items with below 10% sales since timestamp
      * 
      * @param timestamp date for query
-     * @return Vector<MyPair<Inventory, Float>> for the percentage of each inventory
+     * @return {@code Vector<MyPair<Inventory, Float>>} for the percentage of each
+     *         inventory
      *         item sold
      */
     public Vector<MyPair<Inventory, Float>> getExcessReport(java.sql.Date timestamp) {
@@ -1157,10 +1164,9 @@ public class Data {
     /**
      * Gets total sales since last Z report, if no z-reports exists throw error
      * 
-     * @param restaurantId id of restaurant
+     * @param restaurant_id id of restaurant
      * @return double representing the total sales since last z report of restaurant
      */
-
     public MyPair<Double, Timestamp> getTotalSalesSinceLastZReport(int restaurant_id) {
         double totalSales = 0;
 
@@ -1207,7 +1213,7 @@ public class Data {
     /**
      * Gets total sales for that day
      * 
-     * @param restaurantId id of restaurant
+     * @param restaurant_id id of restaurant
      * @return double representing the total sales for today
      */
     public double getTotalSalesForToday(int restaurant_id) {
@@ -1236,7 +1242,7 @@ public class Data {
     /**
      * generates x report total sales for that day, since last z report
      * 
-     * @param restaurantId id of restaurant to generate x report
+     * @param restaurant_id id of restaurant to generate x report
      * @return double representing the total sales for that day since last z report
      *         id
      */
@@ -1249,7 +1255,7 @@ public class Data {
     /**
      * generates z report total sales for that day and zeros the total
      * 
-     * @param restaurantId id of restaurant to generate z report
+     * @param restaurant_id id of restaurant to generate z report
      * @return boolean representing the success or faliure of the operation
      */
     public double getZReport(int restaurant_id) {
@@ -1268,6 +1274,19 @@ public class Data {
         }
     }
 
+    /**
+     * 
+     * Returns a sales report for the specified date range.
+     * 
+     * @param sDate the start date of the report
+     * 
+     * @param eDate the end date of the report
+     * 
+     * @return a HashMap containing the menu item names and their respective
+     *         quantities sold during the specified date range
+     * 
+     * @throws IllegalArgumentException if the end date occurs before the start date
+     */
     public HashMap<String, Integer> getSalesReport(java.sql.Date sDate, java.sql.Date eDate) {
         if (eDate.compareTo(sDate) < 0) {
             throw new IllegalArgumentException("Provided END DATE Occurs Before Provided START DATE");
@@ -1301,7 +1320,7 @@ public class Data {
      * @return A Vector containing the inventory items that require a restock.
      */
     public Vector<Inventory> getRestockReport(int minimumQty) {
-        String sqlStatement = "SELECT * FROM inventory WHERE quantity <= " + minimumQty + ";";
+        String sqlStatement = "SELECT * FROM inventory WHERE quantity < " + minimumQty + ";";
         Vector<Inventory> refillItems = new Vector<Inventory>();
         try {
             // System.out.println("Starting restock report generation...");
