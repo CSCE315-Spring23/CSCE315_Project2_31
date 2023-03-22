@@ -55,13 +55,13 @@ public class ManagerControlPanel {
         getExcessReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ExcessReportPanel excessReportPanel = new ExcessReportPanel(db);
                 JFrame excessFrame = new JFrame("Excess Report");
-                excessFrame.add(excessReportPanel.panel);
                 excessFrame.setSize(400, 600);
                 excessFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 excessFrame.setLocationRelativeTo(null);
                 excessFrame.setResizable(false);
+                ExcessReportPanel excessReportPanel = new ExcessReportPanel(db);
+                excessFrame.add(excessReportPanel.panel);
                 excessFrame.setVisible(true);
             }
         });
@@ -71,32 +71,13 @@ public class ManagerControlPanel {
         getRestockReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Getting Restock Report...");
                 JFrame restockFrame = new JFrame("Restock Report");
-                Vector<Inventory> restockVect = db.getRestockReport(50);
-                DefaultListModel<String> model = new DefaultListModel<String>();
-
-                System.out.println("Restock Report:");
-                for (int i = 0; i < restockVect.size(); i++) {
-                    String itemContent = String
-                            .format("Item Name: %s --- Quantity: %d", restockVect.get(i).name,
-                                    restockVect.get(i).quantity);
-                    System.out.println(itemContent);
-                    model.addElement(itemContent);
-                }
-
-                JList<String> restockList = new JList<>(model);
-                restockList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-                restockList.setLayoutOrientation(JList.VERTICAL);
-                restockList.setVisibleRowCount(-1);
-
-                JScrollPane scrollPane = new JScrollPane(restockList);
-                scrollPane.setPreferredSize(new Dimension(400, 600));
-                restockFrame.add(scrollPane);
                 restockFrame.setSize(400, 600);
                 restockFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 restockFrame.setLocationRelativeTo(null);
                 restockFrame.setResizable(false);
+                RestockReportPanel restockReportPanel = new RestockReportPanel(db);
+                restockFrame.add(restockReportPanel.panel);
                 restockFrame.setVisible(true);
             }
         });

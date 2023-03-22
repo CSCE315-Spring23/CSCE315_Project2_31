@@ -2,10 +2,10 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
+import java.util.concurrent.Flow;
 
 public class SalesReportPanel {
     JPanel panel;
-    boolean reportSubmitted;
     java.sql.Date sDate;
     java.sql.Date eDate;
     Data db;
@@ -54,12 +54,18 @@ public class SalesReportPanel {
         dateInputPanel.setPreferredSize(new Dimension(500, 100));
         // dateInputPanel.setBorder(BorderFactory.createLineBorder(Color.black));
         // create panel to hold the text fields
-        JPanel textFieldPanel = new JPanel(new GridLayout(1, 4));
+        JPanel textFieldPanel = new JPanel(new GridLayout(1, 2));
+        JPanel textFieldFlowLeft = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel textFieldFlowRight = new JPanel(new FlowLayout(FlowLayout.CENTER));
         // create text fields to input dates for query
         JLabel startDateLabel = new JLabel("Start Date [YYYY-MM-DD]:");
-        JTextField startDateTextField = new JTextField(5);
+        JTextField startDateTextField = new JTextField(7);
         JLabel endDateLabel = new JLabel("End Date [YYYY-MM-DD]:");
-        JTextField endDateTextField = new JTextField(5);
+        JTextField endDateTextField = new JTextField(7);
+        startDateLabel.setHorizontalAlignment(JLabel.CENTER);
+        startDateTextField.setHorizontalAlignment(JTextField.CENTER);
+        endDateLabel.setHorizontalAlignment(JLabel.CENTER);
+        endDateTextField.setHorizontalAlignment(JTextField.CENTER);
         // create button to run sales report
         JButton submitDateButton = new JButton("Run Sales Report");
         submitDateButton.addActionListener(new ActionListener() {
@@ -76,17 +82,19 @@ public class SalesReportPanel {
                     // query for sales report
                     HashMap<String, Integer> menuItemsWithQuantitySold = db.getSalesReport(sDate, eDate);
                     // populate report info into a list
-                    DefaultListModel<String> updatedModel = new DefaultListModel<String>();
+                    DefaultListModel<String> model = new DefaultListModel<String>();
+                    System.out.println("---------------------------------------------------");
+                    System.out.println("Sales Report:");
                     for (Map.Entry<String, Integer> mapElem : menuItemsWithQuantitySold.entrySet()) {
                         int id = Integer.parseInt(mapElem.getKey());
                         String name = db.getMenuName(id);
                         int sales = mapElem.getValue();
                         String content = "Menu Item: " + name + " --- Number of Sales: " + sales;
                         System.out.println("Menu Item: " + name + " --- Number of Sales: " + sales);
-                        updatedModel.addElement(content);
+                        model.addElement(content);
                     }
                     // populate list to be imported into scroll pane
-                    JList<String> menuItemList = new JList<>(updatedModel);
+                    JList<String> menuItemList = new JList<>(model);
                     menuItemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                     menuItemList.setLayoutOrientation(JList.VERTICAL);
                     menuItemList.setVisibleRowCount(-1);
@@ -98,6 +106,7 @@ public class SalesReportPanel {
                     salesPanel.add(scrollPane);
                     salesPanel.validate();
                     salesPanel.repaint();
+                    System.out.println("---------------------------------------------------");
                 } catch (IllegalArgumentException err) {
                     if (err.getMessage() == null) {
                         System.out.println("Invalid date provided - [Invalid Date Format]");
@@ -109,10 +118,12 @@ public class SalesReportPanel {
                 }
             }
         });
-        textFieldPanel.add(startDateLabel);
-        textFieldPanel.add(startDateTextField);
-        textFieldPanel.add(endDateLabel);
-        textFieldPanel.add(endDateTextField);
+        textFieldFlowLeft.add(startDateLabel);
+        textFieldFlowLeft.add(startDateTextField);
+        textFieldFlowRight.add(endDateLabel);
+        textFieldFlowRight.add(endDateTextField);
+        textFieldPanel.add(textFieldFlowLeft);
+        textFieldPanel.add(textFieldFlowRight);
         dateInputPanel.add(textFieldPanel);
         dateInputPanel.add(submitDateButton);
         // setup GridBagConstraints for SalesReportPanel
