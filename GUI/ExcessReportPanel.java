@@ -54,8 +54,8 @@ public class ExcessReportPanel {
         // create panel to hold the text fields
         JPanel textFieldPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         // create text fields to input dates for query
-        JLabel startDateLabel = new JLabel("Start Date:");
-        JTextField startDateTextField = new JTextField(4);
+        JLabel startDateLabel = new JLabel("Start Date [YYYY-MM-DD]:");
+        JTextField startDateTextField = new JTextField(7);
         startDateLabel.setHorizontalAlignment(JLabel.CENTER);
         startDateTextField.setHorizontalAlignment(JTextField.CENTER);
         // create button to run sales report
