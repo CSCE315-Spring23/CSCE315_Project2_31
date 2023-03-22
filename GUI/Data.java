@@ -1272,7 +1272,7 @@ public class Data {
         if (eDate.compareTo(sDate) < 0) {
             throw new IllegalArgumentException("Provided END DATE Occurs Before Provided START DATE");
         }
-        System.out.println("I AM HERE IN THE QUERY!!!");
+        // System.out.println("I AM HERE IN THE QUERY!!!");
         String sqlStatement = "SELECT * FROM menu_to_order WHERE order_id IN (SELECT order_id FROM orders WHERE date >= '"
                 +
                 sDate.toString() + "' AND date <= '" + eDate.toString() + "');";
@@ -1304,7 +1304,7 @@ public class Data {
         String sqlStatement = "SELECT * FROM inventory WHERE quantity <= " + minimumQty + ";";
         Vector<Inventory> refillItems = new Vector<Inventory>();
         try {
-            System.out.println("Starting restock report generation...");
+            // System.out.println("Starting restock report generation...");
             ResultSet res = this.executeSQL(sqlStatement);
             while (res.next()) {
                 Inventory item = new Inventory(
@@ -1313,7 +1313,7 @@ public class Data {
                         res.getInt("quantity"));
                 refillItems.add(item);
             }
-            System.out.println("Report generated successfully.");
+            // System.out.println("Report generated successfully.");
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
