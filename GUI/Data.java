@@ -1184,7 +1184,7 @@ public class Data {
         String sqlGetLatestZReport = "SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = "
                 + restaurant_id + ";";
 
-        Timestamp latestZReportDate = new Timestamp(System.currentTimeMillis());
+        Timestamp latestZReportDate = new Timestamp(-1);
 
         try {
             ResultSet resCheckZReports = this.executeSQL(sqlCheckZReports);
@@ -1215,7 +1215,7 @@ public class Data {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            return new MyPair<Double, Timestamp>(-1.0, latestZReportDate);
+            return new MyPair<Double, Timestamp>(getTotalSalesForToday(restaurant_id), latestZReportDate);
         }
         return new MyPair<Double, Timestamp>(totalSales, latestZReportDate);
     }
