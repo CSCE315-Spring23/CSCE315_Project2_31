@@ -41,12 +41,14 @@ public class ManagerControlPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MyPair<Double, Timestamp> res = db.getXReport(1);
-                if (res.getFirst() == -1.0) {
+                if (res.getSecond() == new Timestamp(0)) {
                     JOptionPane.showMessageDialog(panel,
-                            String.format("No Z reports exist for restaurant 1.\nTry Z Report"));
+                            String.format("No Z reports exist for restaurant 1.\nSales total today: $%.2f",
+                                    res.getSecond(), res.getFirst()));
                 } else {
                     JOptionPane.showMessageDialog(null,
-                            String.format("Sales total since last Z Report (%s): $%.2f", res.getSecond(),
+                            String.format("Sales total since last Z Report (or for the day if none) (%s): $%.2f",
+                                    res.getSecond(),
                                     res.getFirst()));
                 }
             }
