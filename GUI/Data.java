@@ -1161,10 +1161,10 @@ public class Data {
             }
         }
         Vector<Inventory> inventory_items = this.getAllInventoryItems();
-        
+
         for (int i = 0; i < inventory_items.size(); i++) {
             if (!sold.containsKey(inventory_items.get(i).inventory_id)) {
-                out.add(new MyPair<Inventory, Float>(inventory_items.get(i), (float)0.0));
+                out.add(new MyPair<Inventory, Float>(inventory_items.get(i), (float) 0.0));
             }
         }
 
@@ -1191,7 +1191,7 @@ public class Data {
             if (resCheckZReports.next()) {
                 int zReportsCount = resCheckZReports.getInt(1);
                 if (zReportsCount == 0) {
-                    throw new RuntimeException("No Z reports exist for restaurant " + restaurant_id);
+                    throw new RuntimeException("No Z reports exist for restaurant " + restaurant_id + "returned 0");
                 }
             }
             ResultSet resGetLatestZReportDate = this.executeSQL(sqlGetLatestZReport);

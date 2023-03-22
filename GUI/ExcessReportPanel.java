@@ -83,8 +83,8 @@ public class ExcessReportPanel {
         JTextField startDateTextField = new JTextField(7);
         startDateLabel.setHorizontalAlignment(JLabel.CENTER);
         startDateTextField.setHorizontalAlignment(JTextField.CENTER);
-        // create button to run sales report
-        JButton submitDateButton = new JButton("Run Restock Report");
+        // create button to run excess report
+        JButton submitDateButton = new JButton("Run Excess Report");
         submitDateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -93,7 +93,7 @@ public class ExcessReportPanel {
                         throw new IllegalArgumentException("No Date Provided");
                     }
                     input_date = java.sql.Date.valueOf(startDateTextField.getText());
-                    // query for sales report
+                    // query for excess report
                     Vector<MyPair<Inventory, Float>> inventoryItemsWithLowSales = db.getExcessReport(input_date);
                     // populate report info into a list
                     DefaultListModel<String> model = new DefaultListModel<String>();
