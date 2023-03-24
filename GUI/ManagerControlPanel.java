@@ -40,15 +40,15 @@ public class ManagerControlPanel {
         getXReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MyPair<Double, Timestamp> res = db.getXReport(1);
-                if (res.getSecond().equals(new Timestamp(-1))) {
+                XReport res = db.getXReport(1);
+                if (res.report_date.equals(new Timestamp(-1))) {
                     JOptionPane.showMessageDialog(panel,
-                            String.format("No Z reports exist. Sales total today: $%.2f", res.getFirst()));
+                            String.format("No Z reports exist. Sales total today: $%.2f", res.total_sales));
                 } else {
                     JOptionPane.showMessageDialog(null,
-                            String.format("Sales total since last Z Report (or for the day if none) (%s): $%.2f",
-                                    res.getSecond(),
-                                    res.getFirst()));
+                            String.format("Sales total since last Z Report (%s): $%.2f",
+                                    res.report_date,
+                                    res.total_sales));
                 }
             }
         });
@@ -58,12 +58,13 @@ public class ManagerControlPanel {
         getZReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double salesTotal = db.getZReport(1);
-                if (salesTotal == -1) {
+                ZReport report = db.getZReport(1);
+                if (report.total_sales == -1) {
                     JOptionPane.showMessageDialog(null, "Z Report generation failed. Please try again.");
                 } else {
                     JOptionPane.showMessageDialog(null,
-                            String.format("Z Report generated successfully!\nSales total today: $%.2f", salesTotal));
+                            String.format("Z Report generated successfully!\nSales total today: $%.2f",
+                                    report.total_sales));
                 }
             }
         });

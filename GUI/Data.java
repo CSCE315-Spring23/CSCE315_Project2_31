@@ -1172,42 +1172,23 @@ public class Data {
     }
 
     /**
-     * Gets total sales since last Z report, if no z-reports exists throw error
+     * Gets total sales since last Z report
      * 
      * @param restaurant_id id of restaurant
-     * @return double representing the total sales since last z report of restaurant
+     * @return double representing total sales
      */
-    public MyPair<Double, Timestamp> getTotalSalesSinceLastZReport(int restaurant_id) {
-        double totalSales = 0;
+    public double getTotalSalesSinceLastZReport(int restaurant_id) {
+        double totalSales = -1;
 
-        String sqlCheckZReports = "SELECT COUNT(*) FROM z_reports WHERE restaurant_id = " + restaurant_id + ";";
-        String sqlGetLatestZReport = "SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = "
-                + restaurant_id + ";";
-
-        Timestamp latestZReportDate = new Timestamp(-1);
+        String sqlGetTotalSales = "SELECT SUM(o.cost_total) " +
+                "FROM orders o " +
+                "JOIN staff s ON o.staff_id = s.staff_id " +
+                "WHERE (o.date > (SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = "
+                + restaurant_id
+                + " ) AND o.date < CURRENT_TIMESTAMP " +
+                "AND s.restaurant_id = " + restaurant_id + ");";
 
         try {
-            ResultSet resCheckZReports = this.executeSQL(sqlCheckZReports);
-            if (resCheckZReports.next()) {
-                int zReportsCount = resCheckZReports.getInt(1);
-                if (zReportsCount == 0) {
-                    throw new RuntimeException("No Z reports exist for restaurant " + restaurant_id + "returned 0");
-                }
-            }
-            ResultSet resGetLatestZReportDate = this.executeSQL(sqlGetLatestZReport);
-            if (resGetLatestZReportDate.next()) {
-                latestZReportDate = resGetLatestZReportDate.getTimestamp(1);
-            } else {
-                throw new RuntimeException("No Z reports exist for restaurant " + restaurant_id);
-            }
-            String sqlGetTotalSales = "SELECT SUM(o.cost_total) " +
-                    "FROM orders o " +
-                    "JOIN staff s ON o.staff_id = s.staff_id " +
-                    "WHERE (o.date > (SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = "
-                    + restaurant_id
-                    + " ) AND o.date < CURRENT_TIMESTAMP " +
-                    "AND s.restaurant_id = " + restaurant_id + ");";
-
             ResultSet resGetTotalSales = this.executeSQL(sqlGetTotalSales);
             if (resGetTotalSales.next()) {
                 totalSales = resGetTotalSales.getDouble(1);
@@ -1215,9 +1196,8 @@ public class Data {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            return new MyPair<Double, Timestamp>(getTotalSalesForToday(restaurant_id), latestZReportDate);
         }
-        return new MyPair<Double, Timestamp>(totalSales, latestZReportDate);
+        return totalSales;
     }
 
     /**
@@ -1256,10 +1236,37 @@ public class Data {
      * @return double representing the total sales for that day since last z report
      *         id
      */
-    public MyPair<Double, Timestamp> getXReport(int restaurant_id) {
-        MyPair<Double, Timestamp> res = getTotalSalesSinceLastZReport(restaurant_id);
-        System.out.println("X Report - Total Sales: " + res.getFirst());
-        return res;
+    public XReport getXReport(int restaurant_id) {
+        XReport report;
+
+        String sqlCheckZReports = "SELECT COUNT(*) FROM z_reports WHERE restaurant_id = " + restaurant_id + ";";
+        String sqlGetLatestZReport = "SELECT MAX(z.report_date) FROM z_reports z WHERE z.restaurant_id = "
+                + restaurant_id + ";";
+
+        Timestamp latestZReportDate = new Timestamp(-1);
+
+        try {
+            ResultSet resCheckZReports = this.executeSQL(sqlCheckZReports);
+            if (resCheckZReports.next()) {
+                int zReportsCount = resCheckZReports.getInt(1);
+                if (zReportsCount == 0) {
+                    throw new RuntimeException("No Z reports exist for restaurant " + restaurant_id + "returned 0");
+                }
+            }
+            ResultSet resGetLatestZReportDate = this.executeSQL(sqlGetLatestZReport);
+            if (resGetLatestZReportDate.next()) {
+                latestZReportDate = resGetLatestZReportDate.getTimestamp(1);
+            } else {
+                throw new RuntimeException("No Z reports exist for restaurant " + restaurant_id);
+            }
+            report = new XReport(latestZReportDate, getTotalSalesSinceLastZReport(restaurant_id), restaurant_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            report = new XReport(latestZReportDate, getTotalSalesForToday(restaurant_id), restaurant_id);
+        }
+        System.out.println("X Report - Total Sales: " + report.total_sales);
+        return report;
     }
 
     /**
@@ -1268,20 +1275,28 @@ public class Data {
      * @param restaurant_id id of restaurant to generate z report
      * @return boolean representing the success or faliure of the operation
      */
-    public double getZReport(int restaurant_id) {
+    public ZReport getZReport(int restaurant_id) {
         double totalSales = getTotalSalesForToday(restaurant_id);
+        int report_id = -1;
+        Timestamp report_date = new Timestamp(-1);
+        ZReport report;
         System.out.println("Z Report - Total Sales: " + totalSales);
         String sql = "INSERT INTO z_reports (report_date, total_sales, restaurant_id) VALUES (CURRENT_TIMESTAMP, "
-                + totalSales + ", " + restaurant_id + ");";
+                + totalSales + ", " + restaurant_id + ") RETURNING report_id, report_date;";
         try {
-            this.executeUpdateSQL(sql);
+            ResultSet res = this.executeSQL(sql);
+            if (res.next()) {
+                report_id = res.getInt(1);
+                report_date = res.getTimestamp(2);
+            }
             System.out.println("Z Report saved successfully");
-            return totalSales;
+            report = new ZReport(report_id, report_date, totalSales, restaurant_id);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            return -1;
+            report = new ZReport(restaurant_id, report_date, -1, restaurant_id);
         }
+        return report;
     }
 
     /**
